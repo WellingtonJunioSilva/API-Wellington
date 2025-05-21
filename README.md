@@ -11,7 +11,8 @@ Spring Data JPA
 MySQL
 Lombok
 Maven
-📂 Estrutura de Pastas
+
+
 ├── src
 │   ├── main
 │   │   ├── java
@@ -31,23 +32,19 @@ Maven
 │   └── script.sql
 ├── pom.xml
 └── README.md
+
 ✅ Pré-requisitos
 Java 17
 MySQL Server
 Maven
 🚀 Como Executar o Projeto
 1️⃣ Clone o repositório:
-
 git clone https://github.com/seu-usuario/cadastro_pessoas.git
 2️⃣ Acesse o diretório do projeto:
-
 cd cadastro_pessoas
 3️⃣ Execute o Maven para baixar as dependências:
-
 mvn clean install
 4️⃣ Configure o banco de dados MySQL:
-
-Acesse o MySQL:
 mysql -u seu_usuario -p
 Crie o banco:
 CREATE DATABASE estudo_pessoas;
@@ -96,3 +93,5 @@ spring.jpa.properties.hibernate.format_sql=true
 Wellerson Ferreira de Carvalho
 
 Projeto desenvolvido para estudo de Spring Boot e API RESTful.
+
+
