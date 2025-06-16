@@ -8,7 +8,7 @@ nome varchar (200) not null,
 documento char (11) not null,
 localizacao varchar (500) not null,
 biografia text not null,
-fotoPerfil varchar (3000)
+fotoPerfil TEXT
 );
 /*alter table produtor
 drop column localizacao;*/
@@ -22,7 +22,7 @@ add column estado varchar (60) not null;
 create table apoiador (
 id bigint primary key unique auto_increment not null,
 nome varchar (200) not null,
-tipo enum ('pessoa fisica','ONG', 'empresas/comercio', 'parceiro convêniado') not null,
+tipo enum ('PESSOA_FISICA','ONG', 'EMPRESAS/COMERCIO', 'CONVENIADO') not null,
 /*localizacao varchar (500) not null,*/
 contato varchar (100) not null,
 foto varchar (3000),
@@ -54,10 +54,6 @@ add column cidade bigint;
 
 alter table demandaProdutor
 add column estado bigint;
-
-alter table demandaProdutor
-add foreign key (cidade) references produtor (id),
-add foreign key (estado) references produtor (id);
 
 create table demandaApoiador(
 id bigint primary key auto_increment not null unique,

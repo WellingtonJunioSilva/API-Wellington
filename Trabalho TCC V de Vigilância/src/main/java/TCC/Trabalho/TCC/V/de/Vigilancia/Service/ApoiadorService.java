@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import TCC.Trabalho.TCC.V.de.Vigilancia.Model.Apoiador.ApoiadorModel;
 import TCC.Trabalho.TCC.V.de.Vigilancia.Repository.ApoiadorRepository;
 
 @Service
