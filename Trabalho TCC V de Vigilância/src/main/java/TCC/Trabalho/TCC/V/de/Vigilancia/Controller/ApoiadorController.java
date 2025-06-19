@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,5 +48,13 @@ public class ApoiadorController {
             }
         apoiador.setId(id);;
         return ResponseEntity.ok(service.salvarApoiador(apoiador));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity <Void> excluirApoiador(@PathVariable Long id){
+        if (!service.buscarApoiadoresPeloID(id).isPresent()) {
+                return ResponseEntity.notFound().build();
+            }
+        service.deletarApoiador(id);
+        return ResponseEntity.noContent().build();
     }
 }
