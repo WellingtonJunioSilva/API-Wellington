@@ -8,6 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="Interface/assents/CSS/home.css" rel="stylesheet">
     <link href="Interface/assents/JS/home.js" rel="stylesheet">
+    <link href="Interface/assents/IMG/logo.png" rel="icon" type="image/x-icon">
 </head>
 <body>
     <!-- Navigation -->
@@ -17,42 +18,16 @@
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
-            </button>
-            
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" onclick="showSection('feed')">
-                            <i class="fas fa-home me-1"></i>Feed
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#" onclick="showSection('connections')">
-                            <i class="fas fa-handshake me-1"></i>Conexões
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showSection('research')">
-                            <i class="fas fa-flask me-1"></i>Pesquisas
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#" onclick="showSection('messages')">
-                            <i class="fas fa-comments me-1"></i>Mensagens
-                            <span class="notification-badge">3</span>
-                        </a>
-                    </li>
-                </ul>
-                
+            </button>       
                 <div class="d-flex align-items-center">
                     <div class="search-bar me-3">
                         <input type="text" class="form-control" placeholder="Buscar...">
                         <i class="fas fa-search"></i>
                     </div>
-                    
+                
                     <div class="dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <img src="https://via.placeholder.com/32x32/4a7c59/ffffff?text=JP" class="rounded-circle me-2" alt="Profile">
+                            <img src="Interface/assents/IMG/images.jpg" class="post-avatar me-2" alt="Profile">
                             João Paulo
                         </button>
                         <ul class="dropdown-menu">
@@ -73,7 +48,7 @@
             <div class="col-lg-3">
                 <div class="sidebar">
                     <div class="sidebar-header">
-                        <img src="https://via.placeholder.com/80x80/ffffff/4a7c59?text=JP" class="rounded-circle mb-3" alt="Profile">
+                        <img src="Interface/assents/IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
                         <h5>João Paulo Silva</h5>
                         <p class="mb-0">Agricultor • São Paulo</p>
                         <small>127 conexões</small>
@@ -117,7 +92,7 @@
                     <!-- Create Post -->
                     <div class="create-post">
                         <div class="d-flex align-items-center mb-3">
-                            <img src="IMG/instagram-joao-guilherme-cropped.webp" class="card me-1" alt="Profile">
+                        <img src="Interface/assents/IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
                             <textarea class="form-control" placeholder="Compartilhe suas experiências, dúvidas ou descobertas..."></textarea>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
@@ -136,7 +111,7 @@
                     <!-- Posts -->
                     <div class="post-card card">
                         <div class="post-header">
-                            <img src="IMG/CrisViana.jpg" class="post-avatar" alt="Maria Silva">
+                            <img src="Interface/assents/IMG/CrisViana.jpg" class="post-avatar" alt="Maria Silva">
                             <div class="post-author">
                                 <h6>Maria Silva</h6>
                                 <small><i class="fas fa-map-marker-alt me-1"></i>Minas Gerais • 2h atrás</small>
@@ -154,7 +129,7 @@
                         <div class="post-content">
                             <p>Pessoal, acabei de implementar um sistema de irrigação inteligente na minha plantação de tomates. Os resultados foram impressionantes! 🍅💧</p>
                             <p>A economia de água foi de 40% e a produtividade aumentou 25%. Alguém mais tem experiência com IoT na agricultura?</p>
-                            <img src="IMG/Iot.jpg" class="post-image" alt="Sistema de Irrigação">
+                            <img src="Interface/assents/IMG/Iot.jpg" class="post-image" alt="Sistema de Irrigação">
                         </div>
                         <div class="post-actions">
                             <button class="btn-action" onclick="toggleLike(this)">
@@ -171,7 +146,7 @@
 
                     <div class="post-card card">
                         <div class="post-header">
-                            <img src="https://via.placeholder.com/50x50/ff6b35/ffffff?text=AG" class="post-avatar" alt="AgroTech">
+                            <img src="Interface/assents/IMG/AgroTech.jpg" class="post-avatar" alt="AgroTech">
                             <div class="post-author">
                                 <h6>AgroTech Solutions <i class="fas fa-check-circle text-primary ms-1"></i></h6>
                                 <small><i class="fas fa-building me-1"></i>Empresa • 4h atrás</small>
@@ -300,7 +275,7 @@
                     <div class="sidebar-content">
                         <div class="d-flex align-items-center mb-3">
                             <div class="position-relative">
-                                <img src="https://via.placeholder.com/40x40/4a7c59/ffffff?text=AR" class="rounded-circle" alt="Ana Rosa">
+                                <img src="Interface/assents/IMG/Tasha.jpg" class="post-avatar" alt="Ana Rosa">
                                 <span class="online-status"></span>
                             </div>
                             <div class="ms-3 flex-grow-1">
@@ -311,7 +286,7 @@
                         </div>
                         
                         <div class="d-flex align-items-center mb-3">
-                            <img src="https://via.placeholder.com/40x40/2d5a27/ffffff?text=RF" class="rounded-circle" alt="Roberto Farias">
+                            <img src="Interface/assents/IMG/Kyan.jpg" class="post-avatar" alt="Paulo Farias">
                             <div class="ms-3 flex-grow-1">
                                 <h6 class="mb-0 small">Roberto Farias</h6>
                                 <small class="text-muted">Pecuarista</small>
