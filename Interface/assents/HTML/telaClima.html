@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A de Agro - Rede dos Agricultores</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="../../assents/CSS/home.css" rel="stylesheet">
+    <link href="../../assents/JS/home.js" rel="stylesheet">
+    <link href="../../assents/IMG/logo.png" rel="icon" type="image/x-icon">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-seedling me-2"></i> A de Agro
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>       
+                <div class="d-flex align-items-center">
+                    <div class="search-bar me-3">
+                        <input type="text" class="form-control" placeholder="Buscar...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <img src="../IMG/images.jpg" class="post-avatar me-2" alt="Profile">
+                            João Paulo
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <img src="../IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
+                        <h5>João Paulo Silva</h5>
+                        <p class="mb-0">Agricultor • São Paulo</p>
+                        <small>127 conexões</small>
+                    </div>
+                    <div class="sidebar-content">
+                        <ul class="sidebar-menu">
+                            <li><a href="#" class="active" onclick="showSection('feed')"><i class="fas fa-home"></i>Feed Principal</a></li>
+                            <li><a href="#" onclick="showSection('message')"><i class="fas fa-message"></i>Mensagens</a></li>
+                            <li><a href="#" onclick="showSection('weather')"><i class="fas fa-cloud-sun"></i>Clima</a></li>
+                            <li><a href="#" onclick="showSection('news')"><i class="fas fa-newspaper"></i>Notícias</a></li>
+                            <li><a href="./telaConexões.html"><i class="fas fa-handshake"></i>Conexões</a></li>
+                            <li><a href="#" onclick="showSection('research')"><i class="fas fa-flask"></i>Pesquisas</a></li>
+                            <li><a href="#" onclick="showSection('groups')"><i class="fas fa-users"></i>Grupos</a></li>
+                            <li><a href="#" onclick="showSection('events')"><i class="fas fa-calendar"></i>Eventos</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Weather Widget -->
+                <div class="weather-widget">
+                    <h6><i class="fas fa-map-marker-alt me-2"></i>São Paulo, SP</h6>
+                    <div class="weather-temp">28°C</div>
+                    <p class="mb-2">Parcialmente nublado</p>
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <small>Hoje<br><strong>32°/20°</strong></small>
+                        </div>
+                        <div class="col-4">
+                            <small>Amanhã<br><strong>30°/18°</strong></small>
+                        </div>
+                        <div class="col-4">
+                            <small>Sexta<br><strong>25°/15°</strong></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-6">
+                <!-- Feed Section -->
+                <div id="feed-section">
+                    <!-- Create Post -->
+                    <div class="create-post">
+                        <div class="d-flex align-items-center mb-3">
+                        <img src="../IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
+                            <textarea class="form-control" placeholder="Compartilhe suas experiências, dúvidas ou descobertas..."></textarea>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <button class="btn btn-outline-primary btn-sm me-2">
+                                    <i class="fas fa-image me-1"></i>Foto
+                                </button>
+                                <button class="btn btn-outline-primary btn-sm">
+                                    <i class="fas fa-video me-1"></i>Vídeo
+                                </button>
+                            </div>
+                            <button class="btn btn-primary">Publicar</button>
+                        </div>
+                    </div>
+
+                    <!-- Posts -->
+                    <div class="post-card card">
+                        <div class="post-header">
+                            <img src="../IMG/CrisViana.jpg" class="post-avatar" alt="Maria Silva">
+                            <div class="post-author">
+                                <h6>Maria Silva</h6>
+                                <small><i class="fas fa-map-marker-alt me-1"></i>Minas Gerais • 2h atrás</small>
+                            </div>
+                            <div class="dropdown">
+                                <button class="btn btn-sm" data-bs-toggle="dropdown">
+                                    <i class="fas fa-ellipsis-h"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="#">Salvar post</a></li>
+                                    <li><a class="dropdown-item" href="#">Denunciar</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>Pessoal, acabei de implementar um sistema de irrigação inteligente na minha plantação de tomates. Os resultados foram impressionantes! 🍅💧</p>
+                            <p>A economia de água foi de 40% e a produtividade aumentou 25%. Alguém mais tem experiência com IoT na agricultura?</p>
+                            <img src="../IMG/Iot.jpg" class="post-image" alt="Sistema de Irrigação">
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn-action" onclick="toggleLike(this)">
+                                <i class="far fa-heart me-1"></i>Curtir (24)
+                            </button>
+                            <button class="btn-action" onclick="toggleComments(this)">
+                                <i class="far fa-comment me-1"></i>Comentar (8)
+                            </button>
+                            <button class="btn-action">
+                                <i class="fas fa-share me-1"></i>Compartilhar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="post-card card">
+                        <div class="post-header">
+                            <img src="../IMG/AgroTech.jpg" class="post-avatar" alt="AgroTech">
+                            <div class="post-author">
+                                <h6>AgroTech Solutions <i class="fas fa-check-circle text-primary ms-1"></i></h6>
+                                <small><i class="fas fa-building me-1"></i>Empresa • 4h atrás</small>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p><strong>🚀 Nova tecnologia de análise de solo disponível!</strong></p>
+                            <p>Estamos oferecendo análises gratuitas de solo para pequenos produtores rurais. Nossa tecnologia utiliza IA para fornecer recomendações precisas de nutrientes e pH.</p>
+                            <p>Interessados podem se inscrever através do link nos comentários. Vagas limitadas!</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="btn-action">
+                                <i class="far fa-heart me-1"></i>Curtir (156)
+                            </button>
+                            <button class="btn-action">
+                                <i class="far fa-comment me-1"></i>Comentar (32)
+                            </button>
+                            <button class="btn-action">
+                                <i class="fas fa-share me-1"></i>Compartilhar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                
+                <!-- Research Section -->
+                <div id="research-section" style="display: none;">
+                    <div class="main-content">
+                        <div class="p-4">
+                            <h4 class="mb-4">Pesquisas e Estudos</h4>
+                            
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title">Impacto da Agricultura Regenerativa na Produtividade</h6>
+                                    <p class="card-text">Estudo da EMBRAPA sobre práticas regenerativas e seus efeitos na produção de grãos.</p>
+                                    <small class="text-muted">Publicado em 15/05/2024 • EMBRAPA</small>
+                                    <div class="mt-2">
+                                        <button class="btn btn-outline-primary btn-sm">Ler estudo</button>
+                                        <button class="btn btn-outline-secondary btn-sm ms-2">Salvar</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h6 class="card-title">Tendências Tecnológicas no Agronegócio 2024</h6>
+                                    <p class="card-text">Relatório sobre as principais inovações tecnológicas que estão transformando a agricultura.</p>
+                                    <small class="text-muted">Publicado em 10/05/2024 • AgTech Brasil</small>
+                                    <div class="mt-2">
+                                        <button class="btn btn-outline-primary btn-sm">Ler relatório</button>
+                                        <button class="btn btn-outline-secondary btn-sm ms-2">Compartilhar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Sidebar -->
+            <div class="col-lg-3">
+                <!-- News Widget -->
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h6><i class="fas fa-newspaper me-2"></i>Notícias do Agro</h6>
+                    </div>
+                    <div class="sidebar-content p-0">
+                        <div class="news-item">
+                            <div class="news-title">Safra de soja bate recorde histórico</div>
+                            <small class="text-muted">Globo Rural • 1h atrás</small>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-title">Nova linha de crédito rural disponível</div>
+                            <small class="text-muted">Canal Rural • 3h atrás</small>
+                        </div>
+                        <div class="news-item">
+                            <div class="news-title">Tecnologia blockchain no agronegócio</div>
+                            <small class="text-muted">AgroNews • 5h atrás</small>
+                        </div>
+                        <div class="p-3">
+                            <button class="btn btn-outline-primary btn-sm w-100">Ver todas as notícias</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Suggested Connections -->
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <h6><i class="fas fa-users me-2"></i>Sugestões para Você</h6>
+                    </div>
+                    <div class="sidebar-content">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="position-relative">
+                                <img src="../IMG/Tasha.jpg" class="post-avatar" alt="Ana Rosa">
+                                <span class="online-status"></span>
+                            </div>
+                            <div class="ms-3 flex-grow-1">
+                                <h6 class="mb-0 small">Ana Rosa</h6>
+                                <small class="text-muted">Especialista em Café</small>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm">+</button>
+                        </div>
+                        
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="../IMG/Kyan.jpg" class="post-avatar" alt="Paulo Farias">
+                            <div class="ms-3 flex-grow-1">
+                                <h6 class="mb-0 small">Roberto Farias</h6>
+                                <small class="text-muted">Pecuarista</small>
+                            </div>
+                            <button class="btn btn-outline-primary btn-sm">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> 
+    <script src="../../assents/JS/home.js"></script>
+    </body>
+</html>
+        
+    

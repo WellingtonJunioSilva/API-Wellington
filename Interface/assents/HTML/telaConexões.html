@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A de Agro - Rede dos Agricultores</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="../../assents/CSS/home.css" rel="stylesheet">
+    <link href="../../assents/JS/home.js" rel="stylesheet">
+    <link href="../../assents/IMG/logo.png" rel="icon" type="image/x-icon">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-seedling me-2"></i> A de Agro
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="d-flex align-items-center">
+                    <div class="search-bar me-3">
+                        <input type="text" class="form-control" placeholder="Buscar...">
+                        <i class="fas fa-search"></i>
+                    </div>
+
+                    <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <img src="../IMG/images.jpg" class="post-avatar me-2" alt="Profile">
+                            João Paulo
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                        </ul>
+                    </div>
+                </div>
+        </div>
+        </div>
+
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <img src="../IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
+                        <h5>João Paulo Silva</h5>
+                        <p class="mb-0">Agricultor • São Paulo</p>
+                        <small>127 conexões</small>
+                    </div>
+                    <div class="sidebar-content">
+                        <ul class="sidebar-menu">
+                            <li><a href="./AgroConnect.html" onclick="showSection('feed')"><i class="fas fa-home"></i>Feed Principal</a></li>
+                            <li><a href="#" onclick="showSection('message')"><i class="fas fa-message"></i>Mensagens</a> </li>
+                            <li><a href="#" onclick="showSection('weather')"><i class="fas fa-cloud-sun"></i>Clima</a> </li>
+                            <li><a href="#" onclick="showSection('news')"><i class="fas fa-newspaper"></i>Notícias</a> </li>
+                            <li><a href="./telaConexões.html" class="active"> <i class="fas fa-handshake"></i>Conexões</a> </li>
+                            <li><a href="#" onclick="showSection('research')"><i class="fas fa-flask"></i>Pesquisas</a> </li>
+                            <li><a href="#" onclick="showSection('groups')"><i class="fas fa-users"></i>Grupos</a></li>
+                            <li><a href="#" onclick="showSection('events')"><i class="fas fa-calendar"></i>Eventos</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                <div id="connections-section">
+                    <div class="main-content">
+                        <div class="p-4">
+                            <h4 class="mb-4">Oportunidades de Conexão</h4>
+
+                            <div class="connection-card">
+                                <span class="connection-type type-investor">Investidor</span>
+                                <h6>Verde Capital Partners</h6>
+                                <p>Fundo de investimento especializado em agronegócio sustentável. Buscamos projetos inovadores com
+                                    foco em tecnologia verde.</p>
+                                <p><strong>Investimento:</strong> R$ 50.000 - R$ 500.000</p>
+                                <button class="btn btn-primary btn-sm">Conectar</button>
+                                <button class="btn btn-outline-primary btn-sm ms-2">Ver perfil</button>
+                            </div>
+
+                            <div class="connection-card">
+                                <span class="connection-type type-farmer">Produtor</span>
+                                <h6>Carlos Mendes - Fazenda Boa Vista</h6>
+                                <p>Produtor de soja e milho há 15 anos. Procuro parceria para compartilhar equipamentos e
+                                    conhecimento sobre agricultura de precisão.</p>
+                                <p><strong>Localização:</strong> Goiás • <strong>Área:</strong> 200 hectares</p>
+                                <button class="btn btn-primary btn-sm">Conectar</button>
+                                <button class="btn btn-outline-primary btn-sm ms-2">Mensagem</button>
+                            </div>
+
+                            <div class="connection-card">
+                                <span class="connection-type type-ngo">ONG</span>
+                                <h6>Instituto Agricultura Familiar</h6>
+                                <p>Oferecemos capacitação gratuita, microcrédito e assistência técnica para pequenos produtores
+                                    rurais.</p>
+                                <p><strong>Serviços:</strong> Consultoria, Financiamento, Treinamento</p>
+                                <button class="btn btn-primary btn-sm">Solicitar apoio</button>
+                                <button class="btn btn-outline-primary btn-sm ms-2">Saiba mais</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

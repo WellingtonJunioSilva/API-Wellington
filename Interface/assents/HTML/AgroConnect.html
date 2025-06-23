@@ -6,9 +6,9 @@
     <title>A de Agro - Rede dos Agricultores</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="Interface/assents/CSS/home.css" rel="stylesheet">
-    <link href="Interface/assents/JS/home.js" rel="stylesheet">
-    <link href="Interface/assents/IMG/logo.png" rel="icon" type="image/x-icon">
+    <link href="../../assents/CSS/home.css" rel="stylesheet">
+    <link href="../../assents/JS/home.js" rel="stylesheet">
+    <link href="../../assents/IMG/logo.png" rel="icon" type="image/x-icon">
 </head>
 <body>
     <!-- Navigation -->
@@ -27,7 +27,7 @@
                 
                     <div class="dropdown">
                         <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                            <img src="Interface/assents/IMG/images.jpg" class="post-avatar me-2" alt="Profile">
+                            <img src="../IMG/images.jpg" class="post-avatar me-2" alt="Profile">
                             João Paulo
                         </button>
                         <ul class="dropdown-menu">
@@ -48,7 +48,7 @@
             <div class="col-lg-3">
                 <div class="sidebar">
                     <div class="sidebar-header">
-                        <img src="Interface/assents/IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
+                        <img src="../IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
                         <h5>João Paulo Silva</h5>
                         <p class="mb-0">Agricultor • São Paulo</p>
                         <small>127 conexões</small>
@@ -56,9 +56,10 @@
                     <div class="sidebar-content">
                         <ul class="sidebar-menu">
                             <li><a href="#" class="active" onclick="showSection('feed')"><i class="fas fa-home"></i>Feed Principal</a></li>
+                            <li><a href="#" onclick="showSection('message')"><i class="fas fa-message"></i>Mensagens</a></li>
                             <li><a href="#" onclick="showSection('weather')"><i class="fas fa-cloud-sun"></i>Clima</a></li>
                             <li><a href="#" onclick="showSection('news')"><i class="fas fa-newspaper"></i>Notícias</a></li>
-                            <li><a href="#" onclick="showSection('connections')"><i class="fas fa-handshake"></i>Conexões</a></li>
+                            <li><a href="./telaConexões.html"><i class="fas fa-handshake"></i>Conexões</a></li>
                             <li><a href="#" onclick="showSection('research')"><i class="fas fa-flask"></i>Pesquisas</a></li>
                             <li><a href="#" onclick="showSection('groups')"><i class="fas fa-users"></i>Grupos</a></li>
                             <li><a href="#" onclick="showSection('events')"><i class="fas fa-calendar"></i>Eventos</a></li>
@@ -92,7 +93,7 @@
                     <!-- Create Post -->
                     <div class="create-post">
                         <div class="d-flex align-items-center mb-3">
-                        <img src="Interface/assents/IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
+                        <img src="../IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
                             <textarea class="form-control" placeholder="Compartilhe suas experiências, dúvidas ou descobertas..."></textarea>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
@@ -111,7 +112,7 @@
                     <!-- Posts -->
                     <div class="post-card card">
                         <div class="post-header">
-                            <img src="Interface/assents/IMG/CrisViana.jpg" class="post-avatar" alt="Maria Silva">
+                            <img src="../IMG/CrisViana.jpg" class="post-avatar" alt="Maria Silva">
                             <div class="post-author">
                                 <h6>Maria Silva</h6>
                                 <small><i class="fas fa-map-marker-alt me-1"></i>Minas Gerais • 2h atrás</small>
@@ -129,7 +130,7 @@
                         <div class="post-content">
                             <p>Pessoal, acabei de implementar um sistema de irrigação inteligente na minha plantação de tomates. Os resultados foram impressionantes! 🍅💧</p>
                             <p>A economia de água foi de 40% e a produtividade aumentou 25%. Alguém mais tem experiência com IoT na agricultura?</p>
-                            <img src="Interface/assents/IMG/Iot.jpg" class="post-image" alt="Sistema de Irrigação">
+                            <img src="../IMG/Iot.jpg" class="post-image" alt="Sistema de Irrigação">
                         </div>
                         <div class="post-actions">
                             <button class="btn-action" onclick="toggleLike(this)">
@@ -146,7 +147,7 @@
 
                     <div class="post-card card">
                         <div class="post-header">
-                            <img src="Interface/assents/IMG/AgroTech.jpg" class="post-avatar" alt="AgroTech">
+                            <img src="../IMG/AgroTech.jpg" class="post-avatar" alt="AgroTech">
                             <div class="post-author">
                                 <h6>AgroTech Solutions <i class="fas fa-check-circle text-primary ms-1"></i></h6>
                                 <small><i class="fas fa-building me-1"></i>Empresa • 4h atrás</small>
@@ -171,42 +172,7 @@
                     </div>
                 </div>
 
-                <!-- Connections Section -->
-                <div id="connections-section" style="display: none;">
-                    <div class="main-content">
-                        <div class="p-4">
-                            <h4 class="mb-4">Oportunidades de Conexão</h4>
-                            
-                            <div class="connection-card">
-                                <span class="connection-type type-investor">Investidor</span>
-                                <h6>Verde Capital Partners</h6>
-                                <p>Fundo de investimento especializado em agronegócio sustentável. Buscamos projetos inovadores com foco em tecnologia verde.</p>
-                                <p><strong>Investimento:</strong> R$ 50.000 - R$ 500.000</p>
-                                <button class="btn btn-primary btn-sm">Conectar</button>
-                                <button class="btn btn-outline-primary btn-sm ms-2">Ver perfil</button>
-                            </div>
-
-                            <div class="connection-card">
-                                <span class="connection-type type-farmer">Produtor</span>
-                                <h6>Carlos Mendes - Fazenda Boa Vista</h6>
-                                <p>Produtor de soja e milho há 15 anos. Procuro parceria para compartilhar equipamentos e conhecimento sobre agricultura de precisão.</p>
-                                <p><strong>Localização:</strong> Goiás • <strong>Área:</strong> 200 hectares</p>
-                                <button class="btn btn-primary btn-sm">Conectar</button>
-                                <button class="btn btn-outline-primary btn-sm ms-2">Mensagem</button>
-                            </div>
-
-                            <div class="connection-card">
-                                <span class="connection-type type-ngo">ONG</span>
-                                <h6>Instituto Agricultura Familiar</h6>
-                                <p>Oferecemos capacitação gratuita, microcrédito e assistência técnica para pequenos produtores rurais.</p>
-                                <p><strong>Serviços:</strong> Consultoria, Financiamento, Treinamento</p>
-                                <button class="btn btn-primary btn-sm">Solicitar apoio</button>
-                                <button class="btn btn-outline-primary btn-sm ms-2">Saiba mais</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+                
                 <!-- Research Section -->
                 <div id="research-section" style="display: none;">
                     <div class="main-content">
@@ -275,7 +241,7 @@
                     <div class="sidebar-content">
                         <div class="d-flex align-items-center mb-3">
                             <div class="position-relative">
-                                <img src="Interface/assents/IMG/Tasha.jpg" class="post-avatar" alt="Ana Rosa">
+                                <img src="../IMG/Tasha.jpg" class="post-avatar" alt="Ana Rosa">
                                 <span class="online-status"></span>
                             </div>
                             <div class="ms-3 flex-grow-1">
@@ -286,7 +252,7 @@
                         </div>
                         
                         <div class="d-flex align-items-center mb-3">
-                            <img src="Interface/assents/IMG/Kyan.jpg" class="post-avatar" alt="Paulo Farias">
+                            <img src="../IMG/Kyan.jpg" class="post-avatar" alt="Paulo Farias">
                             <div class="ms-3 flex-grow-1">
                                 <h6 class="mb-0 small">Roberto Farias</h6>
                                 <small class="text-muted">Pecuarista</small>
@@ -299,7 +265,7 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script> 
-    <script src="./assents/JS/home.js"></script>
+    <script src="../../assents/JS/home.js"></script>
     </body>
 </html>
         
