@@ -1,8 +1,6 @@
 package TCC.Trabalho.TCC.V.de.Vigilancia.Model.Demanda_Produtor;
 
 import java.time.LocalDateTime;
-
-import TCC.Trabalho.TCC.V.de.Vigilancia.Model.ProdutorModel;
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
