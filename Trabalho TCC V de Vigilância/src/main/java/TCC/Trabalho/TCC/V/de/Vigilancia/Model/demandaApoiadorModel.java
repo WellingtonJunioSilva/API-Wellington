@@ -32,16 +32,20 @@ public class demandaApoiadorModel {
     private String descricao;
 
     @Column(nullable = false)
-    private LocalDateTime post;
+    private String cidade;
+
+    @Column (nullable = false)
+    private String estado;
 
     @Column(nullable = false)
-    private LocalDate validade;
+    private LocalDateTime dataPostagem;
+
+    @Column(nullable = false)
+    private LocalDate validade_oferta;
 
     @Enumerated(EnumType.STRING)
     private statusDemanda status;
 
-    @ManyToOne
-    @JoinColumn(name = "idApoiador")
-    private ApoiadorModel apoiador;
+    
 
 }
