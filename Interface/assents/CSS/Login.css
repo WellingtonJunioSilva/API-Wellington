@@ -1,0 +1,32 @@
+     
+
+    .login-container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 30px;
+            border-radius: 10px;
+            margin-left: 100px;
+        }
+        .login-title{
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .LogoLogin {
+            
+            margin-left:250px;
+            margin-right: 100px;
+            
+
+        }
+
+        #entrar {
+            background-color:#4a7c59 ;
+            border: none ;
+
+        }
+        .imagem {
+            margin-left: 200px;
+            margin-top: 800px;
+            margin-bottom: 800px;
+        }
+

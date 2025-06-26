@@ -90,7 +90,7 @@
             background: white;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            margin-top: 100px;
+            margin-top: 20px;
             padding: 0;
             margin-bottom: 20px;
         }
@@ -351,3 +351,8 @@
             border: 2px solid white;
     
         }
+        #filtro {
+            background-color: #4a7c59;
+        }
+
+
