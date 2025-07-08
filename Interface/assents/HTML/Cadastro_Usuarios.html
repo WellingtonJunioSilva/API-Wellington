@@ -1,18 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" data-bs-theme="black">
+<html lang="pt-br" data-bs-theme="black">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cadastro de Apoiadores</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="../CSS/telaCadastro.css"
-
+    <link href="../CSS/telaCadastro.css" rel="stylesheet">
 </head>
 <body class="d-flex align-items-center py-4 bg-body-tertiary">
     <div class="container">
         <div class="cadastro-container">
-            <h3 class="cadastro-title"> Apoiadores</h3>
-            <form>
+            <h3 class="cadastro-title">Cadastro de Usuários</h3>
+            <form onsubmit="Adicionar(event)">
                 <div class="mb-3">
                     <label for="nome" class="form-label">Nome</label>
                     <input type="text" id="nome" class="form-control" placeholder="nome">
@@ -27,7 +26,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="cep" class="form-label">CEP</label>
-                    <input type="text" class="form-control" id="cep" placeholder="cep">
+                    <input type="text" class="form-control" id="cep" placeholder="cep" onblur="buscarCep()">
                 </div>
                 <div class="mb-3">
                     <label for="cidade" class="form-label">Cidade</label>
@@ -38,43 +37,47 @@
                     <input type="text" class="form-control" id="estado" placeholder="estado">
                 </div>
                 <div class="mb-3">
-                    <label for="contato" class="form-label">Contato</label>
-                    <input type="text" class="form-control" id="contato" placeholder="contato">
+                    <label for="telefone" class="form-label">Telefone</label>
+                    <input type="text" class="form-control" id="telefone" placeholder="telefone">
                 </div>
+                
                 <div class="mb-3">
-                    <label for="foto_perfil" class="form-label">Foto_Perfil</label>
-                    <input type="text" id="foto" class="form-control" placeholder="foto">
+                    <label for="tipo_usuario" class="form-label">Tipo de Usuário</label>
+                    <select class="form-select" id="tipo_usuario" onchange="verificarTipoUsuario()" required>
+                        <option value="">Selecione</option>
+                        <option value="Apoiador">Apoiador</option>
+                        <option value="Produtor">Produtor</option>
+                    </select>
                 </div>
+
+                <div class="mb-3" id="campo_apoiador" style="display: none;">
+                    <label for="tipo_apoiador" class="form-label">Tipo Apoiador</label>
+                    <select class="form-select" id="tipo_apoiador">
+                        <option value="Pessoa Física">Pessoa física</option>
+                        <option value="ONG">ONG</option>
+                        <option value="Empresa">Empresa/Comércio</option>
+                        <option value="Conveniado">Conveniado</option>
+                    </select>
+                </div>
+
                 <div class="mb-3">
                     <label for="biografia" class="form-label">Biografia</label>
                     <input type="text" id="biografia" class="form-control" placeholder="biografia">
                 </div>
+
+                <div class="mb-3">
+                    <label for="foto_perfil" class="form-label">Foto de Perfil</label>
+                    <input type="text" id="foto_perfil" class="form-control" placeholder="foto">
+                </div>
+
+                <button type="submit" class="btn btn-primary">Adicionar</button>
             </form>
         </div>
-        <table class="table table-bordered" id="tabelaApoaidores">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Documento</th>
-                    <th>CEP</th>
-                    <th>Cidade</th>
-                    <th>Estado</th>
-                    <th>Contato</th>
-                    <th>Foto_Perfil</th>
-                    <th>Biografia</th>
-                </tr>
-            </thead>
-            <tbody>
-
-            </tbody>
-        </table>
     </div> 
-    
+
+    <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
-    <script src="app.js"></script>
-
+    <script src="../JS/cadastroUsuarios.js"></script>
 </body>
 </html>
