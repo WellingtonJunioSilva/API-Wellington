@@ -45,32 +45,26 @@
                     <label for="tipo_usuario" class="form-label">Tipo de Usuário</label>
                     <select class="form-select" id="tipo_usuario" onchange="verificarTipoUsuario()" required>
                         <option value="">Selecione</option>
-                        <option value="Apoiador">Apoiador</option>
-                        <option value="Produtor">Produtor</option>
+                        <option value="APOIADOR">Apoiador</option>
+                        <option value="PRODUTOR">Produtor</option>
                     </select>
                 </div>
 
                 <div class="mb-3" id="campo_apoiador" style="display: none;">
                     <label for="tipo_apoiador" class="form-label">Tipo Apoiador</label>
                     <select class="form-select" id="tipo_apoiador">
-                        <option value="Pessoa Física">Pessoa física</option>
+                        <option value="PESSOA_FISICA">Pessoa física</option>
                         <option value="ONG">ONG</option>
-                        <option value="Empresa">Empresa/Comércio</option>
-                        <option value="Conveniado">Conveniado</option>
+                        <option value="EMPRESA_COMERCIO">Empresa/Comércio</option>
+                        <option value="CONVENIADO">Conveniado</option>
                     </select>
                 </div>
-
                 <div class="mb-3">
-                    <label for="biografia" class="form-label">Biografia</label>
-                    <input type="text" id="biografia" class="form-control" placeholder="biografia">
+                   <label for="senha" class="form-label"> Senha </label>
+                    <input type="password" class="form-control" id="senha" placeholder="senha">
                 </div>
 
-                <div class="mb-3">
-                    <label for="foto_perfil" class="form-label">Foto de Perfil</label>
-                    <input type="text" id="foto_perfil" class="form-control" placeholder="foto">
-                </div>
-
-                <button type="submit" class="btn btn-primary">Adicionar</button>
+                <button type="submit" class="btnAdicionar">Adicionar</button>
             </form>
         </div>
     </div> 

@@ -10,15 +10,14 @@ const limparFormulario = () => {
     document.getElementById("telefone").value = "";
     document.getElementById('tipo_usuario').value = "";
     document.getElementById("tipo_apoiador").value = "";
-    document.getElementById("biografia").value = "";
-    document.getElementById("foto_perfil").value = "";
+    document.getElementById("senha").value = "";
 }  
 
 function verificarTipoUsuario() {
     const tipo_usuario = document.getElementById('tipo_usuario').value;
     const campoApoiador = document.getElementById('campo_apoiador');
 
-    if (tipo_usuario === 'Apoiador') {
+    if (tipo_usuario === "APOIADOR") {
         campoApoiador.style.display = 'block';
     } else {
         campoApoiador.style.display = 'none';
@@ -70,14 +69,11 @@ const Adicionar = async (event) => {
     const cidade = document.getElementById("cidade").value;
     const estado = document.getElementById("estado").value;
     const telefone = document.getElementById("telefone").value;
-    const tipo_usuario = document.getElementById("tipo_usuario").value;
-    const biografia = document.getElementById("biografia").value;
-    const fotoPerfil = document.getElementById("foto_perfil").value;
+    const tipo_usuario = document.getElementById("tipo_usuario");
+    const tipoUsuarioValue = tipo_usuario.options[tipo_usuario.selectedIndex].value;
+    const senha = document.getElementById("senha").value;
 
-    let tipo_apoiador = "";
-    if (tipo_usuario === "Apoiador") {
-        tipo_apoiador = document.getElementById("tipo_apoiador").value;
-    }
+
 
     const usuario = {
         nome: nome,
@@ -87,11 +83,14 @@ const Adicionar = async (event) => {
         cidade: cidade,
         estado: estado,
         telefone: telefone,
-        tipo_usuario: tipo_usuario,
-        tipo_apoiador: tipo_apoiador,
-        biografia: biografia,
-        fotoPerfil: fotoPerfil
+        tipo_usuario: tipoUsuarioValue,
+        senha: senha
     };
+       
+    if (tipoUsuarioValue === "APOIADOR") {
+        tipo_apoiador = document.getElementById("tipo_apoiador");
+        tipo_apoiador = tipo_apoiador.options[tipo_apoiador.selectedIndex].value;
+    }
 
     try {
         const response = await fetch(`http://localhost:8080/tcc/usuarios`, {

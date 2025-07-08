@@ -10,3 +10,12 @@
             text-align: center;
             margin-bottom: 20px;
         }
+        .btnAdicionar {
+            width: 100%;
+            padding: 10px;
+            background-color: #365e27;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
