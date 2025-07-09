@@ -85,11 +85,13 @@ const Adicionar = async (event) => {
         telefone: telefone,
         tipo_usuario: tipoUsuarioValue,
         senha: senha
-    };
-       
+        };
+    
+        let tipo_apoiador = null;
     if (tipoUsuarioValue === "APOIADOR") {
         tipo_apoiador = document.getElementById("tipo_apoiador");
         tipo_apoiador = tipo_apoiador.options[tipo_apoiador.selectedIndex].value;
+        usuario.tipo_apoiador = tipo_apoiador;
     }
 
     try {
