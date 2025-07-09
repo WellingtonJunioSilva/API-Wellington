@@ -1,32 +1,137 @@
-     
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    .login-container {
-            max-width: 400px;
-            margin: 100px auto;
-            padding: 30px;
-            border-radius: 10px;
-            margin-left: 100px;
-        }
-        .login-title{
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .LogoLogin {
-            
-            margin-left:250px;
-            margin-right: 100px;
-            
+body, html {
+  height: 100%;
+  font-family: Arial, sans-serif;
+}
 
-        }
+.container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
 
-        #entrar {
-            background-color:#4a7c59 ;
-            border: none ;
+.form-container {
+  flex: 1;
+  padding: 40px;
+  background-color: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 
-        }
-        .imagem {
-            margin-left: 200px;
-            margin-top: 800px;
-            margin-bottom: 800px;
-        }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
 
+.logo img {
+  width: 40px;
+  height: 40px;
+}
+
+.logo span {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 300px;
+}
+
+.login-form label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 14px;
+}
+
+.login-form input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.btn-login {
+  width: 150px;
+  background-color: #365e27;
+  color: white;
+  padding: 10px;
+  border: none; 
+  border-radius: 8px;
+  cursor: pointer;
+  margin-left: 75px ;
+  margin-top: 5px;
+}
+
+.links {
+  margin-top: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.links a {
+  text-decoration: none;
+  color: #000;
+}
+
+.linha {
+  width: 100%;
+  max-width: 300px;
+  margin: 20px 0;
+  border: none;
+  border-top: 1px solid #aaa;
+}
+
+.social-buttons {
+  width: 100%;
+  max-width: 220px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-buttons button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background-color: #365e27;
+  color: white;
+}
+
+.social-buttons img {
+  width: 20px;
+  height: 20px;
+}
+
+.terms {
+  margin-top: 20px;
+  font-size: 11px;
+  text-align: center;
+  color: #333;
+}
+
+.image-container {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
