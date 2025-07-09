@@ -1,4 +1,4 @@
-create database raiz_overfror;
+CREATE database raiz_overfror;
 
 use raiz_overfror;
 
@@ -15,36 +15,32 @@ tipo_usuario enum ('APOIADOR', 'PRODUTOR') not null,
 tipo_apoiador enum ('PESSOA_FISICA', 'ONG', 'EMPRESA/COMERCIO, CONVENIADO'),
 biografia text,
 foto_perfil text
-
 );
 
+alter table Usuario 
+add column senha varchar (50);
 
-create table demandaProdutor(
+SET SQL_SAFE_UPDATES = 1;
+
+UPDATE Usuario SET senha = 'temporaria' WHERE senha IS NULL;
+
+alter table Usuario
+modify column senha varchar (50) not null;
+
+
+create table demandas(
 id bigint auto_increment primary key unique not null,
 idUsuario bigint,
 titulo varchar (250) not null,
 descricao text not null,
-categoria enum ('grão', 'feijões e raízes', 'frutas e hortaliças', 'verduras e ervas', 'outros'),
-dataPostagem datetime default current_timestamp,
+categoria enum ('graos', 'feijoes_raizes', 'frutas_hortalicas', 'verduras_ervas', 'outros'),
+data_postagem datetime,
 status enum ('aberta', 'fechada'),
 cidade VARCHAR (60) NOT NULL,
 estado VARCHAR (60) not NULL,
+validade_oferta date,
 foreign key (idUsuario) references Usuario (id)
 );
 
-create table demandaApoiador(
-id bigint primary key auto_increment not null unique,
-idUsuario bigint,
-titulo varchar (250) not null,
-descricao text not null,
-cidade VARCHAR (60) NOT NULL, 
-estado VARCHAR (60) NOT NULL,
-dataPostagem datetime default current_timestamp,
-validade_oferta date,
-status enum ('aberta', 'fechada'),
 
-foreign key (idUsuario) references Usuario (id),
-);
-
-
-
+select * from usuario;

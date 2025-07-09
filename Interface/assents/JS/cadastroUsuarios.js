@@ -110,6 +110,11 @@ const Adicionar = async (event) => {
         alert("Usuário cadastrado com sucesso!");
         console.log("Usuário:", usuario);
         limparFormulario();
+
+        setTimeout(() => {
+            window.location.href = "AgroConnect.html"; // Redireciona para a página de login após o cadastro
+        }, 1000); // Redireciona após 1 segundo 
+        
     } catch (error) {
         console.error("Erro ao adicionar usuário:", error);
         alert("Erro ao adicionar usuário. Tente novamente.");
