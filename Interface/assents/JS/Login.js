@@ -27,8 +27,12 @@ document.getElementById("login-form").addEventListener("submit", async function 
     if (response.ok) {
       const usuario = await response.json();
       console.log("Login bem-sucedido:", usuario);
+      
+      // Armazenar os dados do usuário no localStorage
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+      
       // Redirecionar para a página protegida
-      window.location.href = "AgroConnect.html";
+      window.location.href = "TelaInicial.html";
     } else if (response.status === 401) {
       mensagemErro.textContent = "Usuário ou senha incorretos.";
     } else {
