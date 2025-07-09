@@ -14,12 +14,12 @@
         <h6>V de Vigilancia</h6>
       </div>
 
-      <form class="login-form">
+      <form class="login-form" id="login-form">
         <label for="email">Email/CPF</label>
         <input type="email" id="email" placeholder="Digite seu email ou CPF">
 
         <label for="senha">Senha</label>
-        <input type="senha" id="senha" placeholder="Digite sua senha">
+        <input type="password" id="senha" placeholder="Digite sua senha">
 
         <button type="submit" class= "btn-login">Entrar</button>
       </form>
@@ -44,6 +44,7 @@
         Ao clicar em “entrar” ou “cadastre-se”, você aceita automaticamente<br>
         o Contrato de Usuário, a Política de Privacidade e a Política de Cookies do V de Vigilância.
       </p>
+      <p id="mensagemErro" style="color: red;"></p>
     </div>
 
     <div class="image-container">
@@ -51,4 +52,5 @@
     </div>
   </div>
 </body>
+<script src="../JS/Login  .js"></script>
 </html>
