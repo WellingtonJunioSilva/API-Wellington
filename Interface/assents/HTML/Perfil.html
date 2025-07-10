@@ -49,7 +49,7 @@
             <div class="col-lg-3">
                 <div class="sidebar">
                     <div class="sidebar-header">
-                        <img src="../IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
+                        <img src="../IMG/images.jpg" class="post-avatar" alt="João Paulo Silva" id="sidebar-pic">
                         <h5>João Paulo Silva</h5>
                         <p class="mb-0">Agricultor • São Paulo</p>
                         <small>127 conexões</small>
@@ -89,17 +89,73 @@
             <div class="col-lg-6">
                 <div class="main-content p-4">
                     <div class="text-center mb-4">
-                        <img src="../IMG/images.jpg" alt="João Paulo Silva" class="post-avatar" style="width:120px; height:120px; border-width: 4px;" />
+                        <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#modalPicture" onclick="getPic()">
+                            <img src="../IMG/images.jpg" alt="João Paulo Silva" class="post-avatar" id="perfil-pic" style="width:120px; height:120px; border-width: 4px;" />
+                        </button>
                         <h2 class="mt-3" style="color: var(--primary-green); font-weight: 700;">João Paulo Silva</h2>
                         <p class="text-muted">Agricultor • São Paulo, Brasil</p>
-                        <button class="btn btn-primary px-4">Editar Perfil</button>
+                        <button type="button" class="btn btn-primary px-4" data-bs-toggle="modal" data-bs-target="#modalDesc" onclick="getInfo()">Editar Perfil</button>
                     </div>
 
-                    <hr />
+                    <div class="modal fade" id="modalPicture" tabindex="-1" aria-labelledby="modalTitlePic" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalTitlePic">Alterar foto de perfil</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-flex align-items-center justify-content-center" id="modalPic"></div>
+                            <form>
+                                <div class="mb-3">
+                                    <label for="link-img" class="col-form-label">Link da nova imagem:</label>
+                                    <input type="text" class="form-control" id="link-img">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="savePic()" data-bs-dismiss="modal">Salvar alterações</button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="modal fade" id="modalDesc" tabindex="-1" aria-labelledby="modalTitleDesc" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="modalTitleDesc">Alterar dados</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="d-flex align-items-center justify-content-center" id="modalPic"></div>
+                            <form>
+                                <div class="mb-3">
+                                    <label for="bio-input" class="col-form-label">Sobre mim:</label>
+                                    <textarea rows="5" type="text" class="form-control" id="bio-input"></textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email-input" class="col-form-label">Email:</label>
+                                    <input type="text" class="form-control" id="email-input">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="tel-input" class="col-form-label">Telefone:</label>
+                                    <input type="text" class="form-control" id="tel-input">
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn btn-primary" onclick="saveInfo()" data-bs-dismiss="modal">Salvar alterações</button>
+                        </div>
+                        </div>
+                    </div>
+                    </div>
 
                     <section class="mb-4">
                         <h5 style="color: var(--primary-green); font-weight: 600;">Sobre mim</h5>
-                        <p>Sou agricultor há mais de 10 anos, especializado em cultivo sustentável de grãos e hortaliças. Apaixonado por inovação no campo e tecnologias que ajudam a aumentar a produtividade e preservar o meio ambiente.</p>
+                        <p id="bioParagraph">Sou agricultor há mais de 10 anos, especializado em cultivo sustentável de grãos e hortaliças. Apaixonado por inovação no campo e tecnologias que ajudam a aumentar a produtividade e preservar o meio ambiente.</p>
                     </section>
 
                     <section class="mb-4">
@@ -113,8 +169,8 @@
 
                     <section class="mb-4">
                         <h5 style="color: var(--primary-green); font-weight: 600;">Contatos</h5>
-                        <p><i class="fas fa-envelope me-2"></i>joao.silva@email.com</p>
-                        <p><i class="fas fa-phone me-2"></i>(11) 99999-9999</p>
+                        <p id="emailParagraph"><i class="fas fa-envelope me-2"></i>joao.silva@email.com</p>
+                        <p id="telParagraph"><i class="fas fa-phone me-2"></i>(11) 99999-9999</p>
                         <p><i class="fab fa-whatsapp me-2"></i>(11) 99999-9999</p>
                     </section>
 
@@ -130,6 +186,7 @@
         </div>
     </div>
 
+<script src="../JS/perfil.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 </body>
 </html>
