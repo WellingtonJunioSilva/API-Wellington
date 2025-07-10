@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A de Agro - Rede dos Agricultores</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="../../assents/CSS/home.css" rel="stylesheet">
+    <link href="../../assents/JS/home.js" rel="stylesheet">
+    <link href="../../assents/IMG/logo.png" rel="icon" type="image/x-icon">
+</head>
+<body>
+<!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="#"><i class="fas fa-seedling me-2"></i> A de Agro
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>       
+                <div class="d-flex align-items-center">
+                    <div class="search-bar me-3">
+                        <input type="text" class="form-control" placeholder="Buscar...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                
+                   <div class="dropdown">
+                        <button class="btn btn-outline-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                            <img src="../IMG/images.jpg" class="post-avatar me-2" alt="Profile">
+                            João Paulo
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Perfil</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configurações</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Sair</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+
+            <!-- Sidebar -->
+            <div class="col-lg-3">
+                <div class="sidebar">
+                    <div class="sidebar-header">
+                        <img src="../IMG/images.jpg" class="post-avatar" alt="João Paulo Silva">
+                        <h5>João Paulo Silva</h5>
+                        <p class="mb-0">Agricultor • São Paulo</p>
+                        <small>127 conexões</small>
+                    </div>
+                    <div class="sidebar-content">
+                        <ul class="sidebar-menu">
+                            <li><a href="./AgroConnect.html" class="active"><i class="fas fa-home"></i>Feed Principal</a></li>
+                            <li><a href="./telaMensagens.html"><i class="fas fa-message"></i>Mensagens</a> </li>
+                            <li><a href="./telaClima.html"><i class="fas fa-cloud-sun"></i>Clima</a> </li>
+                            <li><a href="./telaNoticias.html"><i class="fas fa-newspaper"></i>Notícias</a> </li>
+                            <li><a href="./telaConexões.html"><i class="fas fa-handshake"></i>Conexões</a> </li>
+                            <li><a href="./telaEventos.html"><i class="fas fa-calendar"></i>Eventos</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Weather Widget -->
+                <div class="weather-widget">
+                    <h6><i class="fas fa-map-marker-alt me-2"></i>São Paulo, SP</h6>
+                    <div class="weather-temp">28°C</div>
+                    <p class="mb-2">Parcialmente nublado</p>
+                    <div class="row text-center">
+                        <div class="col-4">
+                            <small>Hoje<br /><strong>32°/20°</strong></small>
+                        </div>
+                        <div class="col-4">
+                            <small>Amanhã<br /><strong>30°/18°</strong></small>
+                        </div>
+                        <div class="col-4">
+                            <small>Sexta<br /><strong>25°/15°</strong></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content - Perfil -->
+            <div class="col-lg-6">
+                <div class="main-content p-4">
+                    <div class="text-center mb-4">
+                        <img src="../IMG/images.jpg" alt="João Paulo Silva" class="post-avatar" style="width:120px; height:120px; border-width: 4px;" />
+                        <h2 class="mt-3" style="color: var(--primary-green); font-weight: 700;">João Paulo Silva</h2>
+                        <p class="text-muted">Agricultor • São Paulo, Brasil</p>
+                        <button class="btn btn-primary px-4">Editar Perfil</button>
+                    </div>
+
+                    <hr />
+
+                    <section class="mb-4">
+                        <h5 style="color: var(--primary-green); font-weight: 600;">Sobre mim</h5>
+                        <p>Sou agricultor há mais de 10 anos, especializado em cultivo sustentável de grãos e hortaliças. Apaixonado por inovação no campo e tecnologias que ajudam a aumentar a produtividade e preservar o meio ambiente.</p>
+                    </section>
+
+                    <section class="mb-4">
+                        <h5 style="color: var(--primary-green); font-weight: 600;">Experiência</h5>
+                        <ul>
+                            <li>Gestão de fazendas familiares (2015 - presente)</li>
+                            <li>Implementação de sistemas de irrigação inteligente</li>
+                            <li>Consultoria em agricultura sustentável</li>
+                        </ul>
+                    </section>
+
+                    <section class="mb-4">
+                        <h5 style="color: var(--primary-green); font-weight: 600;">Contatos</h5>
+                        <p><i class="fas fa-envelope me-2"></i>joao.silva@email.com</p>
+                        <p><i class="fas fa-phone me-2"></i>(11) 99999-9999</p>
+                        <p><i class="fab fa-whatsapp me-2"></i>(11) 99999-9999</p>
+                    </section>
+
+                    <section>
+                        <h5 style="color: var(--primary-green); font-weight: 600;">Redes Sociais</h5>
+                        <a href="#" class="btn btn-outline-primary me-2"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="btn btn-outline-primary me-2"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="btn btn-outline-primary me-2"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="btn btn-outline-primary"><i class="fab fa-linkedin-in"></i></a>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+</body>
+</html>
