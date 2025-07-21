@@ -367,4 +367,17 @@
             cursor: pointer;
         }
 
+        .sidebar-header{
+            text-align: center;
+            padding: 20px;
+        }
+        #foto-usuario {
+            width: 50px;
+            height: 50px;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+        }
+        
+     
 
