@@ -1,13 +1,66 @@
+:root{
+  --verde-principal: #2d5a27;
+  --amarelo-destaque: #ffc107;
+  --cinza-claro: #f0f0f0;
+  --sombra-leve: rgba(0,0,0,0.1);
+  --sombra-forte: rgba(0,0,0,0.2);
+  --fonte: 'Poppins', sans-serif;
+  --branco: #f8f9fa;
+}
+
 body{
     background-color: #fef9f0;
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: var(--fonte);
+}
+
+.navbar{
+    background-color: #2d5a27;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+}
+
+.navbar .nav-link{
+    color: var(--branco);
+    margin-right: 15px;
+    transition: color 0.3s ease, transform 0.3s ease;
+}
+
+.navbar .nav-link:hover{
+    color: var(--amarelo-destaque);
+    transform: translateY(-2px);
+}
+
+.navbar .btn-outline-light{
+    border-radius: 12px;
+    padding: 6px 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+.navbar .btn-outline-light:hover{
+    background-color: var(--branco);
+    color: #000;
+    transform: scale(1.05);
+}
+
+.navbar .btn-light{
+    border-radius: 12px;
+    padding: 6px 16px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.collapse-transition {
+    transition: height 0.3s ease;
 }
 
 .texto-principal{
     font-size: 2.8rem;
-    font-style: italic;
+    font-weight: bold;
     text-transform: uppercase;
     line-height: 1.3;
+}
+.texto-principal span{
+    color: #2ea76f;
 }
 
 .subtexto{
@@ -15,24 +68,46 @@ body{
     font-style: italic;
     max-width: 500px;
     line-height: 1.3rem;
-    color: #333;
+    color: #222;
 }
-
-.btn-cadastroColheita{
-background-color: #f5e4c3;
-border-bottom: #f5e4c3;
-color: #000;
-border-radius: 8%;
-text-align: center;
+.btn-cadastroSafra{
+        background-color:var(--amarelo-destaque);
+        color: #000;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        transition: 0.3s ease;
 }
 
 .btn-apoiador{
-    background-color: #528b4d;
-    border-bottom: #528b4d;
-    color: #ffffff;
-    border-radius: 8%;
-    text-align: center;
+        background-color:var(--cinza-claro);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        padding: 0.6rem 1.2rem;
+        font-weight: 600;
+        transition: 0.3s ease;
 }
+
+.btn-cadastroSafra:hover, .btn-apoiador:hover{
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px var(--sombra-forte);
+}
+
+.hero-image {
+    border-radius: 1rem;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transition: transform 0.5s ease, box-shadow 0.3s ease;
+    background: linear-gradient(145deg, #ffffff, #f0f0f0);
+    padding: 5px;
+}
+
+.hero-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+}
+
 
 .bg-depoimento{
     background-color: #fbe9cd;
@@ -43,36 +118,86 @@ text-align: center;
     border: 1.5rem;
 }
 
-.card-step{
-    background-color: #e3fcbc;
-    border: 1.5rem;
-    border-radius: 12px;
-    transition: transform 0.2s ease;
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.cartoes{
+  background-color: #ffffff;
+  border: 12px solid #f0f0f0;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: fadeInUp 0.7s ease-in-out;
+}
+
+.cartoes:hover{
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
 .icon{
-    color: #198754;
+    color: #2ea76f;
 }
 
 /*Responsividade do sistema*/
 
-@media(max-width: 768px){
-    .texto-principal{
-        font-size: 2rem;
-    }
+@media (max-width: 768px) {
+  .hero-section {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    padding: 5vh 0;
+  }
 
-    .subtexto{
-        font-size: 1rem;
-    }
+  .cartoes{
+    font-size: 0.9rem;
+  }
 
-    .bg-depoimento{
-        flex-direction: column;
-        text-align: center;
-    }
+  .texto-principal {
+    font-size: 1.8rem;
+    text-align: center;
+  }
 
-    .bg-depoimento img{
-        margin-bottom: 1rem;
-    }
+  .subtexto {
+    font-size: 1rem;
+    text-align: center;
+  }
+
+}
+@media (max-width: 576px) {
+  .d-flex.flex-wrap.gap-2 {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.8rem;
+  }
+}
+@media (max-width: 1200px) {
+  .hero-section {
+    padding-top: 5rem;
+    padding-bottom: 5rem;
+  }
+
+  .texto-principal {
+    font-size: 2.2rem;
+  }
+
+  .subtexto {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .hero-section {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
 }
 
 
