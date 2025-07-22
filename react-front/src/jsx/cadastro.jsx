@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import "../css/telaCadastroReact.css"; // CSS personalizado
+import { Link } from "react-router-dom";
+import "../css/telaCadastroReact.css";
 
 export default function Cadastro() {
   const [form, setForm] = useState({
@@ -15,19 +16,9 @@ export default function Cadastro() {
     senha: "",
   });
 
-  const limparFormulario = () => {
-    setForm({
-      nome: "",
-      email: "",
-      documento: "",
-      cep: "",
-      cidade: "",
-      estado: "",
-      telefone: "",
-      tipo_usuario: "",
-      tipo_apoiador: "",
-      senha: "",
-    });
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
   const cepValido = (cep) => cep.length === 8 && /^\d+$/.test(cep);
@@ -59,111 +50,214 @@ export default function Cadastro() {
     }
   };
 
-  const Adicionar = async (event) => {
-    event.preventDefault();
-    const usuario = { ...form };
-
-    try {
-      const response = await fetch(`http://localhost:8080/tcc/usuarios`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(usuario),
-      });
-
-      if (!response.ok) throw new Error(`Erro ${response.status}`);
-      alert("Usuário cadastrado com sucesso!");
-      localStorage.setItem("usuario", JSON.stringify(usuario));
-      limparFormulario();
-    } catch (error) {
-      console.error("Erro ao cadastrar usuário:", error);
-      alert("Erro ao cadastrar usuário. Tente novamente.");
-    }
+ const handleSubmit = async (e) => {
+  e.preventDefault();
+  
+  // Formata os campos antes de enviar
+  const usuario = {
+    ...form,
+    documento: form.documento.replace(/\D/g, ''),
+    telefone: form.telefone.replace(/\D/g, ''),
+    cep: form.cep.replace(/\D/g, '')
   };
 
-  return (
-    <div className="cadastro-page">
-      <div className="cadastro-left">
-        <h1>Bem-vindo!</h1>
-        <p>Cadastre-se para aproveitar todos os recursos.</p>
-      </div>
+  try {
+    const response = await fetch(`http://localhost:8080/tcc/usuarios`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(usuario),
+    });
 
-      <div className="cadastro-right">
-        <div className="cadastro-card">
-          <h3>Cadastro de Usuários</h3>
-          <form onSubmit={Adicionar}>
+    if (!response.ok) {
+      // Tenta extrair a mensagem de erro do servidor, se disponível
+      const errorData = await response.json().catch(() => null);
+      const errorMessage = errorData?.message || `Erro ${response.status}`;
+      throw new Error(errorMessage);
+    }
+
+    const data = await response.json();
+    alert("Usuário cadastrado com sucesso!");
+    
+    // Armazena apenas os dados necessários no localStorage
+    localStorage.setItem("usuario", JSON.stringify({
+      id: data.id, // Assumindo que o servidor retorna o ID
+      nome: usuario.nome,
+      email: usuario.email,
+      tipo_usuario: usuario.tipo_usuario
+    }));
+    
+    limparFormulario();
+    
+    // Redireciona após cadastro bem-sucedido
+    window.location.href = "/dashboard"; // Ajuste para sua rota de destino
+
+  } catch (error) {
+    console.error("Erro ao cadastrar usuário:", error);
+    
+    // Mensagens de erro mais específicas
+    if (error.message.includes("já cadastrado")) {
+      alert("Este e-mail já está cadastrado. Por favor, faça login ou utilize outro e-mail.");
+    } else {
+      alert(`Erro ao cadastrar: ${error.message}`);
+    }
+  }
+};
+
+  return (
+    <div className="cadastro-container">
+      <div className="cadastro-card">
+        <h2>Cadastro</h2>
+        <p>Preencha os campos abaixo para criar sua conta.</p>
+        
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label htmlFor="nome">Nome Completo</label>
             <input
               type="text"
-              placeholder="Nome"
+              id="nome"
+              name="nome"
+              placeholder="Digite seu nome completo"
               value={form.nome}
-              onChange={(e) => setForm({ ...form, nome: e.target.value })}
+              onChange={handleChange}
+              required
             />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="email">E-mail</label>
             <input
               type="email"
-              placeholder="E-mail"
+              id="email"
+              name="email"
+              placeholder="seu@email.com"
               value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              onChange={handleChange}
+              required
             />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="documento">CPF/CNPJ</label>
             <input
               type="text"
-              placeholder="Documento"
+              id="documento"
+              name="documento"
+              placeholder="000.000.000-00 ou 00.000.000/0000-00"
               value={form.documento}
-              onChange={(e) => setForm({ ...form, documento: e.target.value })}
+              onChange={handleChange}
+              required
             />
+          </div>
+          
+          <div className="form-row">
+            <div className="form-group cep-group">
+              <label htmlFor="cep">CEP</label>
+              <input
+                type="text"
+                id="cep"
+                name="cep"
+                placeholder="00000-000"
+                value={form.cep}
+                onChange={handleChange}
+                onBlur={buscarCep}
+                required
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="cidade">Cidade</label>
+              <input
+                type="text"
+                id="cidade"
+                name="cidade"
+                placeholder="Sua cidade"
+                value={form.cidade}
+                onChange={handleChange}
+                required
+              />
+            </div>
+            <div className="form-group uf-group">
+              <label htmlFor="estado">UF</label>
+              <input
+                type="text"
+                id="estado"
+                name="estado"
+                placeholder="UF"
+                value={form.estado}
+                onChange={handleChange}
+                required
+              />
+            </div>
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="telefone">Telefone</label>
             <input
               type="text"
-              placeholder="CEP"
-              value={form.cep}
-              onChange={(e) => setForm({ ...form, cep: e.target.value })}
-              onBlur={buscarCep}
-            />
-            <input
-              type="text"
-              placeholder="Cidade"
-              value={form.cidade}
-              onChange={(e) => setForm({ ...form, cidade: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Estado"
-              value={form.estado}
-              onChange={(e) => setForm({ ...form, estado: e.target.value })}
-            />
-            <input
-              type="text"
-              placeholder="Telefone"
+              id="telefone"
+              name="telefone"
+              placeholder="(00) 00000-0000"
               value={form.telefone}
-              onChange={(e) => setForm({ ...form, telefone: e.target.value })}
+              onChange={handleChange}
+              required
             />
+          </div>
+          
+          <div className="form-group">
+            <label htmlFor="tipo_usuario">Tipo de Usuário</label>
             <select
+              id="tipo_usuario"
+              name="tipo_usuario"
               value={form.tipo_usuario}
-              onChange={(e) => setForm({ ...form, tipo_usuario: e.target.value })}
+              onChange={handleChange}
+              required
             >
-              <option value="">Selecione o tipo</option>
+              <option value="">Selecione...</option>
               <option value="APOIADOR">Apoiador</option>
               <option value="PRODUTOR">Produtor</option>
             </select>
-            {form.tipo_usuario === "APOIADOR" && (
+          </div>
+          
+          {form.tipo_usuario === "APOIADOR" && (
+            <div className="form-group">
+              <label htmlFor="tipo_apoiador">Tipo de Apoiador</label>
               <select
+                id="tipo_apoiador"
+                name="tipo_apoiador"
                 value={form.tipo_apoiador}
-                onChange={(e) =>
-                  setForm({ ...form, tipo_apoiador: e.target.value })
-                }
+                onChange={handleChange}
+                required
               >
-                <option value="">Tipo de Apoiador</option>
+                <option value="">Selecione...</option>
                 <option value="PESSOA_FISICA">Pessoa Física</option>
                 <option value="ONG">ONG</option>
-                <option value="EMPRESA_COMERCIO">Empresa/Comércio</option>
-                <option value="CONVENIADO">Conveniado</option>
+                <option value="EMPRESA">Empresa</option>
               </select>
-            )}
+            </div>
+          )}
+          
+          <div className="form-group">
+            <label htmlFor="senha">Senha</label>
             <input
               type="password"
-              placeholder="Senha"
+              id="senha"
+              name="senha"
+              placeholder="Crie uma senha segura"
               value={form.senha}
-              onChange={(e) => setForm({ ...form, senha: e.target.value })}
+              onChange={handleChange}
+              required
             />
-            <button type="submit">Cadastrar</button>
-          </form>
+            <small className="dica-senha">
+              Use pelo menos 8 caracteres, incluindo letras e números
+            </small>
+          </div>
+          
+          <button type="submit" className="btn-cadastrar">
+            Cadastrar
+          </button>
+        </form>
+        
+        <div className="cadastro-footer">
+          Já tem uma conta? <Link to="/login">Faça login</Link>
         </div>
       </div>
     </div>

@@ -1,7 +1,39 @@
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Cadastro from "./cadastro.jsx";
+import Login from "./Login.jsx";
 
 function App() {
-  return <Cadastro/>
+  return (
+    <Router>
+      {/* Menu simples */}
+      <nav style={styles.nav}>
+        <Link to="/login" style={styles.link}>Login</Link>
+        <Link to="/cadastro" style={styles.link}>Cadastro</Link>
+      </nav>
+
+      {/* Definindo rotas */}
+      <Routes>
+        <Route path="/" element={<Navigate to="/login" />} /> {/* Redireciona para Login por padrão */}
+        <Route path="/login" element={<Login />} />
+        <Route path="/cadastro" element={<Cadastro />} />
+      </Routes>
+    </Router>
+  );
 }
+
+const styles = {
+  nav: {
+    display: "flex",
+    justifyContent: "center",
+    gap: "20px",
+    padding: "10px",
+    background: "#2d5a27",
+  },
+  link: {
+    color: "#fff",
+    textDecoration: "none",
+    fontWeight: "bold",
+  },
+};
 
 export default App;
