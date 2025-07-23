@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import '../css/telaInicialReact.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import perfilPadrao from "../IMG/icon perfil criado recentemente.png";
@@ -198,34 +199,53 @@ const TelaInicial = () => {
                             <div className="sidebar-content">
                                 <ul className="sidebar-menu">
                                     <li>
-                                        <a href="/" className={activeTab === 'feed' ? 'active' : ''}>
+                                        <Link 
+                                            to="/inicio" 
+                                            className={activeTab === 'feed' ? 'active' : ''}
+                                            onClick={() => setActiveTab('feed')}
+                                        >
                                             <i className="fas fa-home"></i>Feed Principal
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a href="/mensagens">
+                                        <Link 
+                                            to="/mensagens"
+                                            onClick={() => setActiveTab('mensagens')}
+                                        >
                                             <i className="fas fa-message"></i>Mensagens
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a href="/clima">
+                                        <Link 
+                                            to="/clima"
+                                            onClick={() => setActiveTab('clima')}
+                                        >
                                             <i className="fas fa-cloud-sun"></i>Clima
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a href="/noticias">
+                                        <Link 
+                                            to="/noticias"
+                                            onClick={() => setActiveTab('noticias')}
+                                        >
                                             <i className="fas fa-newspaper"></i>Notícias
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a href="/conexoes">
+                                        <Link 
+                                            to="/demandas"  // Alterado para "/demandas"
+                                            onClick={() => setActiveTab('conexoes')}
+                                        >
                                             <i className="fas fa-handshake"></i>Conexões
-                                        </a>
+                                        </Link>
                                     </li>
                                     <li>
-                                        <a href="/eventos">
+                                        <Link 
+                                            to="/eventos"
+                                            onClick={() => setActiveTab('eventos')}
+                                        >
                                             <i className="fas fa-calendar"></i>Eventos
-                                        </a>
+                                        </Link>
                                     </li>
                                 </ul>
                             </div>

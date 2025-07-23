@@ -1,7 +1,8 @@
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import Cadastro from "./cadastro.jsx";
 import Login from "./Login.jsx";
-import Inicio from "./Inicio.jsx"; // Adicione esta importação
+import Inicio from "./Inicio.jsx";
+import Demandas from "./Demandas.jsx"; // Adicione esta importação
 
 function App() {
   return (
@@ -10,7 +11,8 @@ function App() {
       <nav style={styles.nav}>
         <Link to="/login" style={styles.link}>Login</Link>
         <Link to="/cadastro" style={styles.link}>Cadastro</Link>
-        <Link to="/inicio" style={styles.link}>Inicio</Link> {/* Corrigido aqui */}
+        <Link to="/inicio" style={styles.link}>Inicio</Link>
+        <Link to="/demandas" style={styles.link}>Demandas</Link> {/* Corrigido aqui */}
       </nav>
 
       {/* Definindo rotas */}
@@ -19,6 +21,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/inicio" element={<Inicio />} />
+        <Route path="/demandas" element={<Demandas />} />
       </Routes>
     </Router>
   );
