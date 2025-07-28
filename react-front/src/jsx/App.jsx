@@ -2,7 +2,8 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-ro
 import Cadastro from "./cadastro.jsx";
 import Login from "./Login.jsx";
 import Inicio from "./Inicio.jsx";
-import Demandas from "./Demandas.jsx"; // Adicione esta importação
+import Demandas from "./Demandas.jsx";
+import PerfilUser from "./perfil.jsx"; // Adicione esta importação
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Link to="/cadastro" style={styles.link}>Cadastro</Link>
         <Link to="/inicio" style={styles.link}>Inicio</Link>
         <Link to="/demandas" style={styles.link}>Demandas</Link> {/* Corrigido aqui */}
+        <Link to="/perfil" style={styles.link}>Perfil</Link>
       </nav>
 
       {/* Definindo rotas */}
@@ -22,6 +24,7 @@ function App() {
         <Route path="/cadastro" element={<Cadastro />} />
         <Route path="/inicio" element={<Inicio />} />
         <Route path="/demandas" element={<Demandas />} />
+        <Route path="/perfil" element= {<PerfilUser/>} />
       </Routes>
     </Router>
   );

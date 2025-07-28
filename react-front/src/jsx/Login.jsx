@@ -48,7 +48,7 @@ export default function Login() {
         localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
         
         // Redirecionar para a página protegida
-        navigate("/TelaInicial"); // Usando react-router
+        navigate("./Inicio.jsx"); // Usando react-router
       } else if (response.status === 401) {
         setMensagemErro("Usuário ou senha incorretos.");
       } else {
