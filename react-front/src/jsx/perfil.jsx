@@ -151,7 +151,7 @@ const PerfilUser = () => {
                     </div>
 
                     {/* Conteúdo principal */}
-                    <div className = infoUsuarios></div>
+            
                 </div>
             </div>
         </div>
