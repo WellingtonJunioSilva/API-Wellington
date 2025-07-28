@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
-import perfilPadrao from "../IMG/icon perfil criado recentemente.png";
+import perfilPadrao from "../IMG/icon perfil novo.png";
 
 const Demandas = () => {
     const [filtros, setFiltros] = useState({

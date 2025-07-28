@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import '../css/telaInicialReact.css';
 import "@fortawesome/fontawesome-free/css/all.min.css";
-import perfilPadrao from "../IMG/icon perfil criado recentemente.png";
+import perfilPadrao from "../IMG/icon perfil novo.png";
 import post1Img from "../IMG/CrisViana.jpg";
 import post2Img from "../IMG/AgroTech.jpg";
 import iotImg from "../IMG/Iot.jpg";
