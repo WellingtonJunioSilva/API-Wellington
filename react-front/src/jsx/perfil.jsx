@@ -71,18 +71,6 @@ const PerfilUser = () => {
                     <Link className="navbar-brand" to="/inicio">
                         <i className="fas fa-leaf me-2"></i>AgroTech
                     </Link>
-                    <div className="d-flex gap-3">
-                        <input type="text" className="form-control" placeholder="Buscar..." value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-                        <select className="form-select" value={filtros.tipoUsuario || ''} onChange={(e) => setFiltros({ ...filtros, tipoUsuario: e.target.value || null })}>
-                            <option value="">Filtrar por tipo</option>
-                            <option value="Produtor">Produtor</option>
-                            <option value="Apoiador">Apoiador</option>
-                        </select>
-                        <select className="form-select" value={filtros.ordenacao || ''} onChange={(e) => setFiltros({ ...filtros, ordenacao: e.target.value || null })}>
-                            <option value="">Ordenar por</option>
-                            <option value="recentes">Mais Recentes</option>
-                        </select>
-                    </div>
                 </div>
             </nav>
 
@@ -90,49 +78,80 @@ const PerfilUser = () => {
                 <div className="row">
                     {/* Sidebar */}
                     <div className="col-lg-3">
-                        <div className="card sidebar mb-4">
-                            <div className="card-body sidebar-header text-center">
-                                <img
-                                    src={fotoPerfil || "https://static.vecteezy.com/system/resources/previews/009/292/244/non_2x/default-avatar-icon-of-social-media-user-vector.jpg"}
-                                    className="rounded-circle mb-3"
-                                    width="120"
-                                    height="120"
-                                    alt="Foto do usuário"
-                                />
+                        <div className="sidebar">
+                            <div className="sidebar-header">
+                                <a href="/perfil">
+                                    <img src={usuario.foto} className="post-avatar" alt="Foto do usuário" />
+                                </a>
                                 <h5>{usuario.nome}</h5>
-                                <p className="text-muted mb-1">
+                                <p className="mb-0">
                                     {usuario.tipo_usuario} • {usuario.cidade}
                                 </p>
-                                <small className="text-muted">127 conexões</small>
+                                <small>127 conexões</small>
+                            </div>
+                            <div className="sidebar-content">
+                                <ul className="sidebar-menu">
+                                    <li>
+                                        <Link 
+                                            to="/inicio" 
+                                            className={activeTab === 'feed' ? 'active' : ''}
+                                            onClick={() => setActiveTab('feed')}
+                                        >
+                                            <i className="fas fa-home"></i>Feed Principal
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link 
+                                            to="/mensagens"
+                                            className={activeTab === 'mensagens' ? 'active' : ''}
+                                            onClick={() => setActiveTab('mensagens')}
+                                        >
+                                            <i className="fas fa-message"></i>Mensagens
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link 
+                                            to="/clima"
+                                            className={activeTab === 'clima' ? 'active' : ''}
+                                            onClick={() => setActiveTab('clima')}
+                                        >
+                                            <i className="fas fa-cloud-sun"></i>Clima
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link 
+                                            to="/noticias"
+                                            className={activeTab === 'noticias' ? 'active' : ''}
+                                            onClick={() => setActiveTab('noticias')}
+                                        >
+                                            <i className="fas fa-newspaper"></i>Notícias
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link 
+                                            to="/demandas"
+                                            className={activeTab === 'conexoes' ? 'active' : ''}
+                                            onClick={() => setActiveTab('conexoes')}
+                                        >
+                                            <i className="fas fa-handshake"></i>Conexões
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link 
+                                            to="/eventos"
+                                            className={activeTab === 'eventos' ? 'active' : ''}
+                                            onClick={() => setActiveTab('eventos')}
+                                        >
+                                            <i className="fas fa-calendar"></i>Eventos
+                                        </Link>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                     </div>
 
                     {/* Conteúdo principal */}
-                    <div className="col-lg-9">
-                        <div className="card mb-4">
-                            <div className="card-header">Editar Perfil</div>
-                            <div className="card-body">
-                                <div className="mb-3">
-                                    <label className="form-label">Foto (URL)</label>
-                                    <input type="text" className="form-control" value={fotoPerfil} onChange={(e) => setFotoPerfil(e.target.value)} />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Biografia</label>
-                                    <textarea className="form-control" value={biografia} onChange={(e) => setBiografia(e.target.value)} />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Email</label>
-                                    <input type="email" className="form-control" value={email} onChange={(e) => setEmail(e.target.value)} />
-                                </div>
-                                <div className="mb-3">
-                                    <label className="form-label">Telefone</label>
-                                    <input type="text" className="form-control" value={telefone} onChange={(e) => setTelefone(e.target.value)} />
-                                </div>
-                                <button className="btn btn-success" onClick={handleSalvarPerfil}>Salvar Alterações</button>
-                            </div>
-                        </div>
-                    </div>
+                    <div className = infoUsuarios></div>
                 </div>
             </div>
         </div>
