@@ -107,9 +107,18 @@ const Adicionar = async (event) => {
             throw new Error(`Erro ${response.status}: ${response.statusText}`);
         }
 
-        alert("Usuário cadastrado com sucesso!");
+       alert("Usuário cadastrado com sucesso!");
         console.log("Usuário:", usuario);
+
+        // SALVAR NO LOCALSTORAGE
+        localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+
         limparFormulario();
+        setTimeout(() => {
+        window.location.href = "TelaInicial.html";
+        }, 1000);
+        // Redireciona após 1 segundo 
+        
     } catch (error) {
         console.error("Erro ao adicionar usuário:", error);
         alert("Erro ao adicionar usuário. Tente novamente.");

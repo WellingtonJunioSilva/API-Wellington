@@ -1,0 +1,534 @@
+    import React, { useState, useEffect } from "react";
+    import { Link, useNavigate } from "react-router-dom";
+    import "bootstrap/dist/css/bootstrap.min.css";
+    import "@fortawesome/fontawesome-free/css/all.min.css";
+    import perfilPadrao from "../IMG/icon perfil novo.png";
+    import '../css/PerfilUser.css';
+
+
+    const PerfilUser = () => {
+    const [editandoDemandaId, setEditandoDemandaId] = useState(null);
+    const [demandaEdit, setDemandaEdit] = useState(null);
+    const navigate = useNavigate();
+    // Função para excluir usuário
+    const handleExcluirUsuario = async () => {
+        if (!window.confirm('Tem certeza que deseja excluir sua conta? Essa ação não pode ser desfeita.')) return;
+        try {
+            await fetch(`http://localhost:8080/tcc/usuario/${usuario.id}`, {
+                method: 'DELETE',
+            });
+            localStorage.removeItem('usuarioLogado');
+            alert('Usuário excluído com sucesso!');
+            navigate('./Login.jsx'); // Redireciona para a página de login após exclusão
+        } catch (err) {
+            alert('Erro ao excluir usuário.');
+        }
+    };
+
+    // Função para abrir edição de demanda
+    const handleEditarDemanda = (demanda) => {
+        setEditandoDemandaId(demanda.id);
+        setDemandaEdit({ ...demanda });
+    };
+
+    // Função para salvar edição da demanda
+    const handleSalvarDemandaEdit = async (e) => {
+        e.preventDefault();
+        try {
+            const res = await fetch(`http://localhost:8080/tcc/demandas/${editandoDemandaId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...demandaEdit, usuarioId: usuario.id })
+            });
+            const data = await res.json();
+            setDemandas(demandas.map(d => d.id === editandoDemandaId ? data : d));
+            setEditandoDemandaId(null);
+            setDemandaEdit(null);
+        } catch (err) {
+            alert('Erro ao salvar edição da demanda.');
+        }
+    };
+
+    // Função para cancelar edição de demanda
+    const handleCancelarDemandaEdit = () => {
+        setEditandoDemandaId(null);
+        setDemandaEdit(null);
+    };
+        // Estados para demandas
+        const [usuario, setUsuario] = useState(null);
+        const [fotoPerfil, setFotoPerfil] = useState("");
+        const [biografia, setBiografia] = useState("");
+        const [email, setEmail] = useState("");
+        const [telefone, setTelefone] = useState("");
+        const [loading, setLoading] = useState(true);
+        const [activeTab, setActiveTab] = useState('sobre');
+        const [searchTerm, setSearchTerm] = useState('');
+        const [filtros, setFiltros] = useState({ tipoUsuario: null, ordenacao: null });
+        const [editando, setEditando] = useState(false);
+        const [demandas, setDemandas] = useState([]);
+        const [novaDemanda, setNovaDemanda] = useState({
+            titulo: '',
+            descricao: '',
+            categoria: '',
+            cidade: '',
+            estado: '',
+            validade_oferta: '',
+            status: '',
+            data_postagem: '',
+        });
+        const [formDemandaAberto, setFormDemandaAberto] = useState(false);
+        const [carregandoDemandas, setCarregandoDemandas] = useState(false);
+
+        // Buscar demandas do usuário ao carregar perfil
+        useEffect(() => {
+            if (!usuario) return;
+            const fetchDemandas = async () => {
+                setCarregandoDemandas(true);
+                try {
+                    const res = await fetch(`http://localhost:8080/tcc/demandas/usuario/${usuario.id}`, {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const data = await res.json();
+                    setDemandas(Array.isArray(data) ? data : []);
+                } catch (err) {
+                    setDemandas([]);
+                } finally {
+                    setCarregandoDemandas(false);
+                }
+            };
+            fetchDemandas();
+        }, [usuario]);
+
+        // Função para criar nova demanda
+        const handleCriarDemanda = async (e) => {
+            e.preventDefault();
+            // Validação simples
+            if (!novaDemanda.titulo || !novaDemanda.descricao || !novaDemanda.categoria || !novaDemanda.validade_oferta || !novaDemanda.status) {
+                alert('Preencha todos os campos obrigatórios.');
+                return;
+            }
+            try {
+                const res = await fetch(`http://localhost:8080/tcc/demandas`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        ...novaDemanda,
+                        usuarioId: usuario.id,
+                        data_postagem: novaDemanda.data_postagem || new Date().toISOString().slice(0,10),
+                    })
+                });
+                const data = await res.json();
+                setDemandas([data, ...demandas]);
+                setNovaDemanda({
+                    titulo: '', descricao: '', categoria: '', cidade: usuario.cidade, estado: usuario.estado, validade_oferta: '', status: '', data_postagem: ''
+                });
+                setFormDemandaAberto(false);
+            } catch (err) {
+                alert('Erro ao criar demanda.');
+            }
+        };
+
+        const emailUsuario = JSON.parse(localStorage.getItem("usuarioLogado")).email;
+
+        useEffect(() => {
+            const fetchUser = async () => {
+                try {
+                    const res = await fetch(`http://localhost:8080/tcc/usuarios/email/${emailUsuario}`);
+                    const data = await res.json();
+                    setUsuario(data);
+                    setFotoPerfil(data.foto_perfil || "");
+                    setBiografia(data.biografia || "");
+                    setEmail(data.email || "");
+                    setTelefone(data.telefone || "");
+                } catch (err) {
+                    console.error("Erro ao carregar dados:", err);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchUser();
+        }, [emailUsuario]);
+
+        const handleSalvarPerfil = async () => {
+            if (!usuario) return;
+            const dadosAtualizados = {
+                ...usuario,
+                foto_perfil: fotoPerfil,
+                biografia,
+                email,
+                telefone
+            };
+
+            try {
+                const res = await fetch(`http://localhost:8080/tcc/usuario/${usuario.id}`, {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dadosAtualizados)
+                });
+                const data = await res.json();
+                setUsuario(data);
+                alert("Perfil atualizado com sucesso!");
+            } catch (err) {
+                console.error("Erro ao atualizar perfil:", err);
+                alert("Erro ao salvar alterações.");
+            }
+        };
+
+        if (loading) return <div className="text-center mt-5">Carregando...</div>;
+        if (!usuario) return <div className="alert alert-danger mt-5">Erro ao carregar perfil</div>;
+
+        return (
+            <div className="bg-light min-vh-100">
+                <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow sticky-top">
+                    <div className="container">
+                        <Link className="navbar-brand" to="/inicio">
+                            <i className="fas fa-leaf me-2"></i>AgroTech
+                        </Link>
+                    </div>
+                </nav>
+
+                <div className="container mt-4">
+                    <div className="row">
+                        {/* Sidebar */}
+                        <div className="col-lg-3">
+                                    <div className="sidebar">
+                                    <div className="sidebar-header">
+                <a href="/perfil">
+                  <img src={usuario.foto_perfil || perfilPadrao} className="post-avatar" alt="Foto do usuário" />
+                </a>
+                <h5 id="nome-usuario">{usuario.nome}</h5>
+                <p className="mb-0">
+                  {usuario.tipo_usuario} • {usuario.cidade}
+                </p>
+                                    </div>
+                                    <div className="sidebar-content">
+                                        <ul className="sidebar-menu">
+                                        <li>
+                                            <Link 
+                                            to="/inicio" 
+                                            className={activeTab === 'feed' ? 'active' : ''}
+                                            onClick={() => setActiveTab('feed')}
+                                            >
+                                            <i className="fas fa-home"></i>Feed Principal
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link 
+                                            to="/mensagens"
+                                            className={activeTab === 'mensagens' ? 'active' : ''}
+                                            onClick={() => setActiveTab('mensagens')}
+                                            >
+                                            <i className="fas fa-message"></i>Mensagens
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link 
+                                            to="/noticias"
+                                            className={activeTab === 'noticias' ? 'active' : ''}
+                                            onClick={() => setActiveTab('noticias')}
+                                            >
+                                            <i className="fas fa-newspaper"></i>Notícias
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link 
+                                            to="/demandas"
+                                            className={activeTab === 'conexoes' ? 'active' : ''}
+                                            onClick={() => setActiveTab('conexoes')}
+                                            >
+                                            <i className="fas fa-handshake"></i>Demandas
+                                            </Link>
+                                        </li>
+                                        <li>
+                                            <Link 
+                                            to="/eventos"
+                                            className={activeTab === 'eventos' ? 'active' : ''}
+                                            onClick={() => setActiveTab('eventos')}
+                                            >
+                                            <i className="fas fa-calendar"></i>Eventos
+                                            </Link>
+                                        </li>
+                                        </ul>
+                                    </div>
+                                    </div>
+                                </div>
+
+                        {/* Conteúdo principal */}
+
+                        <div className="col-lg-9">
+                            <div className="card mb-4">
+                                <div className="card-body">
+                                    <div className="row mb-3">
+                                        <div className="col-md-3 text-center">
+                                            <img
+                                                src={fotoPerfil || usuario.foto_perfil || perfilPadrao}
+                                                alt="Foto de perfil"
+                                                className="img-fluid rounded-circle mb-2"
+                                                style={{ width: "120px", height: "120px", objectFit: "cover" }}
+                                            />
+                                        </div>
+                                        <div className="col-md-9">
+                                            <h5>{usuario.nome}</h5>
+                                            <p className="mb-1"><strong>Tipo de Usuário:</strong> {usuario.tipo_usuario}</p>
+                                            <p className="mb-1"><strong>Cidade:</strong> {usuario.cidade}</p>
+                                            <p className="mb-1"><strong>Email:</strong> {usuario.email}</p>
+                                            <p className="mb-1"><strong>Telefone:</strong> {usuario.telefone}</p>
+                                        </div>
+                                    </div>
+                                    {/* Botão para editar perfil */}
+                                    {!editando && (
+                                        <>
+                                            <button className="btn btn-outline-success mb-3 me-2" onClick={() => setEditando(true)}>
+                                                Editar Perfil
+                                            </button>
+                                            <button className="btn btn-outline-danger mb-3" onClick={handleExcluirUsuario}>
+                                                Excluir Perfil
+                                            </button>
+                                        </>
+                                    )}
+                                    {/* Formulário de edição */}
+                                    {editando && (
+                                        <>
+                                            <div className="mb-3">
+                                                <label className="form-label"><strong>Biografia</strong></label>
+                                                <textarea
+                                                    className="form-control"
+                                                    rows={4}
+                                                    value={biografia}
+                                                    onChange={e => setBiografia(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label className="form-label"><strong>Foto de Perfil (URL)</strong></label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    value={fotoPerfil}
+                                                    onChange={e => setFotoPerfil(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label className="form-label"><strong>Email</strong></label>
+                                                <input
+                                                    type="email"
+                                                    className="form-control"
+                                                    value={email}
+                                                    onChange={e => setEmail(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="mb-3">
+                                                <label className="form-label"><strong>Telefone</strong></label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    value={telefone}
+                                                    onChange={e => setTelefone(e.target.value)}
+                                                />
+                                            </div>
+                                            <button className="btn btn-success me-2" onClick={handleSalvarPerfil}>
+                                                Salvar Alterações
+                                            </button>
+                                            <button className="btn btn-secondary" onClick={() => setEditando(false)}>
+                                                Cancelar
+                                            </button>
+                                        </>
+                                    )}
+                                </div>
+                            </div>
+                            {/* Área de demandas do usuário */}
+                            <div className="card mb-4">
+                                <div className="card-body">
+                                    <h5 className="mb-3">Minhas Demandas</h5>
+                                    {/* Botão para abrir formulário de nova demanda */}
+                                    {!formDemandaAberto && (
+                                        <button className="btn btn-success mb-3" onClick={() => setFormDemandaAberto(true)}>
+                                            Nova Demanda
+                                        </button>
+                                    )}
+                                    {/* Formulário completo de demanda */}
+                                    {formDemandaAberto && (
+                                        <form onSubmit={handleCriarDemanda} className="mb-3">
+                                            <div className="mb-2">
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="Título da demanda"
+                                                    value={novaDemanda.titulo}
+                                                    onChange={e => setNovaDemanda({ ...novaDemanda, titulo: e.target.value })}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="mb-2">
+                                                <textarea
+                                                    className="form-control"
+                                                    placeholder="Descrição da demanda"
+                                                    rows={2}
+                                                    value={novaDemanda.descricao}
+                                                    onChange={e => setNovaDemanda({ ...novaDemanda, descricao: e.target.value })}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="mb-2">
+                                                <select
+                                                    className="form-control"
+                                                    value={novaDemanda.categoria}
+                                                    onChange={e => setNovaDemanda({ ...novaDemanda, categoria: e.target.value })}
+                                                    required
+                                                >
+                                                    <option value="">Selecione a categoria</option>
+                                                    <option value="graos">Grãos</option>
+                                                    <option value="feijoes_raizes">Feijões/Raízes</option>
+                                                    <option value="frutas_hortalicas">Frutas/Hortaliças</option>
+                                                    <option value="verduras_ervas">Verduras/Ervas</option>
+                                                    <option value="outros">Outros</option>
+                                                </select>
+                                            </div>
+                                            <div className="mb-2">
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="Cidade"
+                                                    value={usuario.cidade}
+                                                    onChange={e => setNovaDemanda({ ...novaDemanda, cidade: usuario.cidade })}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="mb-2">
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="Estado"
+                                                    value={usuario.estado}
+                                                    onChange={e => setNovaDemanda({ ...novaDemanda, estado: usuario.estado})}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="mb-2">
+                                                <input
+                                                    type="date"
+                                                    className="form-control"
+                                                    placeholder="Validade da oferta"
+                                                    value={novaDemanda.validade_oferta}
+                                                    onChange={e => setNovaDemanda({ ...novaDemanda, validade_oferta: e.target.value })}
+                                                    required
+                                                />
+                                            </div>
+                                            <div className="mb-2">
+                                                <select
+                                                    className="form-control"
+                                                    value={novaDemanda.status}
+                                                    onChange={e => setNovaDemanda({ ...novaDemanda, status: e.target.value })}
+                                                    required
+                                                >
+                                                    <option value="">Selecione o status</option>
+                                                    <option value="aberta">Aberta</option>
+                                                    <option value="fechada">Fechada</option>
+                                                </select>
+                                            </div>
+                                            <div className="mb-2">
+                                                <label className="form-label">Data de postagem</label>
+                                                <input
+                                                    type="date"
+                                                    className="form-control"
+                                                    value={novaDemanda.data_postagem}
+                                                    onChange={e => setNovaDemanda({ ...novaDemanda, data_postagem: e.target.value })}
+                                                />
+                                            </div>
+                                            <button type="submit" className="btn btn-success me-2">Criar Demanda</button>
+                                            <button type="button" className="btn btn-secondary" onClick={() => setFormDemandaAberto(false)}>Cancelar</button>
+                                        </form>
+                                    )}
+                                    <hr />
+                                    {carregandoDemandas ? (
+                                        <div>Carregando demandas...</div>
+                                    ) : (
+                                        <ul className="list-group">
+                                            {demandas.length === 0 && <li className="list-group-item">Nenhuma demanda criada.</li>}
+                                            {demandas.map((demanda) => (
+                                                <li key={demanda.id} className="list-group-item">
+                                                    {editandoDemandaId === demanda.id ? (
+                                                        <form onSubmit={handleSalvarDemandaEdit} className="mb-2">
+                                                            <div className="mb-2">
+                                                                <input
+                                                                    type="text"
+                                                                    className="form-control"
+                                                                    value={demandaEdit.titulo}
+                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, titulo: e.target.value })}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className="mb-2">
+                                                                <textarea
+                                                                    className="form-control"
+                                                                    value={demandaEdit.descricao}
+                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, descricao: e.target.value })}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className="mb-2">
+                                                                <select
+                                                                    className="form-control"
+                                                                    value={demandaEdit.categoria}
+                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, categoria: e.target.value })}
+                                                                    required
+                                                                >
+                                                                    <option value="">Selecione a categoria</option>
+                                                                    <option value="graos">Grãos</option>
+                                                                    <option value="feijoes_raizes">Feijões/Raízes</option>
+                                                                    <option value="frutas_hortalicas">Frutas/Hortaliças</option>
+                                                                    <option value="verduras_ervas">Verduras/Ervas</option>
+                                                                    <option value="outros">Outros</option>
+                                                                </select>
+                                                            </div>
+                                                            <div className="mb-2">
+                                                                <input
+                                                                    type="date"
+                                                                    className="form-control"
+                                                                    value={demandaEdit.validade_oferta}
+                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, validade_oferta: e.target.value })}
+                                                                    required
+                                                                />
+                                                            </div>
+                                                            <div className="mb-2">
+                                                                <select
+                                                                    className="form-control"
+                                                                    value={demandaEdit.status}
+                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, status: e.target.value })}
+                                                                    required
+                                                                >
+                                                                    <option value="">Selecione o status</option>
+                                                                    <option value="aberta">Aberta</option>
+                                                                    <option value="fechada">Fechada</option>
+                                                                </select>
+                                                            </div>
+                                                            <button type="submit" className="btn btn-success me-2">Salvar</button>
+                                                            <button type="button" className="btn btn-secondary" onClick={handleCancelarDemandaEdit}>Cancelar</button>
+                                                        </form>
+                                                    ) : (
+                                                        <>
+                                                            <strong>{demanda.titulo}</strong> <span className="badge bg-info ms-2">{demanda.categoria}</span>
+                                                            <p className="mb-0">{demanda.descricao}</p>
+                                                            <small className="text-muted">Cidade: {usuario.cidade} | Estado: {usuario.estado} | Validade: {demanda.validade_oferta} | Status: {demanda.status}</small>
+                                                            <div className="mt-2">
+                                                                <button className="btn btn-outline-primary btn-sm" onClick={() => handleEditarDemanda(demanda)}>
+                                                                    Editar
+                                                                </button>
+                                                            </div>
+                                                        </>
+                                                    )}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    export default PerfilUser;

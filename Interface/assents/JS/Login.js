@@ -1,4 +1,4 @@
-document.getElementById("loginForm").addEventListener("submit", async function (event) {
+document.getElementById("login-form").addEventListener("submit", async function (event) {
   event.preventDefault();
 
   const email = document.getElementById("email").value.trim();
@@ -16,7 +16,7 @@ document.getElementById("loginForm").addEventListener("submit", async function (
   };
 
   try {
-    const response = await fetch("http://localhost:8080/tcc/login", {
+    const response = await fetch("http://localhost:8080/tcc/usuarios/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -27,8 +27,12 @@ document.getElementById("loginForm").addEventListener("submit", async function (
     if (response.ok) {
       const usuario = await response.json();
       console.log("Login bem-sucedido:", usuario);
+      
+      // Armazenar os dados do usuário no localStorage
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
+      
       // Redirecionar para a página protegida
-      window.location.href = "painel.html";
+      window.location.href = "TelaInicial.html";
     } else if (response.status === 401) {
       mensagemErro.textContent = "Usuário ou senha incorretos.";
     } else {

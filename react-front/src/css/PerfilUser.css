@@ -1,0 +1,95 @@
+#nome-usuario {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  letter-spacing: 0.5px;
+  color: #fff; /* Define a cor do nome do usuário como branco puro */
+  text-shadow: 0 2px 8px rgba(30,86,49,0.18);
+}
+
+/* GERAL */
+body {
+  background-color: #f5f8f6;
+  font-family: 'Poppins', sans-serif;
+  color: #fffefe;
+}
+
+/* CARD DO PERFIL */
+.card {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.06);
+}
+
+.card-body {
+  padding: 30px;
+}
+
+.btn-outline-success {
+  border-radius: 30px;
+  font-weight: 500;
+}
+
+.btn-success,
+.btn-secondary {
+  border-radius: 30px;
+  font-weight: 500;
+}
+
+/* CAMPOS DE FORMULÁRIO */
+.form-control {
+  border-radius: 12px;
+  box-shadow: none;
+  border-color: #ced4da;
+}
+
+.form-control:focus {
+  border-color: #28a745;
+  box-shadow: 0 0 0 0.15rem rgba(40, 167, 69, 0.25);
+}
+
+.form-label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* DEMANDAS */
+.list-group-item {
+  border-radius: 12px;
+  margin-bottom: 10px;
+  border: 1px solid #eee;
+}
+
+.badge.bg-info {
+  background-color: #d1f0e1 !important;
+  color: #155724 !important;
+  font-weight: 500;
+  font-size: 0.75rem;
+}
+
+/* BOTÕES */
+.btn + .btn {
+  margin-left: 10px;
+}
+
+/* TÍTULOS */
+h5 {
+  font-weight: 600;
+  color: #1e5631;
+}
+
+h5.mb-3 {
+  margin-bottom: 1.5rem;
+}
+
+/* RESPONSIVIDADE */
+@media (max-width: 768px) {
+  .sidebar-header img {
+    width: 80px;
+    height: 80px;
+  }
+
+  .card-body {
+    padding: 20px;
+  }
+}
