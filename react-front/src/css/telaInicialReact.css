@@ -165,9 +165,12 @@ body {
 }
 
 #nome-usuario {
-  font-size: 1.25rem;
+  font-size: 1.3rem;
+  font-weight: 700;
   margin-bottom: 0.25rem;
-  color: var(--white);
+  letter-spacing: 0.5px;
+  color: #fff; /* Define a cor do nome do usuário como branco puro */
+  text-shadow: 0 2px 8px rgba(30,86,49,0.18);
 }
 
 #descricao-usuario {

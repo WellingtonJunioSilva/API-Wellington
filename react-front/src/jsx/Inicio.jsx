@@ -133,11 +133,10 @@ const TelaInicial = () => {
                                 <a href="/perfil">
                                     <img src={usuario.foto} className="post-avatar" alt="Foto do usuário" />
                                 </a>
-                                <h5>{usuario.nome}</h5>
+                                <h5 id='nome-usuario'>{usuario.nome}</h5>
                                 <p className="mb-0">
                                     {usuario.tipo_usuario} • {usuario.cidade}
                                 </p>
-                                <small>127 conexões</small>
                             </div>
                             <div className="sidebar-content">
                                 <ul className="sidebar-menu">
