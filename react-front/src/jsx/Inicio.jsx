@@ -83,64 +83,7 @@ const TelaInicial = () => {
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    <div className="d-flex align-items-center">
-                        <div className="search-bar me-3">
-                            <input type="text" className="form-control" placeholder="Buscar..." />
-                            <i className="fas fa-search"></i>
-                        </div>
-                       <div className="dropdown2">
-                        <button 
-                            id="filtro" 
-                            className="btn btn-outline-light dropdown-toggle" 
-                            type="button"
-                            data-bs-toggle="dropdown" 
-                            aria-expanded="false"
-                        >
-                            <i className="fas fa-filter me-1"></i>
-                            {filtros.tipoUsuario || 'Filtrar por'}
-                        </button>
-                        <ul className="dropdown-menu">
-                            <li>
-                            <a 
-                                className="dropdown-item" 
-                                href="#"
-                                onClick={(e) => {
-                                e.preventDefault();
-                                setFiltros({...filtros, tipoUsuario: 'Produtor'});
-                                }}
-                            >
-                                Produtor
-                            </a>
-                            </li>
-                            <li>
-                            <a 
-                                className="dropdown-item" 
-                                href="#"
-                                onClick={(e) => {
-                                e.preventDefault();
-                                setFiltros({...filtros, tipoUsuario: 'Apoiador'});
-                                }}
-                            >
-                                Apoiador
-                            </a>
-                            </li>
-                            <li><hr className="dropdown-divider" /></li>
-                            <li>
-                            <a 
-                                className="dropdown-item" 
-                                href="#"
-                                onClick={(e) => {
-                                e.preventDefault();
-                                setFiltros({...filtros, tipoUsuario: null});
-                                }}
-                            >
-                                Limpar filtro
-                            </a>
-                            </li>
-                        </ul>
-                        </div>
-                    </div>
-
+                    
                     <div className="dropdown2 ms-2">
                     <button 
                         className="btn btn-outline-light dropdown-toggle" 
@@ -217,14 +160,6 @@ const TelaInicial = () => {
                                     </li>
                                     <li>
                                         <Link 
-                                            to="/clima"
-                                            onClick={() => setActiveTab('clima')}
-                                        >
-                                            <i className="fas fa-cloud-sun"></i>Clima
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link 
                                             to="/noticias"
                                             onClick={() => setActiveTab('noticias')}
                                         >
@@ -236,7 +171,7 @@ const TelaInicial = () => {
                                             to="/demandas"  // Alterado para "/demandas"
                                             onClick={() => setActiveTab('conexoes')}
                                         >
-                                            <i className="fas fa-handshake"></i>Conexões
+                                            <i className="fas fa-handshake"></i>Demandas
                                         </Link>
                                     </li>
                                     <li>

@@ -101,7 +101,6 @@ export default function Demandas() {
                 <p className="mb-0">
                   {usuario.tipo_usuario} • {usuario.cidade}
                 </p>
-                <small>127 conexões</small>
               </div>
               <div className="sidebar-content">
                 <ul className="sidebar-menu">
@@ -125,15 +124,6 @@ export default function Demandas() {
                   </li>
                   <li>
                     <Link 
-                      to="/clima"
-                      className={activeTab === 'clima' ? 'active' : ''}
-                      onClick={() => setActiveTab('clima')}
-                    >
-                      <i className="fas fa-cloud-sun"></i>Clima
-                    </Link>
-                  </li>
-                  <li>
-                    <Link 
                       to="/noticias"
                       className={activeTab === 'noticias' ? 'active' : ''}
                       onClick={() => setActiveTab('noticias')}
@@ -145,9 +135,9 @@ export default function Demandas() {
                     <Link 
                       to="/demandas"
                       className={activeTab === 'conexoes' ? 'active' : ''}
-                      onClick={() => setActiveTab('conexoes')}
+                      onClick={() => setActiveTab('Dem')}
                     >
-                      <i className="fas fa-handshake"></i>Conexões
+                      <i className="fas fa-handshake"></i>Demandas
                     </Link>
                   </li>
                   <li>
