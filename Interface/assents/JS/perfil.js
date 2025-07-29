@@ -98,9 +98,15 @@ function loadInfo(data) {
     document.getElementById("bio-input").value = data.biografia;
     document.getElementById("email-input").value = data.email;
     document.getElementById("tel-input").value = data.telefone;
-    document.getElementById("bioParagraph").innerHTML = data.biografia.toString();
-    document.getElementById("emailParagraph").innerHTML = `<i class="fas fa-envelope me-2"></i>` + data.email;
-    document.getElementById("telParagraph").innerHTML = `<i class="fas fa-phone me-2"></i>` + data.telefone;
+
+    document.getElementById("name-sidebar").innerHTML = data.nome;
+    document.getElementById("location-sidebar").innerHTML = data.tipo_usuario + " • " + data.cidade;
+
+    document.getElementById("name-profile").innerHTML = data.nome;
+    document.getElementById("location-profile").innerHTML = data.tipo_usuario + " • " + data.cidade + ", " + data.estado;
+    document.getElementById("bio-profile").innerHTML = data.biografia.toString();
+    document.getElementById("email-profile").innerHTML = `<i class="fas fa-envelope me-2"></i>` + data.email;
+    document.getElementById("tel-profile").innerHTML = `<i class="fas fa-phone me-2"></i>` + data.telefone;
 }
 
 function saveInfo() {
