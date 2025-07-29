@@ -12,7 +12,7 @@ export default function Cadastro() {
     estado: "",
     telefone: "",
     tipo_usuario: "",
-    tipo_apoiador: "",
+    tipo_apoiador: null,
     senha: "",
   });
 

@@ -7,6 +7,8 @@
 
 
     const PerfilUser = () => {
+    const [fotoFile, setFotoFile] = useState(null);
+    const [fotoPerfilUrl, setFotoPerfilUrl] = useState(perfilPadrao);
     const [editandoDemandaId, setEditandoDemandaId] = useState(null);
     const [demandaEdit, setDemandaEdit] = useState(null);
     const navigate = useNavigate();
@@ -153,19 +155,34 @@
 
         const handleSalvarPerfil = async () => {
             if (!usuario) return;
+            let fotoUrl = fotoPerfil;
+            // Se o usuário selecionou um novo arquivo de foto, faz upload
+            if (fotoFile) {
+                const formData = new FormData();
+                formData.append('file', fotoFile);
+                try {
+                const resUpload = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`, {
+                    method: 'POST',
+                    body: formData
+                });
+                const dataUpload = await resUpload.json();
+                fotoUrl = dataUpload.url || dataUpload.foto_perfil || fotoPerfil;
+                } catch (err) {
+                alert('Erro ao fazer upload da foto.');
+                return;
+                }
+            }
             const dadosAtualizados = {
                 ...usuario,
-                foto_perfil: fotoPerfil,
+                foto_perfil: fotoUrl,
                 biografia,
-                email,
                 telefone
             };
-
             try {
-                const res = await fetch(`http://localhost:8080/tcc/usuario/${usuario.id}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(dadosAtualizados)
+                const res = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(dadosAtualizados)
                 });
                 const data = await res.json();
                 setUsuario(data);
@@ -174,7 +191,7 @@
                 console.error("Erro ao atualizar perfil:", err);
                 alert("Erro ao salvar alterações.");
             }
-        };
+            };
 
         if (loading) return <div className="text-center mt-5">Carregando...</div>;
         if (!usuario) return <div className="alert alert-danger mt-5">Erro ao carregar perfil</div>;
@@ -196,7 +213,7 @@
                                     <div className="sidebar">
                                     <div className="sidebar-header">
                 <a href="/perfil">
-                  <img src={usuario.foto_perfil || perfilPadrao} className="post-avatar" alt="Foto do usuário" />
+                  <img src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
                 </a>
                 <h5 id="nome-usuario">{usuario.nome}</h5>
                 <p className="mb-0">
@@ -263,8 +280,8 @@
                                     <div className="row mb-3">
                                         <div className="col-md-3 text-center">
                                             <img
-                                                src={fotoPerfil || usuario.foto_perfil || perfilPadrao}
-                                                alt="Foto de perfil"
+                                                src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao}
+                                                alt="Foto do usuário"
                                                 className="img-fluid rounded-circle mb-2"
                                                 style={{ width: "120px", height: "120px", objectFit: "cover" }}
                                             />
@@ -303,25 +320,28 @@
                                             <div className="mb-3">
                                                 <label className="form-label"><strong>Foto de Perfil (URL)</strong></label>
                                                 <input
-                                                    type="text"
+                                                    type="file"
                                                     className="form-control"
-                                                    value={fotoPerfil}
-                                                    onChange={e => setFotoPerfil(e.target.value)}
+                                                    accept="image/*"
+                                                    onChange={e => {
+                                                        if (e.target.files && e.target.files[0]) {
+                                                            setFotoFile(e.target.files[0]);
+                                                            setFotoPerfil(URL.createObjectURL(e.target.files[0]));   
+                                                    }
+                                                }}
                                                 />
+
+                                                {fotoPerfil && (
+                                                    <div className="mt-2 text-center">
+                                                        <img src={fotoPerfil} alt="Preview" style={{width : 80, height : 80, borderRadius: '50%', objectFit: 'cover', border: '2px solide #eee'}}/>
+                                                    </div>
+                                                )}
                                             </div>
-                                            <div className="mb-3">
-                                                <label className="form-label"><strong>Email</strong></label>
-                                                <input
-                                                    type="email"
-                                                    className="form-control"
-                                                    value={email}
-                                                    onChange={e => setEmail(e.target.value)}
-                                                />
-                                            </div>
+                                    
                                             <div className="mb-3">
                                                 <label className="form-label"><strong>Telefone</strong></label>
                                                 <input
-                                                    type="text"
+                                                    type="tel"
                                                     className="form-control"
                                                     value={telefone}
                                                     onChange={e => setTelefone(e.target.value)}
