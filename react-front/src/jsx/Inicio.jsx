@@ -78,7 +78,7 @@ const TelaInicial = () => {
             <nav className="navbar navbar-expand-lg navbar-dark sticky-top">
                 <div className="container">
                     <a className="navbar-brand" href="/">
-                        <i className="fas fa-seedling me-2"></i> A de Agro
+                        <i className="fas fa-seedling me-2"></i> ApoiaRural
                     </a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span className="navbar-toggler-icon"></span>

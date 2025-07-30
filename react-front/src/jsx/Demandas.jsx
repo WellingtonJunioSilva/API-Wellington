@@ -64,7 +64,7 @@ export default function Demandas() {
       <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow sticky-top">
         <div className="container">
           <Link className="navbar-brand" to="/inicio">
-            <i className="fas fa-leaf me-2"></i>AgroTech
+            <i className="fas fa-leaf me-2"></i>ApoiaRural
           </Link>
           <div className="d-flex gap-3">
             <input
