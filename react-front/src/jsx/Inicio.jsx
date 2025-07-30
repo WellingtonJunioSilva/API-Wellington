@@ -131,7 +131,7 @@ const TelaInicial = () => {
                         <div className="sidebar">
                             <div className="sidebar-header">
                                 <a href="/perfil">
-                                    <img src={usuario.foto} className="post-avatar" alt="Foto do usuário" />
+                                    <img src={usuario.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
                                 </a>
                                 <h5 id='nome-usuario'>{usuario.nome}</h5>
                                 <p className="mb-0">
@@ -173,14 +173,6 @@ const TelaInicial = () => {
                                             <i className="fas fa-handshake"></i>Demandas
                                         </Link>
                                     </li>
-                                    <li>
-                                        <Link 
-                                            to="/eventos"
-                                            onClick={() => setActiveTab('eventos')}
-                                        >
-                                            <i className="fas fa-calendar"></i>Eventos
-                                        </Link>
-                                    </li>
                                 </ul>
                             </div>
                         </div>
@@ -212,7 +204,7 @@ const TelaInicial = () => {
                             <div className="create-post">
                                 <div className="d-flex align-items-center mb-3">
                                     <img 
-                                        src={usuario.foto} 
+                                        src={usuario.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} 
                                         className="post-avatar" 
                                         alt={usuario.nome} 
                                     />

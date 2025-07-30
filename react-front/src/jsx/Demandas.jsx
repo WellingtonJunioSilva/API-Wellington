@@ -95,7 +95,7 @@ export default function Demandas() {
             <div className="sidebar">
               <div className="sidebar-header">
                 <a href="/perfil">
-                  <img src={usuario.foto} className="post-avatar" alt="Foto do usuário" />
+                  <img src={usuario.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
                 </a>
                 <h5 id="nome-usuario">{usuario.nome}</h5>
                 <p className="mb-0">
