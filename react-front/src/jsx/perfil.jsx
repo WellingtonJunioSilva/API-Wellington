@@ -77,6 +77,7 @@
             validade_oferta: '',
             status: '',
             data_postagem: '',
+            tipoApoio: '',
         });
         const [formDemandaAberto, setFormDemandaAberto] = useState(false);
         const [carregandoDemandas, setCarregandoDemandas] = useState(false);
@@ -102,11 +103,43 @@
             fetchDemandas();
         }, [usuario]);
 
+        // Função para obter opções de categoria e tipo de apoio conforme o tipo de usuário
+        const getOpcoesDemanda = (tipoUsuario) => {
+            if (tipoUsuario && tipoUsuario.toLowerCase().includes('apoiador')) {
+                return {
+                    categorias: [
+                        { value: 'graos', label: 'Grãos' },
+                        { value: 'feijoes_raizes', label: 'Feijões/Raízes' },
+                        { value: 'frutas_hortalicas', label: 'Frutas/Hortaliças' },
+                        { value: 'verduras_ervas', label: 'Verduras/Ervas' },
+                        { value: 'outros', label: 'Outros' }
+                    ],
+                    tiposApoio: [
+                        { value: 'compra_direta', label: 'Compra Direta' },
+                        { value: 'investimento_financeiro', label: 'Investimento Financeiro' },
+                        { value: 'infraestrutura', label: 'Infraestrutura' },
+                        { value: 'maquinario_equipamentos', label: 'Maquinário/Equipamentos' }
+                    ]
+                };
+            }
+            // Para outros tipos de usuário, só categorias
+            return {
+                categorias: [
+                    { value: 'graos', label: 'Grãos' },
+                    { value: 'feijoes_raizes', label: 'Feijões/Raízes' },
+                    { value: 'frutas_hortalicas', label: 'Frutas/Hortaliças' },
+                    { value: 'verduras_ervas', label: 'Verduras/Ervas' },
+                    { value: 'outros', label: 'Outros' }
+                ],
+                tiposApoio: []
+            };
+        };
+
         // Função para criar nova demanda
         const handleCriarDemanda = async (e) => {
             e.preventDefault();
             // Validação simples
-            if (!novaDemanda.titulo || !novaDemanda.descricao || !novaDemanda.categoria || !novaDemanda.validade_oferta || !novaDemanda.status) {
+            if (!novaDemanda.titulo || !novaDemanda.descricao || !novaDemanda.categoria || !novaDemanda.validade_oferta || !novaDemanda.status || (usuario?.tipo_usuario === 'apoiador' && !novaDemanda.tipoApoio)) {
                 alert('Preencha todos os campos obrigatórios.');
                 return;
             }
@@ -123,7 +156,7 @@
                 const data = await res.json();
                 setDemandas([data, ...demandas]);
                 setNovaDemanda({
-                    titulo: '', descricao: '', categoria: '', cidade: usuario.cidade, estado: usuario.estado, validade_oferta: '', status: '', data_postagem: ''
+                    titulo: '', descricao: '', categoria: '', cidade: usuario.cidade, estado: usuario.estado, validade_oferta: '', status: '', data_postagem: '', tipoApoio: ''
                 });
                 setFormDemandaAberto(false);
             } catch (err) {
@@ -360,7 +393,7 @@
                                         </button>
                                     )}
                                     {/* Formulário completo de demanda */}
-                                    {formDemandaAberto && (
+                                    {formDemandaAberto && usuario && (
                                         <form onSubmit={handleCriarDemanda} className="mb-3">
                                             <div className="mb-2">
                                                 <input
@@ -382,21 +415,38 @@
                                                     required
                                                 />
                                             </div>
-                                            <div className="mb-2">
-                                                <select
-                                                    className="form-control"
-                                                    value={novaDemanda.categoria}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, categoria: e.target.value })}
-                                                    required
-                                                >
-                                                    <option value="">Selecione a categoria</option>
-                                                    <option value="graos">Grãos</option>
-                                                    <option value="feijoes_raizes">Feijões/Raízes</option>
-                                                    <option value="frutas_hortalicas">Frutas/Hortaliças</option>
-                                                    <option value="verduras_ervas">Verduras/Ervas</option>
-                                                    <option value="outros">Outros</option>
-                                                </select>
-                                            </div>
+                                            {/* Campo categoria só para produtor (case-insensitive) */}
+                                            {usuario.tipo_usuario && usuario.tipo_usuario.toLowerCase().includes('produtor') && (
+                                                <div className="mb-2">
+                                                    <select
+                                                        className="form-control"
+                                                        value={novaDemanda.categoria}
+                                                        onChange={e => setNovaDemanda({ ...novaDemanda, categoria: e.target.value })}
+                                                        required
+                                                    >
+                                                        <option value="">Selecione a categoria</option>
+                                                        {getOpcoesDemanda(usuario.tipo_usuario).categorias.map(opt => (
+                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            )}
+                                            {/* Campo tipo de apoio só para apoiador (case-insensitive) */}
+                                            {usuario.tipo_usuario && usuario.tipo_usuario.toLowerCase().includes('apoiador') && (
+                                                <div className="mb-2">
+                                                    <select
+                                                        className="form-control"
+                                                        value={novaDemanda.tipoApoio}
+                                                        onChange={e => setNovaDemanda({ ...novaDemanda, tipoApoio: e.target.value })}
+                                                        required
+                                                    >
+                                                        <option value="">Selecione o tipo de apoio</option>
+                                                        {getOpcoesDemanda(usuario.tipo_usuario).tiposApoio.map(opt => (
+                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            )}
                                             <div className="mb-2">
                                                 <input
                                                     type="text"
