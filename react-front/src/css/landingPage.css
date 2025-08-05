@@ -1,3 +1,102 @@
+/* Ícone do menu hamburguer customizado */
+.menu-hamburguer {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.07);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  position: relative;
+  cursor: pointer;
+  transition: box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(40,167,69,0.08);
+}
+.menu-hamburguer:hover {
+  box-shadow: 0 4px 16px rgba(40,167,69,0.18);
+  background: rgba(255,255,255,0.13);
+}
+.menu-hamburguer-bar {
+  position: absolute;
+  left: 8px;
+  width: 24px;
+  height: 3px;
+  background: #fff;
+  border-radius: 2px;
+  transition: 0.3s;
+}
+.menu-hamburguer-bar.top {
+  top: 11px;
+}
+.menu-hamburguer-bar.middle {
+  top: 18px;
+}
+.menu-hamburguer-bar.bottom {
+  top: 25px;
+}
+.menu-hamburguer.open .menu-hamburguer-bar.top {
+  transform: translateY(7px) rotate(45deg);
+}
+.menu-hamburguer.open .menu-hamburguer-bar.middle {
+  opacity: 0;
+}
+.menu-hamburguer.open .menu-hamburguer-bar.bottom {
+  transform: translateY(-7px) rotate(-45deg);
+}
+/* Depoimento destacado */
+.depoimento-card {
+  max-width: 900px;
+  background: linear-gradient(90deg, #c5fcc0 0%, #b2f7b2 100%);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(40, 167, 69, 0.10);
+  padding: 2.5rem 2rem;
+  margin-top: 2rem;
+}
+.depoimento-text {
+  font-size: 1.35rem;
+  color: #222;
+  text-align: center;
+}
+.depoimento-autor {
+  font-size: 1rem;
+  color: #222;
+  font-style: italic;
+  text-align: center;
+}
+/* Rodapé moderno */
+.footer-main {
+  background: #222;
+  color: #ccc;
+  border-top: 1px solid #333;
+  font-size: 1rem;
+}
+.footer-text, .footer-links a {
+  color: #ccc;
+  text-decoration: none;
+  margin-right: 0.5rem;
+}
+.footer-links a:hover {
+  color: #28a745;
+}
+.footer-social a {
+  color: #ccc;
+  font-size: 1.5rem;
+  transition: color 0.2s;
+}
+.footer-social a:hover {
+  color: #28a745;
+}
+/* Rodapé */
+.footer-main {
+  background: var(--gray-light);
+  border-top: 1px solid var(--border-color);
+  color: var(--text-light);
+  font-size: 1rem;
+  margin-top: 3rem;
+}
+.footer-text {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-light);
+}
 .btn-how-comprador:hover,
 .btn-how-switch.btn-outline-success:hover {
   background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
@@ -113,27 +212,6 @@ body {
   color: var(--white);
   box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
   transform: translateY(-2px);
-}
-
-/* Depoimento */
-.bg-depoimento {
-  background-color: var(--bege);
-  border-left: 4px solid var(--bege);
-  border-radius: 10px;
-  padding: 1.5rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-}
-
-.bg-depoimento p {
-  font-size: 1.1rem;
-  font-style: italic;
-  font-weight: 725;
-  margin-bottom: 0.5rem;
-}
-
-.bg-depoimento small {
-  font-weight: 800;
-  color: var(--text-light);
 }
 
 /* Cards */
@@ -324,4 +402,18 @@ body {
 
 .card.cartoes h6 {
   font-size: 1rem;
+}
+
+@media (max-width: 510px) {
+  .card.cartoes {
+    padding: 1rem;
+  }
+
+  .card.cartoes .icon {
+    font-size: 1.5rem;
+  }
+
+  .card.cartoes h6 {
+    font-size: 0.875rem;
+  }
 }

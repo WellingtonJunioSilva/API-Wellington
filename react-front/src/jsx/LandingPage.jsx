@@ -3,41 +3,50 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Link } from "react-router-dom";
-import chico from "../IMG/chico bento.png";
+import joseAntonio from "../IMG/icon perfil novo.png";
 import agricultura from "../IMG/agricultura familiar.jpg";
 import '../css/landingPage.css';
 
 export default function LandingPage() {
   const [tipo, setTipo] = useState('agricultor');
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <>
       {/* NAVBAR */}
-<nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm py-3">
-  <div className="container-fluid px-4">
-    <Link className="navbar-brand fw-bold text-white" to="/">ApoiaRural</Link>
-    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-      <span className="navbar-toggler-icon"></span>
-    </button>
-    
-    <div className="collapse navbar-collapse" id="navbarNav">
-      {/* Se quiser reativar os links do menu, descomente o bloco abaixo */}
-      {/*
-      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-        <li className="nav-item"><a className="nav-link text-white" href="#">Sobre</a></li>
-        <li className="nav-item"><a className="nav-link text-white" href="#">Contato</a></li>
-        <li className="nav-item"><a className="nav-link text-white" href="#">Produtores</a></li>
-        <li className="nav-item"><a className="nav-link text-white" href="#">Apoiadores</a></li>
-      </ul>
-      */}
-      
-      {/* Botões alinhados à direita */}
-      <div className="d-flex ms-auto gap-2">
-        <Link className="btn btn-outline-light" to="/cadastro">Cadastre-se</Link>
-        <Link className="btn btn-light text-success fw-semibold" to="/login">Login</Link>
-      </div>
-    </div>
-  </div>
-</nav>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm py-3">
+        <div className="container-fluid px-4">
+          <Link className="navbar-brand fw-bold text-white" to="/">ApoiaRural</Link>
+          <button
+            className="navbar-toggler"
+            type="button"
+            aria-label="Abrir menu"
+            onClick={() => setMenuOpen((open) => !open)}
+            style={{ border: 'none', background: 'transparent', outline: 'none', padding: 0 }}
+          >
+            <span className={`menu-hamburguer${menuOpen ? ' open' : ''}`}>
+              <span className="menu-hamburguer-bar top"></span>
+              <span className="menu-hamburguer-bar middle"></span>
+              <span className="menu-hamburguer-bar bottom"></span>
+            </span>
+          </button>
+          <div className={`collapse navbar-collapse${menuOpen ? ' show' : ''}`} id="navbarNav">
+            {/* Se quiser reativar os links do menu, descomente o bloco abaixo */}
+            {/*
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item"><a className="nav-link text-white" href="#">Sobre</a></li>
+              <li className="nav-item"><a className="nav-link text-white" href="#">Contato</a></li>
+              <li className="nav-item"><a className="nav-link text-white" href="#">Produtores</a></li>
+              <li className="nav-item"><a className="nav-link text-white" href="#">Apoiadores</a></li>
+            </ul>
+            */}
+            {/* Botões alinhados à direita */}
+            <div className="d-flex ms-auto gap-2">
+              <Link className="btn btn-outline-light" to="/cadastro">Cadastre-se</Link>
+              <Link className="btn btn-light text-success fw-semibold" to="/login">Login</Link>
+            </div>
+          </div>
+        </div>
+      </nav>
 
 
       {/* HERO SECTION */}
@@ -46,14 +55,13 @@ export default function LandingPage() {
           {/* TEXTO */}
           <div className="hero__text">
             <h1 className="hero__title mb-4">
-              CONECTAMOS <br />
+              CONECTANDO <br />
               AGRICULTORES COM <br />
-              QUEM QUER <br />
-              COMPRAR SUA <br />
-              PRODUÇÃO
+              QUEM BUSCA <br />
+              ALIMENTOS DE VERDADE <br />
             </h1>
             <h2 className="hero__subtitle mb-4">
-              Valorize sua colheita. Anuncie sua safra excedente e encontre compradores!
+              Conectando quem cultiva com quem valoriza a terra direto para a sua vida.
             </h2>
             <div className="hero__buttons d-flex flex-column flex-md-row gap-3 mt-3">
               <Link to="/demandas" className="btn-cadastroSafra">
@@ -76,16 +84,17 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* DEPOIMENTO E CARDS */}
+      {/* DEPOIMENTO DESTACADO */}
       <section className="testimonials py-5 bg-white">
-        <div className="container text-center">
-          {/* DEPOIMENTO */}
-          <div className="bg-depoimento mb-5 p-4">
-            <img src={chico} alt="Chico Bento" width="70" className="mb-3 rounded-circle" />
-            <p>
-              <em>"Consegui distribuir minha produção de goiaba para um hortifruti!"</em><br />
-              <small className="text-muted">Chico Bento, Vila Abobrinha</small>
+        <div className="container">
+          <div className="bg-depoimento depoimento-card mx-auto mb-5 d-flex flex-column align-items-center">
+            <img src={joseAntonio} alt="José Antonio" width="50" className="mb-3 rounded-circle shadow" />
+            <p className="depoimento-text mb-2">
+              <strong>
+                <em>"Consegui distribuir minha produção de goiaba para um hortifruti!"</em>
+              </strong>
             </p>
+            <small className="depoimento-autor">Usuário do sistema</small>
           </div>
         </div>
       </section>
@@ -202,6 +211,22 @@ export default function LandingPage() {
     )}
   </div>
 </section>
+    {/* RODAPÉ MODERNO */}
+    <footer className="footer-main mt-5">
+      <div className="container d-flex flex-column flex-md-row justify-content-between align-items-center py-4">
+        <div className="footer-left mb-2 mb-md-0">
+          <span className="footer-text">&copy; {new Date().getFullYear()} ApoiaRural. Todos os direitos reservados.</span>
+          <span className="footer-links ms-3">
+
+          </span>
+        </div>
+        <div className="footer-social">
+          <a href="#" className="mx-2"><i className="bi bi-instagram"></i></a>
+          <a href="#" className="mx-2"><i className="bi bi-github"></i></a>
+          <a href="#" className="mx-2"><i className="bi bi-envelope"></i></a>
+        </div>
+      </div>
+    </footer>
     </>
   );
 }

@@ -77,7 +77,7 @@ const Inicio = () => {
             {/* Navigation */}
             <nav className="navbar navbar-expand-lg navbar-dark sticky-top">
                 <div className="container">
-                    <a className="navbar-brand" href="/">
+                    <a className="navbar-brand" href="../jsx/Inicio.jsx">
                         <i className="fas fa-seedling me-2"></i> ApoiaRural
                     </a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
