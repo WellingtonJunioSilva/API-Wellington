@@ -83,7 +83,18 @@ const Inicio = () => {
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    
+                    {/* Links externos: GitHub, Email, Instagram */}
+                    <div className="d-flex align-items-center ms-auto gap-2">
+                        <a href="https://github.com/caiomccunha/ApoiaRural-Completo" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light" title="GitHub">
+                            <i className="fab fa-github"></i>
+                        </a>
+                        <a href="" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light" title="Email">
+                            <i className="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://instagram.com/seuusuario" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light" title="Instagram">
+                            <i className="fab fa-instagram"></i>
+                        </a>
+                    </div>
                     <div className="dropdown2 ms-2">
                     <button 
                         className="btn btn-outline-light dropdown-toggle" 

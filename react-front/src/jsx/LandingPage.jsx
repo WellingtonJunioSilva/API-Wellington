@@ -222,7 +222,7 @@ export default function LandingPage() {
         </div>
         <div className="footer-social">
           <a href="#" className="mx-2"><i className="bi bi-instagram"></i></a>
-          <a href="#" className="mx-2"><i className="bi bi-github"></i></a>
+          <a href="https://github.com/caiomccunha/ApoiaRural-Completo" className="mx-2"><i className="bi bi-github"></i></a>
           <a href="#" className="mx-2"><i className="bi bi-envelope"></i></a>
         </div>
       </div>
