@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -8,6 +8,7 @@ import agricultura from "../IMG/agricultura familiar.jpg";
 import '../css/landingPage.css';
 
 export default function LandingPage() {
+  const [tipo, setTipo] = useState('agricultor');
   return (
     <>
       {/* NAVBAR */}
@@ -59,7 +60,7 @@ export default function LandingPage() {
                 <i className="bi bi-plus-circle"></i> Cadastrar safra
               </Link>
               <Link to="/demandas" className="btn-apoiador">
-                <i className="bi bi-heart"></i> Sou apoiador
+                <i className="bi bi-heart"></i> Quero comprar!
               </Link>
             </div>
           </div>
@@ -86,30 +87,121 @@ export default function LandingPage() {
               <small className="text-muted">Chico Bento, Vila Abobrinha</small>
             </p>
           </div>
+        </div>
+      </section>
 
-          {/* CARDS */}
-          <div className="row g-4">
-            <div className="col-md-4">
-              <div className="card cartoes h-100">
-                <div className="icon"><i className="bi bi-basket"></i></div>
-                <h6>Agricultor cadastra o excedente</h6>
+      {/* CARDS */}
+<section className="how-it-works-section">
+  <div className="container">
+
+    <div className="text-center mb-12 md:mb-16">
+      <h1 className="section-title main-how-title">
+        Como Funciona o Nosso Sistema
+      </h1>
+      <p className="section-subtitle">
+        ApoiaRural é uma plataforma que conecta agricultores e compradores de forma simples e eficiente.
+      </p>
+      <div className="d-flex justify-content-center gap-3 mt-4">
+        <button
+          className={`btn ${tipo === 'agricultor' ? 'btn-success' : 'btn-outline-success'} fw-bold px-4 py-2 btn-how-switch`}
+          onClick={() => setTipo('agricultor')}
+        >
+          Agricultores
+        </button>
+        <button
+          className={`btn ${tipo === 'comprador' ? 'btn-success btn-how-switch-active' : 'btn-outline-success'} fw-bold px-4 py-2 btn-how-switch btn-how-comprador`}
+          onClick={() => setTipo('comprador')}
+        >
+          Compradores
+        </button>
+      </div>
+    </div>
+
+    {/* Agricultores */}
+    {tipo === 'agricultor' && (
+      <div className="mb-16 bd:mb-24">
+        <h2 className="card-section-title agricultor-title">Para Agricultores</h2>
+        <div className="row g-4">
+          <div className="col-md-4 agricultor">
+            <div className="step-card">
+              <div className="step-icon-wrapper">
+                <i className="bi bi-journal-plus" style={{fontSize: '2rem'}}></i>
               </div>
+              <h3 className="step-title">1. Cadastre sua Safra</h3>
+              <p className="step-text">
+                Anuncie sua safra ou excedentes de forma simples e rápida. Nossa plataforma é intuitiva e te ajuda a evitar o desperdício e alcançar mais compradores.
+              </p>
             </div>
-            <div className="col-md-4">
-              <div className="card cartoes h-100">
-                <div className="icon"><i className="bi bi-eye"></i></div>
-                <h6>Apoiador visualiza produtos disponíveis</h6>
+          </div>
+          <div className="col-md-4 agricultor">
+            <div className="step-card">
+              <div className="step-icon-wrapper">
+                <i className="bi bi-bar-chart-line" style={{fontSize: '2rem'}}></i>
               </div>
+              <h3 className="step-title">2. Gerencie sua Venda</h3>
+              <p className="step-text">
+                Acompanhe o status dos seus anúncios e propostas em tempo real. Negocie diretamente com compradores e organize a logística de entrega.
+              </p>
             </div>
-            <div className="col-md-4">
-              <div className="card cartoes h-100">
-                <div className="icon"><i className="bi bi-check-circle"></i></div>
-                <h6>Conexão direta e eficiente</h6>
+          </div>
+          <div className="col-md-4 agricultor">
+            <div className="step-card">
+              <div className="step-icon-wrapper">
+                <i className="bi bi-cash-coin" style={{fontSize: '2rem'}}></i>
               </div>
+              <h3 className="step-title">3. Receba o Pagamento</h3>
+              <p className="step-text">
+                Conclua a transação de forma segura. Receba o valor da sua venda diretamente na sua conta, sem burocracia ou intermediários.
+              </p>
             </div>
           </div>
         </div>
-      </section>
+      </div>
+    )}
+
+    {/* Compradores */}
+    {tipo === 'comprador' && (
+      <div className="mb-16 bd:mb-24">
+        <h2 className="card-section-title comprador-title">Para Compradores</h2>
+        <div className="row g-4">
+          <div className="col-md-4 comprador">
+            <div className="step-card">
+              <div className="step-icon-wrapper">
+                <i className="bi bi-search" style={{fontSize: '2rem'}}></i>
+              </div>
+              <h3 className="step-title">1. Encontre Produtos Frescos</h3>
+              <p className="step-text">
+                Pesquise por produtos frescos, orgânicos e de alta qualidade, direto do produtor. Filtre por tipo de produto, localização e volume para encontrar o que precisa.
+              </p>
+            </div>
+          </div>
+          <div className="col-md-4 comprador">
+            <div className="step-card">
+              <div className="step-icon-wrapper">
+                <i className="bi bi-chat-dots" style={{fontSize: '2rem'}}></i>
+              </div>
+              <h3 className="step-title">2. Negocie e Feche o Pedido</h3>
+              <p className="step-text">
+                Converse diretamente com o agricultor para negociar preço, quantidade e forma de entrega. Feche o pedido com confiança, sabendo a origem do seu alimento.
+              </p>
+            </div>
+          </div>
+          <div className="col-md-4 comprador">
+            <div className="step-card">
+              <div className="step-icon-wrapper">
+                <i className="bi bi-truck" style={{fontSize: '2rem'}}></i>
+              </div>
+              <h3 className="step-title">3. Receba sua Entrega</h3>
+              <p className="step-text">
+                Acompanhe a logística da entrega e receba os produtos no seu estabelecimento ou residência. Garanta a qualidade e a frescura que só o campo oferece.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </div>
+</section>
     </>
   );
 }

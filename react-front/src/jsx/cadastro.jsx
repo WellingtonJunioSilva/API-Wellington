@@ -89,7 +89,7 @@ export default function Cadastro() {
     limparFormulario();
     
     // Redireciona após cadastro bem-sucedido
-    window.location.href = "/dashboard"; // Ajuste para sua rota de destino
+    window.location.href = "/Inicio.jsx"; // Ajuste para sua rota de destino
 
   } catch (error) {
     console.error("Erro ao cadastrar usuário:", error);
@@ -230,7 +230,8 @@ export default function Cadastro() {
                 <option value="">Selecione...</option>
                 <option value="PESSOA_FISICA">Pessoa Física</option>
                 <option value="ONG">ONG</option>
-                <option value="EMPRESA">Empresa</option>
+                <option value="EMPRESA_COMERCIO">Empresa</option>
+                <option value="CONVENIADO">Conveniado</option>
               </select>
             </div>
           )}

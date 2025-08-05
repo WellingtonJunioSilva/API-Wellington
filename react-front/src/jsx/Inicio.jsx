@@ -10,7 +10,7 @@ import iotImg from "../IMG/Iot.jpg";
 import tashaImg from "../IMG/Tasha.jpg";
 import kyanImg from "../IMG/Kyan.jpg";
 
-const TelaInicial = () => {
+const Inicio = () => {
     const [usuario, setUsuario] = useState(null);
     const [activeTab, setActiveTab] = useState('feed');
     const [conteudoPost, setConteudoPost] = useState('');
@@ -347,4 +347,4 @@ const TelaInicial = () => {
     );
 };
 
-export default TelaInicial;
+export default Inicio;

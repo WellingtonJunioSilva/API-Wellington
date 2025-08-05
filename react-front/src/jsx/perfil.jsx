@@ -77,7 +77,7 @@
             validade_oferta: '',
             status: '',
             data_postagem: '',
-            tipoApoio: '',
+            tipoApoio: null,
         });
         const [formDemandaAberto, setFormDemandaAberto] = useState(false);
         const [carregandoDemandas, setCarregandoDemandas] = useState(false);
@@ -234,7 +234,7 @@
                 <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow sticky-top">
                     <div className="container">
                         <Link className="navbar-brand" to="/inicio">
-                            <i className="fas fa-leaf me-2"></i><ApoiaRural></ApoiaRural>
+                            <i className="fas fa-leaf me-2"></i>ApoiaRural
                         </Link>
                     </div>
                 </nav>
@@ -333,6 +333,15 @@
                                     {/* Formulário de edição */}
                                     {editando && (
                                         <>
+                                            <div className="mb-3">
+                                                <label className="form-label"><strong>Nome</strong></label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    value={usuario.nome}
+                                                    onChange={e => setUsuario({ ...usuario, nome: e.target.value })}
+                                                />
+                                            </div>
                                             <div className="mb-3">
                                                 <label className="form-label"><strong>Biografia</strong></label>
                                                 <textarea

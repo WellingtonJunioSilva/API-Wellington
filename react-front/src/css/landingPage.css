@@ -1,6 +1,13 @@
+.btn-how-comprador:hover,
+.btn-how-switch.btn-outline-success:hover {
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+}
 /* Variáveis */
 :root {
-  --primary-color: #28a745;
+  --primary-color: #1e471d;
   --primary-hover: #218838;
   --text-color: #222;
   --text-light: #555;
@@ -130,32 +137,151 @@ body {
 }
 
 /* Cards */
-.card.cartoes {
-  border: 1px solid var(--border-color);
-  border-radius: 10px;
+/* Seção Como Funciona */
+.how-it-works-section {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--gray-light);
+  padding: 4rem 0;
+}
+
+/* Títulos da seção */
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.main-how-title {
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--text-color);
+  text-shadow: 0 2px 8px rgba(52, 58, 53, 0.726);
+  margin-bottom: 1rem;
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(90deg, var(--text-light) 0%, var(--text-light) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+/* Botões de alternância Agricultores/Compradores */
+.btn-how-switch {
+  border-radius: 50px !important;
+  transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+  margin: 0 0.5rem;
+}
+.btn-how-comprador {
+  color: #1e471d !important;
+  border-color: #1e471d !important;
+}
+.btn-how-switch-active {
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+}
+.btn-how-switch-active.btn-how-comprador {
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+}
+.btn-how-switch-active {
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.2);
+}
+.btn-how-switch-active.btn-how-comprador {
+  /* Mantém gradiente verde para compradores também */
+  background: linear-gradient(90deg, #28a745 0%, #c5fcc0 100%) !important;
+  color: #fff !important;
+  border-color: #1e471d !important;
+}
+
+.section-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-light);
+  max-width: 42rem;
+  margin: 0 auto 3rem;
+  line-height: 1.6;
+}
+
+/* Títulos para agricultores e compradores */
+.card-section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.agricultor-title {
+  color: #1e471d;
+  margin: 1.5rem ;
+}
+
+.comprador-title {
+  color: #1e471d;
+  margin: 1.5rem ;
+}
+
+/* Estilo dos cartões */
+.step-card {
   background-color: var(--white);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
-  padding: 2rem 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  padding: 2.5rem;
   text-align: center;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
 }
 
-.card.cartoes:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+.step-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
 }
 
-.card.cartoes .icon {
-  font-size: 2.8rem;
-  color: var(--primary-color);
-  margin-bottom: 1rem;
+/* Ícones dos cartões */
+.step-icon-wrapper {
+  width: 4.5rem;
+  height: 4.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-bottom: 1.5rem;
+  transition: var(--transition);
 }
 
-.card.cartoes h6 {
-  font-size: 1.1rem;
+.step-icon-wrapper svg {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+
+.agricultor .step-icon-wrapper {
+  background-color: #d1e7dd;
+  color: #1e471d;
+}
+
+.comprador .step-icon-wrapper {
+  background-color: #cce5ff;
+  color: #1e471d;
+}
+
+/* Títulos e texto dos passos */
+.step-title {
+  font-size: 1.25rem;
   font-weight: 600;
-  color: var(--text-color);
-  margin: 0;
+  margin-bottom: 0.75rem;
+}
+
+.step-text {
+  color: var(--text-light);
+  line-height: 1.6;
 }
 
 /* Responsivo */
