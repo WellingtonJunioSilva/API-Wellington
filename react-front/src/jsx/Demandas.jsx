@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import perfilPadrao from "../IMG/icon perfil novo.png";
-import '../css/demandas.css'
+import mensagens from'../jsx/mensagens.jsx'
 // Remover import duplicado de React
 
 export default function Demandas() {
@@ -115,7 +115,7 @@ export default function Demandas() {
                   </li>
                   <li>
                     <Link 
-                      to="/mensagens"
+                      to={mensagens}
                       className={activeTab === 'mensagens' ? 'active' : ''}
                       onClick={() => setActiveTab('mensagens')}
                     >
