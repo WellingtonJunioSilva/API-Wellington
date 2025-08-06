@@ -72,6 +72,48 @@ body {
   margin-left: 10px;
 }
 
+.btn-editar {
+  background-color: #287726;
+  color: #fff;
+  border-radius: 35px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: 0.3s ease;
+
+}
+.btn-editar:hover {
+  background-color: #1f5a1c;
+  color: #fff;
+}
+
+.btn-excluir {
+  background-color: #dc3545;
+  color: #fff;
+  border-radius: 35px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: 0.3s ease;
+}
+
+.btn-excluir:hover {
+  background-color: #c82333;
+  color: #fff;
+}
+
+.btn-editarPerfil {
+  background-color: #1f5a1c;
+  color: #fff;
+  border-radius: 35px;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
+  transition: 0.3s ease;
+}
+
+.btn-editarPerfil:hover {
+  background-color: #1f5a1c;
+  color: #fff;
+}
+
 /* TÍTULOS */
 h5 {
   font-weight: 600;

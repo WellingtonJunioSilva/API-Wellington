@@ -169,6 +169,10 @@ export default function Demandas() {
                         <p className="text-muted small">
                           Postado por {d.usuarioNome} em {new Date(d.data_postagem).toLocaleDateString()} • {d.cidade}, {d.estado}
                         </p>
+
+                        <button className="btn btn-detalhes" onClick={() => navigate(`/demandas/${d.id}`)}>
+                          Ver Detalhes
+                        </button>
                       </div>
                     </div>
                   ))

@@ -15,7 +15,9 @@ export default function LandingPage() {
       {/* NAVBAR */}
       <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow-sm py-3">
         <div className="container-fluid px-4">
-          <Link className="navbar-brand fw-bold text-white" to="/">ApoiaRural</Link>
+          <Link className="navbar-brand fw-bold text-white" to="/">
+            <i className="fas fa-seedling me-2"></i> ApoiaRural
+          </Link>
           <button
             className="navbar-toggler"
             type="button"
@@ -41,8 +43,8 @@ export default function LandingPage() {
             */}
             {/* Botões alinhados à direita */}
             <div className="d-flex ms-auto gap-2">
-              <Link className="btn btn-outline-light" to="/cadastro">Cadastre-se</Link>
-              <Link className="btn btn-light text-success fw-semibold" to="/login">Login</Link>
+              <Link className="btn btn-cadastro" to="/cadastro">Cadastre-se</Link>
+              <Link className="btn btn-login" to="/login">Login</Link>
             </div>
           </div>
         </div>

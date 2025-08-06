@@ -322,10 +322,10 @@
                                     {/* Botão para editar perfil */}
                                     {!editando && (
                                         <>
-                                            <button className="btn btn-outline-success mb-3 me-2" onClick={() => setEditando(true)}>
+                                            <button className="btn btn-editarPerfil mb-3" onClick={() => setEditando(true)}>
                                                 Editar Perfil
                                             </button>
-                                            <button className="btn btn-outline-danger mb-3" onClick={handleExcluirUsuario}>
+                                            <button className="btn btn-excluir mb-3" onClick={handleExcluirUsuario}>
                                                 Excluir Perfil
                                             </button>
                                         </>
@@ -583,7 +583,7 @@
                                                             <p className="mb-0">{demanda.descricao}</p>
                                                             <small className="text-muted">Cidade: {usuario.cidade} | Estado: {usuario.estado} | Validade: {demanda.validade_oferta} | Status: {demanda.status}</small>
                                                             <div className="mt-2">
-                                                                <button className="btn btn-outline-primary btn-sm" onClick={() => handleEditarDemanda(demanda)}>
+                                                                <button className="btn btn-editar" onClick={() => handleEditarDemanda(demanda)}>
                                                                     Editar
                                                                 </button>
                                                             </div>
