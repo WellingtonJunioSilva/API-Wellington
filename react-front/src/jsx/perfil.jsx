@@ -77,7 +77,7 @@
             validade_oferta: '',
             status: '',
             data_postagem: '',
-            tipoApoio: null,
+            tipoApoio: '',
         });
         const [formDemandaAberto, setFormDemandaAberto] = useState(false);
         const [carregandoDemandas, setCarregandoDemandas] = useState(false);
@@ -150,7 +150,7 @@
                     body: JSON.stringify({
                         ...novaDemanda,
                         usuarioId: usuario.id,
-                        data_postagem: novaDemanda.data_postagem || new Date().toISOString().slice(0,10),
+                        data_postagem: (novaDemanda.data_postagem || new Date().toISOString()).slice(0, 10),
                     })
                 });
                 const data = await res.json();
@@ -425,13 +425,12 @@
                                                 />
                                             </div>
                                             {/* Campo categoria só para produtor (case-insensitive) */}
-                                            {usuario.tipo_usuario && usuario.tipo_usuario.toLowerCase().includes('produtor') && (
+                                            {usuario.tipo_usuario && (
                                                 <div className="mb-2">
                                                     <select
                                                         className="form-control"
                                                         value={novaDemanda.categoria}
                                                         onChange={e => setNovaDemanda({ ...novaDemanda, categoria: e.target.value })}
-                                                        required
                                                     >
                                                         <option value="">Selecione a categoria</option>
                                                         {getOpcoesDemanda(usuario.tipo_usuario).categorias.map(opt => (
@@ -447,7 +446,7 @@
                                                         className="form-control"
                                                         value={novaDemanda.tipoApoio}
                                                         onChange={e => setNovaDemanda({ ...novaDemanda, tipoApoio: e.target.value })}
-                                                        required
+                                                        
                                                     >
                                                         <option value="">Selecione o tipo de apoio</option>
                                                         {getOpcoesDemanda(usuario.tipo_usuario).tiposApoio.map(opt => (
@@ -456,6 +455,7 @@
                                                     </select>
                                                 </div>
                                             )}
+
                                             <div className="mb-2">
                                                 <input
                                                     type="text"
@@ -498,15 +498,12 @@
                                                     <option value="fechada">Fechada</option>
                                                 </select>
                                             </div>
-                                            <div className="mb-2">
-                                                <label className="form-label">Data de postagem</label>
-                                                <input
-                                                    type="date"
-                                                    className="form-control"
-                                                    value={novaDemanda.data_postagem}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, data_postagem: e.target.value })}
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                value={novaDemanda.data_postagem}
+                                                onChange={e => setNovaDemanda({ ...novaDemanda, data_postagem: e.target.value })}
                                                 />
-                                            </div>
                                             <button type="submit" className="btn btn-success me-2">Criar Demanda</button>
                                             <button type="button" className="btn btn-secondary" onClick={() => setFormDemandaAberto(false)}>Cancelar</button>
                                         </form>

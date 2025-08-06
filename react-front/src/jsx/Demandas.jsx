@@ -140,15 +140,6 @@ export default function Demandas() {
                       <i className="fas fa-handshake"></i>Demandas
                     </Link>
                   </li>
-                  <li>
-                    <Link 
-                      to="/eventos"
-                      className={activeTab === 'eventos' ? 'active' : ''}
-                      onClick={() => setActiveTab('eventos')}
-                    >
-                      <i className="fas fa-calendar"></i>Eventos
-                    </Link>
-                  </li>
                 </ul>
               </div>
             </div>
