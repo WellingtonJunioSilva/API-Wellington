@@ -4,7 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import perfilPadrao from "../IMG/icon perfil novo.png";
 
-export default function mensagens (){
+export default function mensagens() {
 
     return (
         <div className="bg-light min-vh-100">
