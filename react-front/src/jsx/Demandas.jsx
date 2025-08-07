@@ -122,15 +122,7 @@ export default function Demandas() {
                       <i className="fas fa-message"></i>Mensagens
                     </Link>
                   </li>
-                  <li>
-                    <Link 
-                      to="/noticias"
-                      className={activeTab === 'noticias' ? 'active' : ''}
-                      onClick={() => setActiveTab('noticias')}
-                    >
-                      <i className="fas fa-newspaper"></i>Notícias
-                    </Link>
-                  </li>
+                 
                   <li>
                     <Link 
                       to="/demandas"

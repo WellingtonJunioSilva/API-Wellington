@@ -173,14 +173,7 @@ const Inicio = () => {
                                             <i className="fas fa-message"></i>Mensagens
                                         </Link>
                                     </li>
-                                    <li>
-                                        <Link 
-                                            to="/noticias"
-                                            onClick={() => setActiveTab('noticias')}
-                                        >
-                                            <i className="fas fa-newspaper"></i>Notícias
-                                        </Link>
-                                    </li>
+                                
                                     <li>
                                         <Link 
                                             to="/demandas"  // Alterado para "/demandas"

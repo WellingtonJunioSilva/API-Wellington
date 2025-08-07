@@ -230,7 +230,6 @@ import React, { useState, useEffect } from "react";
                         body: formData
                     });
                     const dataUpload = await resUpload.json();
-                    // Use apenas a URL ou nome do arquivo, nunca o conteúdo da imagem
                     fotoUrl = dataUpload.url || dataUpload.foto_perfil || fotoPerfil;
                     setFotoTimestamp(Date.now());
                 } catch (err) {
@@ -238,31 +237,34 @@ import React, { useState, useEffect } from "react";
                     return;
                 }
             }
-            // Monta objeto apenas com dados necessários
+            // Monta objeto apenas com dados necessários e garante que não há campos indefinidos
             const dadosAtualizados = {
                 id: usuario.id,
-                nome: usuario.nome,
-                email: usuario.email,
-                tipo_usuario: usuario.tipo_usuario,
-                cidade: usuario.cidade,
-                estado: usuario.estado,
-                telefone,
-                biografia,
-                foto_perfil: fotoUrl // apenas referência, nunca conteúdo
+                nome: usuario.nome || '',
+                email: usuario.email || '',
+                tipo_usuario: usuario.tipo_usuario || '',
+                cidade: usuario.cidade || '',
+                estado: usuario.estado || '',
+                telefone: telefone || '',
+                biografia: biografia || '',
+                foto_perfil: fotoUrl || ''
             };
-            console.log('Dados enviados no PUT:', dadosAtualizados);
             try {
                 const res = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(dadosAtualizados)
                 });
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(errorText);
+                }
                 const data = await res.json();
                 setUsuario(data);
                 alert("Perfil atualizado com sucesso!");
             } catch (err) {
                 console.error("Erro ao atualizar perfil:", err);
-                alert("Erro ao salvar alterações.");
+                alert("Erro ao salvar alterações: " + err.message);
             }
             };
 
@@ -313,15 +315,7 @@ import React, { useState, useEffect } from "react";
                                             <i className="fas fa-message"></i>Mensagens
                                             </Link>
                                         </li>
-                                        <li>
-                                            <Link 
-                                            to="/noticias"
-                                            className={activeTab === 'noticias' ? 'active' : ''}
-                                            onClick={() => setActiveTab('noticias')}
-                                            >
-                                            <i className="fas fa-newspaper"></i>Notícias
-                                            </Link>
-                                        </li>
+                                        
                                         <li>
                                             <Link 
                                             to="/demandas"
