@@ -1,4 +1,4 @@
-    import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
     import { Link, useNavigate } from "react-router-dom";
     import "bootstrap/dist/css/bootstrap.min.css";
     import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -11,6 +11,7 @@
     const [fotoPerfilUrl, setFotoPerfilUrl] = useState(perfilPadrao);
     const [editandoDemandaId, setEditandoDemandaId] = useState(null);
     const [demandaEdit, setDemandaEdit] = useState(null);
+    const [fotoTimestamp, setFotoTimestamp] = useState(Date.now());
     const navigate = useNavigate();
     // Função para excluir usuário
     const handleExcluirUsuario = async () => {
@@ -36,11 +37,17 @@
     // Função para salvar edição da demanda
     const handleSalvarDemandaEdit = async (e) => {
         e.preventDefault();
+        // Garante que data_postagem nunca seja nulo
+        const demandaParaSalvar = {
+            ...demandaEdit,
+            usuarioId: usuario.id,
+            data_postagem: demandaEdit.data_postagem || (demandas.find(d => d.id === editandoDemandaId)?.data_postagem) || new Date().toISOString()
+        };
         try {
             const res = await fetch(`http://localhost:8080/tcc/demandas/${editandoDemandaId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...demandaEdit, usuarioId: usuario.id })
+                body: JSON.stringify(demandaParaSalvar)
             });
             const data = await res.json();
             setDemandas(demandas.map(d => d.id === editandoDemandaId ? data : d));
@@ -56,7 +63,31 @@
         setEditandoDemandaId(null);
         setDemandaEdit(null);
     };
-        // Estados para demandas
+
+    const [showModalExcluir, setShowModalExcluir] = useState(false);
+    const [demandaParaExcluir, setDemandaParaExcluir] = useState(null);
+
+    const handleExcluirDemanda = (demandaId) => {
+      setDemandaParaExcluir(demandaId);
+      setShowModalExcluir(true);
+    };
+
+    const confirmarExcluirDemanda = async () => {
+      if (!demandaParaExcluir) return;
+      try {
+        await fetch(`http://localhost:8080/tcc/demandas/${demandaParaExcluir}`, {
+          method: 'DELETE',
+        });
+        setDemandas(demandas.filter(d => d.id !== demandaParaExcluir));
+        setShowModalExcluir(false);
+        setDemandaParaExcluir(null);
+      } catch (err) {
+        alert('Erro ao excluir demanda.');
+        setShowModalExcluir(false);
+      }
+    };
+
+    // Estados para demandas
         const [usuario, setUsuario] = useState(null);
         const [fotoPerfil, setFotoPerfil] = useState("");
         const [biografia, setBiografia] = useState("");
@@ -189,33 +220,42 @@
         const handleSalvarPerfil = async () => {
             if (!usuario) return;
             let fotoUrl = fotoPerfil;
-            // Se o usuário selecionou um novo arquivo de foto, faz upload
+            // Upload da foto via FormData
             if (fotoFile) {
                 const formData = new FormData();
                 formData.append('file', fotoFile);
                 try {
-                const resUpload = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const dataUpload = await resUpload.json();
-                fotoUrl = dataUpload.url || dataUpload.foto_perfil || fotoPerfil;
+                    const resUpload = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const dataUpload = await resUpload.json();
+                    // Use apenas a URL ou nome do arquivo, nunca o conteúdo da imagem
+                    fotoUrl = dataUpload.url || dataUpload.foto_perfil || fotoPerfil;
+                    setFotoTimestamp(Date.now());
                 } catch (err) {
-                alert('Erro ao fazer upload da foto.');
-                return;
+                    alert('Erro ao fazer upload da foto.');
+                    return;
                 }
             }
+            // Monta objeto apenas com dados necessários
             const dadosAtualizados = {
-                ...usuario,
-                foto_perfil: fotoUrl,
+                id: usuario.id,
+                nome: usuario.nome,
+                email: usuario.email,
+                tipo_usuario: usuario.tipo_usuario,
+                cidade: usuario.cidade,
+                estado: usuario.estado,
+                telefone,
                 biografia,
-                telefone
+                foto_perfil: fotoUrl // apenas referência, nunca conteúdo
             };
+            console.log('Dados enviados no PUT:', dadosAtualizados);
             try {
                 const res = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dadosAtualizados)
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dadosAtualizados)
                 });
                 const data = await res.json();
                 setUsuario(data);
@@ -246,7 +286,7 @@
                                     <div className="sidebar">
                                     <div className="sidebar-header">
                 <a href="/perfil">
-                  <img src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
+                  <img src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto?${fotoTimestamp}` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
                 </a>
                 <h5 id="nome-usuario">{usuario.nome}</h5>
                 <p className="mb-0">
@@ -305,7 +345,7 @@
                                     <div className="row mb-3">
                                         <div className="col-md-3 text-center">
                                             <img
-                                                src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao}
+                                                src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto?${fotoTimestamp}` : perfilPadrao}
                                                 alt="Foto do usuário"
                                                 className="img-fluid rounded-circle mb-2"
                                                 style={{ width: "120px", height: "120px", objectFit: "cover" }}
@@ -583,6 +623,9 @@
                                                                 <button className="btn btn-editar" onClick={() => handleEditarDemanda(demanda)}>
                                                                     Editar
                                                                 </button>
+                                                                <button className="btn btn-delete" onClick={() => handleExcluirDemanda(demanda.id)}>
+                                                                    Excluir
+                                                                </button>
                                                             </div>
                                                         </>
                                                     )}
@@ -594,6 +637,25 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                {/* Modal Bootstrap para confirmação de exclusão de demanda */}
+                <div className={`modal fade${showModalExcluir ? ' show d-block' : ''}`} tabIndex="-1" role="dialog" style={{background: showModalExcluir ? 'rgba(0,0,0,0.5)' : 'none'}}>
+                  <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title">Confirmar exclusão</h5>
+                        <button type="button" className="btn-close" onClick={() => setShowModalExcluir(false)} aria-label="Close"></button>
+                      </div>
+                      <div className="modal-body">
+                        <p>Tem certeza que deseja excluir esta demanda? Esta ação não pode ser desfeita.</p>
+                      </div>
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={() => setShowModalExcluir(false)}>Cancelar</button>
+                        <button type="button" className="btn btn-danger" onClick={confirmarExcluirDemanda}>Excluir</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
             </div>
         );

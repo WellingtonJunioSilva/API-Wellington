@@ -142,7 +142,12 @@ const Inicio = () => {
                         <div className="sidebar">
                             <div className="sidebar-header">
                                 <a href="/perfil">
-                                    <img src={usuario.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
+                                    <img 
+                                      src={`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`} 
+                                      className="post-avatar" 
+                                      alt="Foto do usuário" 
+                                      onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
+                                    />
                                 </a>
                                 <h5 id='nome-usuario'>{usuario.nome}</h5>
                                 <p className="mb-0">
@@ -215,9 +220,10 @@ const Inicio = () => {
                             <div className="create-post">
                                 <div className="d-flex align-items-center mb-3">
                                     <img 
-                                        src={usuario.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} 
+                                        src={`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`} 
                                         className="post-avatar" 
                                         alt={usuario.nome} 
+                                        onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
                                     />
                                     <textarea 
                                         className="form-control" 

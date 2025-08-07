@@ -80,6 +80,19 @@ body {
   font-weight: bold;
 }
 
+.post-avatar {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--light-green);
+  align-items: center;
+  margin: auto;
+}
+
 .navbar-brand i {
   margin-right: 0.5rem;
   font-size: 1.8rem;
@@ -286,11 +299,13 @@ body {
 }
 
 .post-avatar {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   width: 50px;
   height: 50px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 1rem;
   border: 2px solid var(--light-green);
 }
 
