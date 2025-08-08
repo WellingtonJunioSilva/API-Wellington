@@ -12,6 +12,9 @@ export default function Demandas() {
   const [searchTerm, setSearchTerm] = useState('');
   const [demandas, setDemandas] = useState([]);
   const [activeTab, setActiveTab] = useState('feed'); // Corrigido: estado para activeTab
+  const [showModalDetalhes, setShowModalDetalhes] = useState(false);
+  const [demandaSelecionada, setDemandaSelecionada] = useState(null);
+  const [mensagem, setMensagem] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,6 +58,25 @@ export default function Demandas() {
     }
     fetchDemandas();
   }, [filtros, searchTerm]);
+
+  const abrirModalDetalhes = (demanda) => {
+    setDemandaSelecionada(demanda);
+    setShowModalDetalhes(true);
+  };
+
+  const fecharModalDetalhes = () => {
+    setShowModalDetalhes(false);
+    setDemandaSelecionada(null);
+    setMensagem("");
+  };
+
+  const enviarMensagem = () => {
+    if (!mensagem.trim()) return;
+    // Aqui você pode implementar o envio real da mensagem para o usuário da demanda
+    alert(`Mensagem enviada para ${demandaSelecionada.usuarioNome}: ${mensagem}`);
+    setMensagem("");
+    setShowModalDetalhes(false);
+  };
 
   if (!usuario) return null;
 
@@ -153,7 +175,7 @@ export default function Demandas() {
                           Postado por {d.usuarioNome} em {new Date(d.data_postagem).toLocaleDateString()} • {d.cidade}, {d.estado}
                         </p>
 
-                        <button className="btn btn-detalhes" onClick={() => navigate(`/demandas/${d.id}`)}>
+                        <button className="btn btn-detalhesDemada" onClick={() => abrirModalDetalhes(d)}>
                           Ver Detalhes
                         </button>
                       </div>
@@ -165,6 +187,34 @@ export default function Demandas() {
           </div>
         </div>
       </div>
+
+      {/* Modal Bootstrap para detalhes da demanda */}
+      {showModalDetalhes && demandaSelecionada && (
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{background: 'rgba(0,0,0,0.5)'}}>
+          <div className="modal-dialog" role="document">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Detalhes da Demanda</h5>
+                <button type="button" className="btn-close" onClick={fecharModalDetalhes} aria-label="Close"></button>
+              </div>
+              <div className="modal-body">
+                <h6>{demandaSelecionada.titulo}</h6>
+                <p>{demandaSelecionada.descricao}</p>
+                <p><strong>Postado por:</strong> {demandaSelecionada.usuarioNome}</p>
+                <p><strong>Data:</strong> {new Date(demandaSelecionada.data_postagem).toLocaleDateString()}</p>
+                <p><strong>Local:</strong> {demandaSelecionada.cidade}, {demandaSelecionada.estado}</p>
+                <hr />
+                <label htmlFor="mensagem" className="form-label">Enviar mensagem para o usuário:</label>
+                <textarea id="mensagem" className="form-control mb-2" value={mensagem} onChange={e => setMensagem(e.target.value)} placeholder="Digite sua mensagem..."></textarea>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={fecharModalDetalhes}>Fechar</button>
+                <button type="button" className="btn btn-mensagem" onClick={enviarMensagem}>Enviar Mensagem</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

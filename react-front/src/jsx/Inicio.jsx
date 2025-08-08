@@ -173,7 +173,7 @@ const Inicio = () => {
                                             <i className="fas fa-message"></i>Mensagens
                                         </Link>
                                     </li>
-                                
+                        
                                     <li>
                                         <Link 
                                             to="/demandas"  // Alterado para "/demandas"
