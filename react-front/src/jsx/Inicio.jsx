@@ -168,6 +168,7 @@ const Inicio = () => {
                                     <li>
                                         <Link 
                                             to="/mensagens"
+                                            className={activeTab === 'mensagens' ? 'active' : ''}
                                             onClick={() => setActiveTab('mensagens')}
                                         >
                                             <i className="fas fa-message"></i>Mensagens
@@ -176,12 +177,24 @@ const Inicio = () => {
                         
                                     <li>
                                         <Link 
-                                            to="/demandas"  // Alterado para "/demandas"
-                                            onClick={() => setActiveTab('conexoes')}
+                                            to="/demandas"
+                                            className={activeTab === 'demandas' ? 'active' : ''}
+                                            onClick={() => setActiveTab('demandas')}
                                         >
                                             <i className="fas fa-handshake"></i>Demandas
                                         </Link>
                                     </li>
+
+                                    <li>
+                                        <Link 
+                                            to="/perfil"
+                                            className={activeTab === 'perfil' ? 'active' : ''}
+                                            onClick={() => setActiveTab('perfil')}
+                                        >
+                                            <i className="fas fa-circle-user"></i>Perfil
+                                        </Link>
+                                    </li>
+                                
                                 </ul>
                             </div>
                         </div>

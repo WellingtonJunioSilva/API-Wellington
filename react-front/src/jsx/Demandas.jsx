@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import perfilPadrao from "../IMG/icon perfil novo.png";
-import mensagens from'../jsx/mensagens.jsx'
 // Remover import duplicado de React
 
 export default function Demandas() {
@@ -11,7 +10,7 @@ export default function Demandas() {
   const [usuario, setUsuario] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [demandas, setDemandas] = useState([]);
-  const [activeTab, setActiveTab] = useState('feed'); // Corrigido: estado para activeTab
+  const [activeTab, setActiveTab] = useState('demandas');
   const [showModalDetalhes, setShowModalDetalhes] = useState(false);
   const [demandaSelecionada, setDemandaSelecionada] = useState(null);
   const [mensagem, setMensagem] = useState("");
@@ -117,7 +116,12 @@ export default function Demandas() {
             <div className="sidebar">
               <div className="sidebar-header">
                 <a href="/perfil">
-                  <img src={usuario.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
+                  <img
+                    src={`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`}
+                    className="post-avatar"
+                    alt="Foto do usuário"
+                    onError={e => { e.target.onerror = null; e.target.src = perfilPadrao; }}
+                  />
                 </a>
                 <h5 id="nome-usuario">{usuario.nome}</h5>
                 <p className="mb-0">
@@ -127,8 +131,8 @@ export default function Demandas() {
               <div className="sidebar-content">
                 <ul className="sidebar-menu">
                   <li>
-                    <Link 
-                      to="/inicio" 
+                    <Link
+                      to="/inicio"
                       className={activeTab === 'feed' ? 'active' : ''}
                       onClick={() => setActiveTab('feed')}
                     >
@@ -136,22 +140,32 @@ export default function Demandas() {
                     </Link>
                   </li>
                   <li>
-                    <Link 
-                      to={mensagens}
+                    <Link
+                      to="/mensagens"
                       className={activeTab === 'mensagens' ? 'active' : ''}
                       onClick={() => setActiveTab('mensagens')}
                     >
                       <i className="fas fa-message"></i>Mensagens
                     </Link>
                   </li>
-                 
+
                   <li>
-                    <Link 
+                    <Link
                       to="/demandas"
-                      className={activeTab === 'conexoes' ? 'active' : ''}
-                      onClick={() => setActiveTab('Dem')}
+                      className={activeTab === 'demandas' ? 'active' : ''}
+                      onClick={() => setActiveTab('demandas')}
                     >
                       <i className="fas fa-handshake"></i>Demandas
+                    </Link>
+                  </li>
+
+                  <li>
+                    <Link
+                      to="/perfil"
+                      className={activeTab === 'perfil' ? 'active' : ''}
+                      onClick={() => setActiveTab('perfil')}
+                    >
+                      <i className="fas fa-circle-user"></i>Perfil
                     </Link>
                   </li>
                 </ul>
@@ -190,7 +204,7 @@ export default function Demandas() {
 
       {/* Modal Bootstrap para detalhes da demanda */}
       {showModalDetalhes && demandaSelecionada && (
-        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{background: 'rgba(0,0,0,0.5)'}}>
+        <div className="modal fade show d-block" tabIndex="-1" role="dialog" style={{ background: 'rgba(0,0,0,0.5)' }}>
           <div className="modal-dialog" role="document">
             <div className="modal-content">
               <div className="modal-header">

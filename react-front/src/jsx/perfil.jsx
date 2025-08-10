@@ -94,7 +94,7 @@ import React, { useState, useEffect } from "react";
         const [email, setEmail] = useState("");
         const [telefone, setTelefone] = useState("");
         const [loading, setLoading] = useState(true);
-        const [activeTab, setActiveTab] = useState('sobre');
+        const [activeTab, setActiveTab] = useState('perfil');
         const [searchTerm, setSearchTerm] = useState('');
         const [filtros, setFiltros] = useState({ tipoUsuario: null, ordenacao: null });
         const [editando, setEditando] = useState(false);
@@ -281,55 +281,69 @@ import React, { useState, useEffect } from "react";
                     </div>
                 </nav>
 
-                <div className="container mt-4">
-                    <div className="row">
-                        {/* Sidebar */}
-                        <div className="col-lg-3">
-                                    <div className="sidebar">
-                                    <div className="sidebar-header">
-                <a href="/perfil">
-                  <img src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto?${fotoTimestamp}` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
-                </a>
-                <h5 id="nome-usuario">{usuario.nome}</h5>
-                <p className="mb-0">
-                  {usuario.tipo_usuario} • {usuario.cidade}
-                </p>
-                                    </div>
-                                    <div className="sidebar-content">
-                                        <ul className="sidebar-menu">
-                                        <li>
-                                            <Link 
+            <div className="container mt-4">
+                <div className="row">
+                    {/* Sidebar */}
+                    <div className="col-lg-3">
+                        <div className="sidebar">
+                            <div className="sidebar-header">
+                                <a href="/perfil">
+                                    <img 
+                                      src={`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`} 
+                                      className="post-avatar" 
+                                      alt="Foto do usuário" 
+                                      onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
+                                    />
+                                </a>
+                                <h5 id='nome-usuario'>{usuario.nome}</h5>
+                                <p className="mb-0">
+                                    {usuario.tipo_usuario} • {usuario.cidade}
+                                </p>
+                            </div>
+                            <div className="sidebar-content">
+                                <ul className="sidebar-menu">
+                                    <li>
+                                        <Link 
                                             to="/inicio" 
                                             className={activeTab === 'feed' ? 'active' : ''}
                                             onClick={() => setActiveTab('feed')}
-                                            >
+                                        >
                                             <i className="fas fa-home"></i>Feed Principal
-                                            </Link>
-                                        </li>
-                                        <li>
-                                            <Link 
+                                        </Link>
+                                    </li>
+                                    <li>
+                                        <Link 
                                             to="/mensagens"
                                             className={activeTab === 'mensagens' ? 'active' : ''}
                                             onClick={() => setActiveTab('mensagens')}
-                                            >
+                                        >
                                             <i className="fas fa-message"></i>Mensagens
-                                            </Link>
-                                        </li>
-                                        
-                                        <li>
-                                            <Link 
+                                        </Link>
+                                    </li>
+                        
+                                    <li>
+                                        <Link 
                                             to="/demandas"
-                                            className={activeTab === 'conexoes' ? 'active' : ''}
-                                            onClick={() => setActiveTab('conexoes')}
-                                            >
+                                            className={activeTab === 'demandas' ? 'active' : ''}
+                                            onClick={() => setActiveTab('demandas')}
+                                        >
                                             <i className="fas fa-handshake"></i>Demandas
-                                            </Link>
-                                        </li>
-                                        
-                                        </ul>
-                                    </div>
-                                    </div>
-                                </div>
+                                        </Link>
+                                    </li>
+
+                                    <li>
+                                        <Link 
+                                            to="/perfil"
+                                            className={activeTab === 'perfil' ? 'active' : ''}
+                                            onClick={() => setActiveTab('perfil')}
+                                        >
+                                            <i className="fas fa-circle-user"></i>Perfil
+                                        </Link>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
 
                         {/* Conteúdo principal */}
 
