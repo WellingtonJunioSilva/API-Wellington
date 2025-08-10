@@ -1,8 +1,10 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "../css/telaCadastroReact.css";
 
 export default function Cadastro() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     nome: "",
     email: "",
@@ -16,9 +18,24 @@ export default function Cadastro() {
     senha: "",
   });
 
+  const limparFormulario = () => { 
+    setForm({
+      nome: "",
+      email: "", 
+      documento: "",
+      cep: "",
+      cidade: "",
+      estado: "",
+      telefone: "",
+      tipo_usuario: "",
+      tipo_apoiador: null,
+      senha: "",
+    });
+  }
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const cepValido = (cep) => cep.length === 8 && /^\d+$/.test(cep);
@@ -50,65 +67,69 @@ export default function Cadastro() {
     }
   };
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  
-  // Formata os campos antes de enviar
-  const usuario = {
-    ...form,
-    documento: form.documento.replace(/\D/g, ''),
-    telefone: form.telefone.replace(/\D/g, ''),
-    cep: form.cep.replace(/\D/g, '')
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    // Formata os campos antes de enviar
+    const usuario = {
+      ...form,
+      documento: form.documento.replace(/\D/g, ""),
+      telefone: form.telefone.replace(/\D/g, ""),
+      cep: form.cep.replace(/\D/g, ""),
+    };
+
+    try {
+      const response = await fetch(`http://localhost:8080/tcc/usuarios`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(usuario),
+      });
+
+      if (!response.ok) {
+        // Tenta extrair a mensagem de erro do servidor, se disponível
+        const errorData = await response.json().catch(() => null);
+        const errorMessage = errorData?.message || `Erro ${response.status}`;
+        throw new Error(errorMessage);
+      }
+
+      const data = await response.json();
+      alert("Usuário cadastrado com sucesso!");
+
+      // Armazena apenas os dados necessários no localStorage
+      localStorage.setItem(
+        "usuario",
+        JSON.stringify({
+          id: data.id, // Assumindo que o servidor retorna o ID
+          nome: usuario.nome,
+          email: usuario.email,
+          tipo_usuario: usuario.tipo_usuario,
+        })
+      );
+
+      limparFormulario();
+
+      // Redireciona após cadastro bem-sucedido
+      navigate("/inicio"); // Redireciona para a rota Inicio
+    } catch (error) {
+      console.error("Erro ao cadastrar usuário:", error);
+
+      // Mensagens de erro mais específicas
+      if (error.message.includes("já cadastrado")) {
+        alert(
+          "Este e-mail já está cadastrado. Por favor, faça login ou utilize outro e-mail."
+        );
+      } else {
+        alert(`Erro ao cadastrar: ${error.message}`);
+      }
+    }
   };
-
-  try {
-    const response = await fetch(`http://localhost:8080/tcc/usuarios`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(usuario),
-    });
-
-    if (!response.ok) {
-      // Tenta extrair a mensagem de erro do servidor, se disponível
-      const errorData = await response.json().catch(() => null);
-      const errorMessage = errorData?.message || `Erro ${response.status}`;
-      throw new Error(errorMessage);
-    }
-
-    const data = await response.json();
-    alert("Usuário cadastrado com sucesso!");
-    
-    // Armazena apenas os dados necessários no localStorage
-    localStorage.setItem("usuario", JSON.stringify({
-      id: data.id, // Assumindo que o servidor retorna o ID
-      nome: usuario.nome,
-      email: usuario.email,
-      tipo_usuario: usuario.tipo_usuario
-    }));
-    
-    limparFormulario();
-    
-    // Redireciona após cadastro bem-sucedido
-    window.location.href = "/dashboard"; // Ajuste para sua rota de destino
-
-  } catch (error) {
-    console.error("Erro ao cadastrar usuário:", error);
-    
-    // Mensagens de erro mais específicas
-    if (error.message.includes("já cadastrado")) {
-      alert("Este e-mail já está cadastrado. Por favor, faça login ou utilize outro e-mail.");
-    } else {
-      alert(`Erro ao cadastrar: ${error.message}`);
-    }
-  }
-};
 
   return (
     <div className="cadastro-container">
       <div className="cadastro-card">
         <h2>Cadastro</h2>
         <p>Preencha os campos abaixo para criar sua conta.</p>
-        
+
         <form onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="nome">Nome Completo</label>
@@ -122,7 +143,7 @@ export default function Cadastro() {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="email">E-mail</label>
             <input
@@ -135,7 +156,7 @@ export default function Cadastro() {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="documento">CPF/CNPJ</label>
             <input
@@ -148,7 +169,7 @@ export default function Cadastro() {
               required
             />
           </div>
-          
+
           <div className="form-row">
             <div className="form-group cep-group">
               <label htmlFor="cep">CEP</label>
@@ -188,7 +209,7 @@ export default function Cadastro() {
               />
             </div>
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="telefone">Telefone</label>
             <input
@@ -201,7 +222,7 @@ export default function Cadastro() {
               required
             />
           </div>
-          
+
           <div className="form-group">
             <label htmlFor="tipo_usuario">Tipo de Usuário</label>
             <select
@@ -216,7 +237,7 @@ export default function Cadastro() {
               <option value="PRODUTOR">Produtor</option>
             </select>
           </div>
-          
+
           {form.tipo_usuario === "APOIADOR" && (
             <div className="form-group">
               <label htmlFor="tipo_apoiador">Tipo de Apoiador</label>
@@ -230,11 +251,12 @@ export default function Cadastro() {
                 <option value="">Selecione...</option>
                 <option value="PESSOA_FISICA">Pessoa Física</option>
                 <option value="ONG">ONG</option>
-                <option value="EMPRESA">Empresa</option>
+                <option value="EMPRESA_COMERCIO">Empresa</option>
+                <option value="CONVENIADO">Conveniado</option>
               </select>
             </div>
           )}
-          
+
           <div className="form-group">
             <label htmlFor="senha">Senha</label>
             <input
@@ -250,12 +272,12 @@ export default function Cadastro() {
               Use pelo menos 8 caracteres, incluindo letras e números
             </small>
           </div>
-          
+
           <button type="submit" className="btn-cadastrar">
             Cadastrar
           </button>
         </form>
-        
+
         <div className="cadastro-footer">
           Já tem uma conta? <Link to="/login">Faça login</Link>
         </div>

@@ -1,5 +1,37 @@
 /* ===== DEMANDAS SECTION ===== */
 
+.btn-detalhesDemada {
+  background-color: var(--primary-green);
+  color: var(--white);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-detalhesDemada:hover {
+  background-color: var(--secondary-green);
+  color: var(--white);
+}
+
+.btn-mensagem {
+  background-color: var(--primary-green);
+  color: var(--white);
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-mensagem:hover {
+  background-color: var(--secondary-green);
+  color: var(--white);
+}
+
 .demandas-section {
   background: var(--white);
   padding: 2rem;

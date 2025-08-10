@@ -10,7 +10,7 @@ import iotImg from "../IMG/Iot.jpg";
 import tashaImg from "../IMG/Tasha.jpg";
 import kyanImg from "../IMG/Kyan.jpg";
 
-const TelaInicial = () => {
+const Inicio = () => {
     const [usuario, setUsuario] = useState(null);
     const [activeTab, setActiveTab] = useState('feed');
     const [conteudoPost, setConteudoPost] = useState('');
@@ -77,13 +77,24 @@ const TelaInicial = () => {
             {/* Navigation */}
             <nav className="navbar navbar-expand-lg navbar-dark sticky-top">
                 <div className="container">
-                    <a className="navbar-brand" href="/">
-                        <i className="fas fa-seedling me-2"></i> A de Agro
+                    <a className="navbar-brand" href="../jsx/Inicio.jsx">
+                        <i className="fas fa-seedling me-2"></i> ApoiaRural
                     </a>
                     <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                         <span className="navbar-toggler-icon"></span>
                     </button>
-                    
+                    {/* Links externos: GitHub, Email, Instagram */}
+                    <div className="d-flex align-items-center ms-auto gap-2">
+                        <a href="https://github.com/caiomccunha/ApoiaRural-Completo" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light" title="GitHub">
+                            <i className="fab fa-github"></i>
+                        </a>
+                        <a href="" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light" title="Email">
+                            <i className="fas fa-envelope"></i>
+                        </a>
+                        <a href="https://instagram.com/seuusuario" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light" title="Instagram">
+                            <i className="fab fa-instagram"></i>
+                        </a>
+                    </div>
                     <div className="dropdown2 ms-2">
                     <button 
                         className="btn btn-outline-light dropdown-toggle" 
@@ -131,7 +142,12 @@ const TelaInicial = () => {
                         <div className="sidebar">
                             <div className="sidebar-header">
                                 <a href="/perfil">
-                                    <img src={usuario.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
+                                    <img 
+                                      src={`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`} 
+                                      className="post-avatar" 
+                                      alt="Foto do usuário" 
+                                      onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
+                                    />
                                 </a>
                                 <h5 id='nome-usuario'>{usuario.nome}</h5>
                                 <p className="mb-0">
@@ -157,14 +173,7 @@ const TelaInicial = () => {
                                             <i className="fas fa-message"></i>Mensagens
                                         </Link>
                                     </li>
-                                    <li>
-                                        <Link 
-                                            to="/noticias"
-                                            onClick={() => setActiveTab('noticias')}
-                                        >
-                                            <i className="fas fa-newspaper"></i>Notícias
-                                        </Link>
-                                    </li>
+                        
                                     <li>
                                         <Link 
                                             to="/demandas"  // Alterado para "/demandas"
@@ -204,9 +213,10 @@ const TelaInicial = () => {
                             <div className="create-post">
                                 <div className="d-flex align-items-center mb-3">
                                     <img 
-                                        src={usuario.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} 
+                                        src={`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`} 
                                         className="post-avatar" 
                                         alt={usuario.nome} 
+                                        onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
                                     />
                                     <textarea 
                                         className="form-control" 
@@ -347,4 +357,4 @@ const TelaInicial = () => {
     );
 };
 
-export default TelaInicial;
+export default Inicio;

@@ -1,4 +1,4 @@
-    import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
     import { Link, useNavigate } from "react-router-dom";
     import "bootstrap/dist/css/bootstrap.min.css";
     import "@fortawesome/fontawesome-free/css/all.min.css";
@@ -11,6 +11,7 @@
     const [fotoPerfilUrl, setFotoPerfilUrl] = useState(perfilPadrao);
     const [editandoDemandaId, setEditandoDemandaId] = useState(null);
     const [demandaEdit, setDemandaEdit] = useState(null);
+    const [fotoTimestamp, setFotoTimestamp] = useState(Date.now());
     const navigate = useNavigate();
     // Função para excluir usuário
     const handleExcluirUsuario = async () => {
@@ -36,11 +37,17 @@
     // Função para salvar edição da demanda
     const handleSalvarDemandaEdit = async (e) => {
         e.preventDefault();
+        // Garante que data_postagem nunca seja nulo
+        const demandaParaSalvar = {
+            ...demandaEdit,
+            usuarioId: usuario.id,
+            data_postagem: demandaEdit.data_postagem || (demandas.find(d => d.id === editandoDemandaId)?.data_postagem) || new Date().toISOString()
+        };
         try {
             const res = await fetch(`http://localhost:8080/tcc/demandas/${editandoDemandaId}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ ...demandaEdit, usuarioId: usuario.id })
+                body: JSON.stringify(demandaParaSalvar)
             });
             const data = await res.json();
             setDemandas(demandas.map(d => d.id === editandoDemandaId ? data : d));
@@ -56,7 +63,31 @@
         setEditandoDemandaId(null);
         setDemandaEdit(null);
     };
-        // Estados para demandas
+
+    const [showModalExcluir, setShowModalExcluir] = useState(false);
+    const [demandaParaExcluir, setDemandaParaExcluir] = useState(null);
+
+    const handleExcluirDemanda = (demandaId) => {
+      setDemandaParaExcluir(demandaId);
+      setShowModalExcluir(true);
+    };
+
+    const confirmarExcluirDemanda = async () => {
+      if (!demandaParaExcluir) return;
+      try {
+        await fetch(`http://localhost:8080/tcc/demandas/${demandaParaExcluir}`, {
+          method: 'DELETE',
+        });
+        setDemandas(demandas.filter(d => d.id !== demandaParaExcluir));
+        setShowModalExcluir(false);
+        setDemandaParaExcluir(null);
+      } catch (err) {
+        alert('Erro ao excluir demanda.');
+        setShowModalExcluir(false);
+      }
+    };
+
+    // Estados para demandas
         const [usuario, setUsuario] = useState(null);
         const [fotoPerfil, setFotoPerfil] = useState("");
         const [biografia, setBiografia] = useState("");
@@ -77,6 +108,7 @@
             validade_oferta: '',
             status: '',
             data_postagem: '',
+            tipoApoio: '',
         });
         const [formDemandaAberto, setFormDemandaAberto] = useState(false);
         const [carregandoDemandas, setCarregandoDemandas] = useState(false);
@@ -102,11 +134,43 @@
             fetchDemandas();
         }, [usuario]);
 
+        // Função para obter opções de categoria e tipo de apoio conforme o tipo de usuário
+        const getOpcoesDemanda = (tipoUsuario) => {
+            if (tipoUsuario && tipoUsuario.toLowerCase().includes('apoiador')) {
+                return {
+                    categorias: [
+                        { value: 'graos', label: 'Grãos' },
+                        { value: 'feijoes_raizes', label: 'Feijões/Raízes' },
+                        { value: 'frutas_hortalicas', label: 'Frutas/Hortaliças' },
+                        { value: 'verduras_ervas', label: 'Verduras/Ervas' },
+                        { value: 'outros', label: 'Outros' }
+                    ],
+                    tiposApoio: [
+                        { value: 'compra_direta', label: 'Compra Direta' },
+                        { value: 'investimento_financeiro', label: 'Investimento Financeiro' },
+                        { value: 'infraestrutura', label: 'Infraestrutura' },
+                        { value: 'maquinario_equipamentos', label: 'Maquinário/Equipamentos' }
+                    ]
+                };
+            }
+            // Para outros tipos de usuário, só categorias
+            return {
+                categorias: [
+                    { value: 'graos', label: 'Grãos' },
+                    { value: 'feijoes_raizes', label: 'Feijões/Raízes' },
+                    { value: 'frutas_hortalicas', label: 'Frutas/Hortaliças' },
+                    { value: 'verduras_ervas', label: 'Verduras/Ervas' },
+                    { value: 'outros', label: 'Outros' }
+                ],
+                tiposApoio: []
+            };
+        };
+
         // Função para criar nova demanda
         const handleCriarDemanda = async (e) => {
             e.preventDefault();
             // Validação simples
-            if (!novaDemanda.titulo || !novaDemanda.descricao || !novaDemanda.categoria || !novaDemanda.validade_oferta || !novaDemanda.status) {
+            if (!novaDemanda.titulo || !novaDemanda.descricao || !novaDemanda.categoria || !novaDemanda.validade_oferta || !novaDemanda.status || (usuario?.tipo_usuario === 'apoiador' && !novaDemanda.tipoApoio)) {
                 alert('Preencha todos os campos obrigatórios.');
                 return;
             }
@@ -117,13 +181,13 @@
                     body: JSON.stringify({
                         ...novaDemanda,
                         usuarioId: usuario.id,
-                        data_postagem: novaDemanda.data_postagem || new Date().toISOString().slice(0,10),
+                        data_postagem: (novaDemanda.data_postagem || new Date().toISOString()).slice(0, 10),
                     })
                 });
                 const data = await res.json();
                 setDemandas([data, ...demandas]);
                 setNovaDemanda({
-                    titulo: '', descricao: '', categoria: '', cidade: usuario.cidade, estado: usuario.estado, validade_oferta: '', status: '', data_postagem: ''
+                    titulo: '', descricao: '', categoria: '', cidade: usuario.cidade, estado: usuario.estado, validade_oferta: '', status: '', data_postagem: '', tipoApoio: ''
                 });
                 setFormDemandaAberto(false);
             } catch (err) {
@@ -156,40 +220,51 @@
         const handleSalvarPerfil = async () => {
             if (!usuario) return;
             let fotoUrl = fotoPerfil;
-            // Se o usuário selecionou um novo arquivo de foto, faz upload
+            // Upload da foto via FormData
             if (fotoFile) {
                 const formData = new FormData();
                 formData.append('file', fotoFile);
                 try {
-                const resUpload = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`, {
-                    method: 'POST',
-                    body: formData
-                });
-                const dataUpload = await resUpload.json();
-                fotoUrl = dataUpload.url || dataUpload.foto_perfil || fotoPerfil;
+                    const resUpload = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const dataUpload = await resUpload.json();
+                    fotoUrl = dataUpload.url || dataUpload.foto_perfil || fotoPerfil;
+                    setFotoTimestamp(Date.now());
                 } catch (err) {
-                alert('Erro ao fazer upload da foto.');
-                return;
+                    alert('Erro ao fazer upload da foto.');
+                    return;
                 }
             }
+            // Monta objeto apenas com dados necessários e garante que não há campos indefinidos
             const dadosAtualizados = {
-                ...usuario,
-                foto_perfil: fotoUrl,
-                biografia,
-                telefone
+                id: usuario.id,
+                nome: usuario.nome || '',
+                email: usuario.email || '',
+                tipo_usuario: usuario.tipo_usuario || '',
+                cidade: usuario.cidade || '',
+                estado: usuario.estado || '',
+                telefone: telefone || '',
+                biografia: biografia || '',
+                foto_perfil: fotoUrl || ''
             };
             try {
                 const res = await fetch(`http://localhost:8080/tcc/usuarios/${usuario.id}`, {
-                method: "PUT",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(dadosAtualizados)
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(dadosAtualizados)
                 });
+                if (!res.ok) {
+                    const errorText = await res.text();
+                    throw new Error(errorText);
+                }
                 const data = await res.json();
                 setUsuario(data);
                 alert("Perfil atualizado com sucesso!");
             } catch (err) {
                 console.error("Erro ao atualizar perfil:", err);
-                alert("Erro ao salvar alterações.");
+                alert("Erro ao salvar alterações: " + err.message);
             }
             };
 
@@ -201,7 +276,7 @@
                 <nav className="navbar navbar-expand-lg navbar-dark bg-success shadow sticky-top">
                     <div className="container">
                         <Link className="navbar-brand" to="/inicio">
-                            <i className="fas fa-leaf me-2"></i>AgroTech
+                            <i className="fas fa-leaf me-2"></i>ApoiaRural
                         </Link>
                     </div>
                 </nav>
@@ -213,7 +288,7 @@
                                     <div className="sidebar">
                                     <div className="sidebar-header">
                 <a href="/perfil">
-                  <img src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
+                  <img src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto?${fotoTimestamp}` : perfilPadrao} className="post-avatar" alt="Foto do usuário" />
                 </a>
                 <h5 id="nome-usuario">{usuario.nome}</h5>
                 <p className="mb-0">
@@ -240,15 +315,7 @@
                                             <i className="fas fa-message"></i>Mensagens
                                             </Link>
                                         </li>
-                                        <li>
-                                            <Link 
-                                            to="/noticias"
-                                            className={activeTab === 'noticias' ? 'active' : ''}
-                                            onClick={() => setActiveTab('noticias')}
-                                            >
-                                            <i className="fas fa-newspaper"></i>Notícias
-                                            </Link>
-                                        </li>
+                                        
                                         <li>
                                             <Link 
                                             to="/demandas"
@@ -272,7 +339,7 @@
                                     <div className="row mb-3">
                                         <div className="col-md-3 text-center">
                                             <img
-                                                src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao}
+                                                src={usuario.foto_perfil ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto?${fotoTimestamp}` : perfilPadrao}
                                                 alt="Foto do usuário"
                                                 className="img-fluid rounded-circle mb-2"
                                                 style={{ width: "120px", height: "120px", objectFit: "cover" }}
@@ -289,10 +356,10 @@
                                     {/* Botão para editar perfil */}
                                     {!editando && (
                                         <>
-                                            <button className="btn btn-outline-success mb-3 me-2" onClick={() => setEditando(true)}>
+                                            <button className="btn btn-editarPerfil mb-3" onClick={() => setEditando(true)}>
                                                 Editar Perfil
                                             </button>
-                                            <button className="btn btn-outline-danger mb-3" onClick={handleExcluirUsuario}>
+                                            <button className="btn btn-excluir mb-3" onClick={handleExcluirUsuario}>
                                                 Excluir Perfil
                                             </button>
                                         </>
@@ -300,6 +367,15 @@
                                     {/* Formulário de edição */}
                                     {editando && (
                                         <>
+                                            <div className="mb-3">
+                                                <label className="form-label"><strong>Nome</strong></label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    value={usuario.nome}
+                                                    onChange={e => setUsuario({ ...usuario, nome: e.target.value })}
+                                                />
+                                            </div>
                                             <div className="mb-3">
                                                 <label className="form-label"><strong>Biografia</strong></label>
                                                 <textarea
@@ -360,7 +436,7 @@
                                         </button>
                                     )}
                                     {/* Formulário completo de demanda */}
-                                    {formDemandaAberto && (
+                                    {formDemandaAberto && usuario && (
                                         <form onSubmit={handleCriarDemanda} className="mb-3">
                                             <div className="mb-2">
                                                 <input
@@ -382,21 +458,38 @@
                                                     required
                                                 />
                                             </div>
-                                            <div className="mb-2">
-                                                <select
-                                                    className="form-control"
-                                                    value={novaDemanda.categoria}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, categoria: e.target.value })}
-                                                    required
-                                                >
-                                                    <option value="">Selecione a categoria</option>
-                                                    <option value="graos">Grãos</option>
-                                                    <option value="feijoes_raizes">Feijões/Raízes</option>
-                                                    <option value="frutas_hortalicas">Frutas/Hortaliças</option>
-                                                    <option value="verduras_ervas">Verduras/Ervas</option>
-                                                    <option value="outros">Outros</option>
-                                                </select>
-                                            </div>
+                                            {/* Campo categoria só para produtor (case-insensitive) */}
+                                            {usuario.tipo_usuario && (
+                                                <div className="mb-2">
+                                                    <select
+                                                        className="form-control"
+                                                        value={novaDemanda.categoria}
+                                                        onChange={e => setNovaDemanda({ ...novaDemanda, categoria: e.target.value })}
+                                                    >
+                                                        <option value="">Selecione a categoria</option>
+                                                        {getOpcoesDemanda(usuario.tipo_usuario).categorias.map(opt => (
+                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            )}
+                                            {/* Campo tipo de apoio só para apoiador (case-insensitive) */}
+                                            {usuario.tipo_usuario && usuario.tipo_usuario.toLowerCase().includes('apoiador') && (
+                                                <div className="mb-2">
+                                                    <select
+                                                        className="form-control"
+                                                        value={novaDemanda.tipoApoio}
+                                                        onChange={e => setNovaDemanda({ ...novaDemanda, tipoApoio: e.target.value })}
+                                                        
+                                                    >
+                                                        <option value="">Selecione o tipo de apoio</option>
+                                                        {getOpcoesDemanda(usuario.tipo_usuario).tiposApoio.map(opt => (
+                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+                                            )}
+
                                             <div className="mb-2">
                                                 <input
                                                     type="text"
@@ -439,15 +532,12 @@
                                                     <option value="fechada">Fechada</option>
                                                 </select>
                                             </div>
-                                            <div className="mb-2">
-                                                <label className="form-label">Data de postagem</label>
-                                                <input
-                                                    type="date"
-                                                    className="form-control"
-                                                    value={novaDemanda.data_postagem}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, data_postagem: e.target.value })}
+                                            <input
+                                                type="date"
+                                                className="form-control"
+                                                value={novaDemanda.data_postagem}
+                                                onChange={e => setNovaDemanda({ ...novaDemanda, data_postagem: e.target.value })}
                                                 />
-                                            </div>
                                             <button type="submit" className="btn btn-success me-2">Criar Demanda</button>
                                             <button type="button" className="btn btn-secondary" onClick={() => setFormDemandaAberto(false)}>Cancelar</button>
                                         </form>
@@ -524,8 +614,11 @@
                                                             <p className="mb-0">{demanda.descricao}</p>
                                                             <small className="text-muted">Cidade: {usuario.cidade} | Estado: {usuario.estado} | Validade: {demanda.validade_oferta} | Status: {demanda.status}</small>
                                                             <div className="mt-2">
-                                                                <button className="btn btn-outline-primary btn-sm" onClick={() => handleEditarDemanda(demanda)}>
+                                                                <button className="btn btn-editar" onClick={() => handleEditarDemanda(demanda)}>
                                                                     Editar
+                                                                </button>
+                                                                <button className="btn btn-delete" onClick={() => handleExcluirDemanda(demanda.id)}>
+                                                                    Excluir
                                                                 </button>
                                                             </div>
                                                         </>
@@ -538,6 +631,25 @@
                             </div>
                         </div>
                     </div>
+                </div>
+
+                {/* Modal Bootstrap para confirmação de exclusão de demanda */}
+                <div className={`modal fade${showModalExcluir ? ' show d-block' : ''}`} tabIndex="-1" role="dialog" style={{background: showModalExcluir ? 'rgba(0,0,0,0.5)' : 'none'}}>
+                  <div className="modal-dialog" role="document">
+                    <div className="modal-content">
+                      <div className="modal-header">
+                        <h5 className="modal-title">Confirmar exclusão</h5>
+                        <button type="button" className="btn-close" onClick={() => setShowModalExcluir(false)} aria-label="Close"></button>
+                      </div>
+                      <div className="modal-body">
+                        <p>Tem certeza que deseja excluir esta demanda? Esta ação não pode ser desfeita.</p>
+                      </div>
+                      <div className="modal-footer">
+                        <button type="button" className="btn btn-secondary" onClick={() => setShowModalExcluir(false)}>Cancelar</button>
+                        <button type="button" className="btn btn-danger" onClick={confirmarExcluirDemanda}>Excluir</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
             </div>
         );
