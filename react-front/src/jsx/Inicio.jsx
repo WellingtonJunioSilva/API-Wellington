@@ -19,6 +19,16 @@ const Inicio = () => {
         tipo_usuario : null,
         ordenação: 'recentes'
     });
+    const [posts, setPosts] = useState([]);
+
+    // --- ESTADOS PARA POSTAGEM ---
+    const MAX_CHARS = 280;
+    const [text, setText] = useState("");
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [preview, setPreview] = useState(null);
+    const [isPosting, setIsPosting] = useState(false);
+    const isPostButtonDisabled = isPosting || (!text.trim() && !selectedFile);
+    const charCounterColor = text.length > MAX_CHARS ? 'red' : undefined;
 
     useEffect(() => {
         const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
@@ -34,11 +44,83 @@ const Inicio = () => {
         }
     }, [navigate]);
 
-    const handlePublicar = () => {
-        // Aqui você pode adicionar a lógica para publicar o post
-        console.log("Post publicado:", conteudoPost);
-        setConteudoPost('');
-        // Adicionar à lista de posts...
+    useEffect(() => {
+        if (!selectedFile) {
+            setPreview(null);
+            return;
+        }
+        const objectUrl = URL.createObjectURL(selectedFile);
+        setPreview(objectUrl);
+        return () => URL.revokeObjectURL(objectUrl);
+    }, [selectedFile]);
+
+    // Adicione a função fetchPosts para buscar os posts do backend
+    const fetchPosts = async () => {
+        try {
+            const response = await fetch('http://localhost:8080/api/posts');
+            if (!response.ok) throw new Error('Erro ao buscar posts');
+            const data = await response.json();
+            setPosts(data);
+            // console.log('Posts carregados:', data); // Para depuração
+        } catch (err) {
+            console.error('Erro ao buscar posts:', err);
+        }
+    };
+
+    useEffect(() => {
+        fetchPosts();
+    }, []);
+
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            if (file.size > 30 * 1024 * 1024) {
+                alert('Arquivo muito grande! O limite é 30MB.');
+                event.target.value = '';
+                return;
+            }
+            setSelectedFile(file);
+        }
+    };
+
+    const handleRemoveMedia = () => {
+        setSelectedFile(null);
+        setPreview(null);
+        const imgInput = document.getElementById('imageUpload');
+        const vidInput = document.getElementById('videoUpload');
+        if (imgInput) imgInput.value = '';
+        if (vidInput) vidInput.value = '';
+    };
+
+    const handleSubmit = async (event) => {
+        event.preventDefault();
+        setIsPosting(true);
+        const formData = new FormData();
+        formData.append('post', JSON.stringify({ message: text.trim() }));
+        if (selectedFile) {
+            formData.append('file', selectedFile);
+        }
+        try {
+            const response = await fetch('http://localhost:8080/api/posts', {
+                method: 'POST',
+                body: formData,
+            });
+            if (!response.ok) {
+                const errorData = await response.text();
+                throw new Error(`Falha ao criar o post. Status: ${response.status}. Detalhes: ${errorData}`);
+            }
+            // Após criar o post, buscar novamente os posts para atualizar o feed
+            await fetchPosts();
+            setText("");
+            setSelectedFile(null);
+            setPreview(null);
+            alert('Post criado com sucesso!');
+        } catch (error) {
+            console.error('Erro detalhado:', error);
+            alert('Ocorreu um erro ao criar o post. Verifique o console para mais detalhes.');
+        } finally {
+            setIsPosting(false);
+        }
     };
 
     const filtrarPosts = (posts) => {
@@ -209,40 +291,69 @@ const Inicio = () => {
                     <div className="col-lg-6">
                         {/* Feed Section */}
                         <div id="feed-section" style={{ display: activeTab === 'feed' ? 'block' : 'none' }}>
-                            {/* Create Post */}
+                            {/* Create Post Adaptado */}
                             <div className="create-post">
-                                <div className="d-flex align-items-center mb-3">
-                                    <img 
-                                        src={`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`} 
-                                        className="post-avatar" 
-                                        alt={usuario.nome} 
-                                        onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
-                                    />
-                                    <textarea 
-                                        className="form-control" 
-                                        placeholder={`O que você está pensando, ${usuario.nome.split(' ')[0]}?`}
-                                        value={conteudoPost}
-                                        onChange={(e) => setConteudoPost(e.target.value)}
-                                    ></textarea>
-                                </div>
-                                <div className="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <button className="btn btn-outline-primary btn-sm me-2">
-                                            <i className="fas fa-image me-1"></i>Foto
-                                        </button>
-                                        <button className="btn btn-outline-primary btn-sm">
-                                            <i className="fas fa-video me-1"></i>Vídeo
-                                        </button>
-                                    </div>
-                                    <button 
-                                        className="btn btn-primary"
-                                        onClick={handlePublicar}
-                                        disabled={!conteudoPost.trim()}
-                                    >
-                                        Publicar
-                                    </button>
-                                </div>
+    <div className="container">
+        <div className="row justify-content-center">
+            <div className="col-md-8 col-lg-12">
+                <div className="card post-creation-card p-2">
+                    <div className="card-body">
+                        <form onSubmit={handleSubmit}>
+                            <div className="d-flex align-items-start mb-3">
+                                <img src={usuario?.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} alt="Foto do Perfil" className="rounded-circle me-3 profile-pic post-avatar" />
+                                <textarea
+                                    id="postTextarea"
+                                    className="form-control post-textarea"
+                                    rows="3"
+                                    placeholder={`No que você está pensando, ${usuario?.nome?.split(' ')[0] || ''}?`}
+                                    value={text}
+                                    onChange={(e) => setText(e.target.value)}
+                                />
                             </div>
+                            {preview && (
+                                <div id="mediaPreview">
+                                    {selectedFile.type.startsWith('image/') ? (
+                                        <img src={preview} alt="Preview" className="img-fluid rounded" />
+                                    ) : (
+                                        <video src={preview} controls className="img-fluid rounded" />
+                                    )}
+                                    <button type="button" className="remove-media-btn" onClick={handleRemoveMedia}>&times;</button>
+                                </div>
+                            )}
+                            <div className="d-flex justify-content-end align-items-center mt-2">
+                                <span id="charCounter" className="text-muted small" style={{ color: charCounterColor }}>
+                                    {text.length} / {MAX_CHARS}
+                                </span>
+                            </div>
+                            <hr className="my-2" />
+                            <div className="d-flex justify-content-between align-items-center">
+                                <div className="d-flex">
+                                    <label htmlFor="imageUpload" className="action-btn d-flex align-items-center me-2">
+                                        <i className="bi bi-image-fill"></i> Foto
+                                    </label>
+                                    <input type="file" id="imageUpload" className="file-input" accept="image/*" onChange={handleFileChange} />
+                                    <label htmlFor="videoUpload" className="action-btn d-flex align-items-center">
+                                        <i className="bi bi-film"></i> Vídeo
+                                    </label>
+                                    <input type="file" id="videoUpload" className="file-input" accept="video/*" onChange={handleFileChange} />
+                                </div>
+                                <button type="submit" className="btn btn-primary fw-bold rounded-pill px-4" disabled={isPostButtonDisabled}>
+                                    {isPosting ? (
+                                        <>
+                                            <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Postando...
+                                        </>
+                                    ) : (
+                                        'Postar'
+                                    )}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
                             {/* Posts */}
                             <div className="post-card card">
