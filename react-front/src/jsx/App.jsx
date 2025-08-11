@@ -20,6 +20,7 @@ function App() {
         <Link to="/demandas" style={styles.link}>Demandas</Link> {/* Corrigido aqui */}
         <Link to="/mensagens" style={styles.link}>Mensagens</Link>
         <Link to="/perfil" style={styles.link}>Perfil</Link>
+        <Link to="/perfil/:id" style={styles.link}>Perfil</Link>
         <Link to="/demandas/:id" style={styles.link}>Detalhe Demanda</Link> {/* Link de exemplo para DetalheDemanda */}
       </nav>
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/mensagens" element={<Mensagens />} />
         <Route path="/demandas" element={<Demandas />} />
         <Route path="/perfil" element= {<PerfilUser/>} />
+        <Route path="/perfil/:id" element= {<PerfilUser/>} />
         <Route path="/demandas/:id" element={<DetalheDemanda />} />
       </Routes>
     </Router>

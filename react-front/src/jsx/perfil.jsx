@@ -1,12 +1,48 @@
 import React, { useState, useEffect } from "react";
-    import { Link, useNavigate } from "react-router-dom";
+    import { Link, useNavigate, useParams } from "react-router-dom";
     import "bootstrap/dist/css/bootstrap.min.css";
     import "@fortawesome/fontawesome-free/css/all.min.css";
     import perfilPadrao from "../IMG/icon perfil novo.png";
     import '../css/PerfilUser.css';
 
 
-    const PerfilUser = () => {
+    export default function PerfilUser() {
+    var{ id } = useParams()
+    const [usuario, setUsuario] = useState(null);
+    const [usuarioLogadoId, setUsuarioLogadoId] = useState(null);
+    const [demandas, setDemandas] = useState([]);
+    const [conectado, setConectado]= useState(false);
+    const [loading, setLoading] = useState(true);
+
+    const usuarioAtual = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+    if(id === undefined) id = usuarioAtual.id;
+
+    useEffect(() => {
+
+        if(usuarioAtual) setUsuarioLogadoId(usuarioAtual.id); 
+
+        const fetchUsuario = async () => {
+            try {
+                const resUsuario = await fetch(`http://localhost:8080/tcc/usuarios/${id}`);
+                const dataUsuario = await resUsuario.json();
+                setUsuario(dataUsuario);
+
+                const resDemandas = await fetch(`http://localhost:8080/tcc/demandas/usuario/${id}`);
+                const dataDemandas = await resDemandas.json();
+                setDemandas(Array.isArray(dataDemandas) ? dataDemandas : []);
+            } catch(error) {
+                console.error("Erro ao carregar perfil:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUsuario();
+    }, [id]);
+
+    const proprioPerfil = usuario && usuarioLogadoId == id;
+
+
     const [fotoFile, setFotoFile] = useState(null);
     const [fotoPerfilUrl, setFotoPerfilUrl] = useState(perfilPadrao);
     const [editandoDemandaId, setEditandoDemandaId] = useState(null);
@@ -87,18 +123,49 @@ import React, { useState, useEffect } from "react";
       }
     };
 
+    useEffect(() => {
+        const verificarConexao = async () => {
+            try {
+                const res = await fetch(
+                    `http://localhost:8080/tcc/usuarios/${usuarioLogadoId}/conectado/${id}`
+                );
+                const data = await res.json();
+                setConectado(data);
+            } catch (error) {
+                console.error("Erro ao verificar conexão:", error);
+            }
+        };
+        verificarConexao();
+    }, [usuarioLogadoId, id]);
+
+    const handleConectarUsuario = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/tcc/usuarios/${usuarioLogadoId}/conectar/${id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+            if(!response.ok) {
+                throw new Error("Erro ao conectar/desconectar-se com usuário");
+            }
+            setConectado(prev => !prev);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     // Estados para demandas
-        const [usuario, setUsuario] = useState(null);
         const [fotoPerfil, setFotoPerfil] = useState("");
         const [biografia, setBiografia] = useState("");
         const [email, setEmail] = useState("");
         const [telefone, setTelefone] = useState("");
-        const [loading, setLoading] = useState(true);
         const [activeTab, setActiveTab] = useState('perfil');
         const [searchTerm, setSearchTerm] = useState('');
         const [filtros, setFiltros] = useState({ tipoUsuario: null, ordenacao: null });
         const [editando, setEditando] = useState(false);
-        const [demandas, setDemandas] = useState([]);
         const [novaDemanda, setNovaDemanda] = useState({
             titulo: '',
             descricao: '',
@@ -194,28 +261,6 @@ import React, { useState, useEffect } from "react";
                 alert('Erro ao criar demanda.');
             }
         };
-
-        const emailUsuario = JSON.parse(localStorage.getItem("usuarioLogado")).email;
-
-        useEffect(() => {
-            const fetchUser = async () => {
-                try {
-                    const res = await fetch(`http://localhost:8080/tcc/usuarios/email/${emailUsuario}`);
-                    const data = await res.json();
-                    setUsuario(data);
-                    setFotoPerfil(data.foto_perfil || "");
-                    setBiografia(data.biografia || "");
-                    setEmail(data.email || "");
-                    setTelefone(data.telefone || "");
-                } catch (err) {
-                    console.error("Erro ao carregar dados:", err);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
-            fetchUser();
-        }, [emailUsuario]);
 
         const handleSalvarPerfil = async () => {
             if (!usuario) return;
@@ -368,7 +413,7 @@ import React, { useState, useEffect } from "react";
                                         </div>
                                     </div>
                                     {/* Botão para editar perfil */}
-                                    {!editando && (
+                                    {!editando && proprioPerfil ? (
                                         <>
                                             <button className="btn btn-editarPerfil mb-3" onClick={() => setEditando(true)}>
                                                 Editar Perfil
@@ -377,6 +422,15 @@ import React, { useState, useEffect } from "react";
                                                 Excluir Perfil
                                             </button>
                                         </>
+                                    ) : (
+                                        <div>
+                                            <button
+                                                className={`btn mb-3 ${conectado ? "btn-danger" : "btn-success"}`}
+                                                onClick={handleConectarUsuario}
+                                            >
+                                                {conectado ? "Desconectar" : "Conectar"}
+                                            </button>
+                                        </div>
                                     )}
                                     {/* Formulário de edição */}
                                     {editando && (
@@ -442,9 +496,13 @@ import React, { useState, useEffect } from "react";
                             {/* Área de demandas do usuário */}
                             <div className="card mb-4">
                                 <div className="card-body">
-                                    <h5 className="mb-3">Minhas Demandas</h5>
+                                    {proprioPerfil ? (
+                                        <h5 className="mb-3">Minhas Demandas</h5>
+                                    ) : (
+                                        <h5 className="mb-3">Demandas de {usuario.nome}</h5>
+                                    )}
                                     {/* Botão para abrir formulário de nova demanda */}
-                                    {!formDemandaAberto && (
+                                    {proprioPerfil && !formDemandaAberto && (
                                         <button className="btn btn-success mb-3" onClick={() => setFormDemandaAberto(true)}>
                                             Nova Demanda
                                         </button>
@@ -668,5 +726,3 @@ import React, { useState, useEffect } from "react";
             </div>
         );
     };
-
-    export default PerfilUser;
