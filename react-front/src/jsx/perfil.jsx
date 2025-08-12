@@ -42,7 +42,6 @@ import React, { useState, useEffect } from "react";
 
     const proprioPerfil = usuario && usuarioLogadoId == id;
 
-
     const [fotoFile, setFotoFile] = useState(null);
     const [fotoPerfilUrl, setFotoPerfilUrl] = useState(perfilPadrao);
     const [editandoDemandaId, setEditandoDemandaId] = useState(null);
@@ -127,7 +126,7 @@ import React, { useState, useEffect } from "react";
         const verificarConexao = async () => {
             try {
                 const res = await fetch(
-                    `http://localhost:8080/tcc/usuarios/${usuarioLogadoId}/conectado/${id}`
+                    `http://localhost:8080/tcc/usuarios/${usuarioAtual.id}/conectado/${id}`
                 );
                 const data = await res.json();
                 setConectado(data);
@@ -340,7 +339,7 @@ import React, { useState, useEffect } from "react";
                                       onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
                                     />
                                 </a>
-                                <h5 id='nome-usuario'>{usuario.nome}</h5>
+                                <h5 id='nome-usuario'>{usuarioAtual.nome}</h5>
                                 <p className="mb-0">
                                     {usuario.tipo_usuario} • {usuario.cidade}
                                 </p>

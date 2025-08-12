@@ -24,21 +24,23 @@ export default function Mensagens() {
         tipo_usuario: usuarioLogado.tipo_usuario || "Usuário",
         cidade: usuarioLogado.cidade || "Local não informado",
         nome: usuarioLogado.nome || "Usuário",
-        conexoes: usuarioLogado.conexoes.length || 0
+        // conexoes: usuarioLogado.conexoes.length || 0
       });
 
       async function fetchConexoes(id) {
       try {
         const res = await fetch(`http://localhost:8080/tcc/usuarios/${id}/conexoes`);
         let data = await res.json();
+        console.log(data);
+        setUsuario({...usuarioLogado, conexoes: data.length});
 
-        if (filtros.tipoUsuario)
+        /* if (filtros.tipoUsuario)
           data = data.filter(d => d.usuarioTipo === filtros.tipoUsuario);
 
         if (searchTerm)
           data = data.filter(d =>
             d.nome.toLowerCase().includes(searchTerm.toLowerCase())
-          );
+          ); */
 
         setConexoes(data);
       } catch (error) {
