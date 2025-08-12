@@ -57,13 +57,26 @@ const Inicio = () => {
     // Adicione a função fetchPosts para buscar os posts do backend
     const fetchPosts = async () => {
         try {
-            const response = await fetch('http://localhost:8080/api/posts');
-            if (!response.ok) throw new Error('Erro ao buscar posts');
+            const usuarioLogado = localStorage.getItem("usuarioLogado");
+            if (!usuarioLogado) throw new Error("usuarioLogado não encontrado no localStorage");
+            let usuarioId;
+            try {
+                usuarioId = JSON.parse(usuarioLogado).id;
+            } catch (e) {
+                throw new Error("Falha ao ler o id do usuarioLogado no localStorage");
+            }
+            if (!usuarioId) throw new Error("id do usuarioLogado não encontrado");
+            const response = await fetch(`http://localhost:8080/api/posts?usuarioId=${usuarioId}`);
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro ao buscar posts: ${response.status} - ${errorText}`);
+            }
             const data = await response.json();
             setPosts(data);
             // console.log('Posts carregados:', data); // Para depuração
         } catch (err) {
             console.error('Erro ao buscar posts:', err);
+            alert(err.message); // Mostra o erro detalhado
         }
     };
 
@@ -95,32 +108,36 @@ const Inicio = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsPosting(true);
+        const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
         const formData = new FormData();
-        formData.append('post', JSON.stringify({ message: text.trim() }));
-        if (selectedFile) {
-            formData.append('file', selectedFile);
+        formData.append('post', JSON.stringify({
+      message: text.trim() || null
+    }));
+    formData.append('autorId', usuarioLogado.id); // campo separado
+    if (selectedFile) {
+        formData.append('file', selectedFile);
+    }
+    try {
+        const response = await fetch('http://localhost:8080/api/posts', {
+            method: 'POST',
+            body: formData,
+        });
+        if (!response.ok) {
+            const errorData = await response.text();
+            throw new Error(`Falha ao criar o post. Status: ${response.status}. Detalhes: ${errorData}`);
         }
-        try {
-            const response = await fetch('http://localhost:8080/api/posts', {
-                method: 'POST',
-                body: formData,
-            });
-            if (!response.ok) {
-                const errorData = await response.text();
-                throw new Error(`Falha ao criar o post. Status: ${response.status}. Detalhes: ${errorData}`);
-            }
-            // Após criar o post, buscar novamente os posts para atualizar o feed
-            await fetchPosts();
-            setText("");
-            setSelectedFile(null);
-            setPreview(null);
-            alert('Post criado com sucesso!');
-        } catch (error) {
-            console.error('Erro detalhado:', error);
-            alert('Ocorreu um erro ao criar o post. Verifique o console para mais detalhes.');
-        } finally {
-            setIsPosting(false);
-        }
+        // Após criar o post, buscar novamente os posts para atualizar o feed
+        await fetchPosts();
+        setText("");
+        setSelectedFile(null);
+        setPreview(null);
+        alert('Post criado com sucesso!');
+    } catch (error) {
+        console.error('Erro detalhado:', error);
+        alert('Ocorreu um erro ao criar o post. Verifique o console para mais detalhes.');
+    } finally {
+        setIsPosting(false);
+    }
     };
 
     const filtrarPosts = (posts) => {
@@ -142,6 +159,89 @@ const Inicio = () => {
         
         return postsFiltrados;
     };
+
+    // Estado para controlar posts curtidos pelo usuário
+const [likedPosts, setLikedPosts] = useState([]);
+
+// Função para curtir/descurtir
+const handleLike = async (postId) => {
+    if (!postId) return;
+    // Se já curtiu, descurte
+    const alreadyLiked = likedPosts.includes(postId);
+    try {
+        const usuarioLogado = localStorage.getItem("usuarioLogado");
+        if (!usuarioLogado) throw new Error("usuarioLogado não encontrado no localStorage");
+        let usuarioId;
+        try {
+            usuarioId = JSON.parse(usuarioLogado).id;
+        } catch (e) {
+            throw new Error("Falha ao ler o id do usuarioLogado no localStorage");
+        }
+        if (!usuarioId) throw new Error("id do usuarioLogado não encontrado");
+        const url = `http://localhost:8080/api/posts/${postId}/${alreadyLiked ? 'unlike' : 'like'}?usuarioId=${usuarioId}`;
+        await fetch(url, { method: 'POST' });
+        setLikedPosts((prev) => {
+            if (alreadyLiked) {
+                return prev.filter(id => id !== postId);
+            } else {
+                return [...prev, postId];
+            }
+        });
+        fetchPosts();
+    } catch (err) {
+        alert('Erro ao curtir/descurtir o post: ' + err.message);
+    }
+};
+
+// Atualiza likedPosts ao carregar posts (supondo que o backend retorna se o usuário curtiu cada post)
+useEffect(() => {
+    setLikedPosts(posts.filter(post => post.curtidoPorUsuario).map(post => post.id));
+}, [posts]);
+
+// Modal para comentar
+const [showCommentModal, setShowCommentModal] = useState(false);
+const [modalCommentText, setModalCommentText] = useState('');
+const [modalPostId, setModalPostId] = useState(null);
+
+const openCommentModal = (postId) => {
+    if (!postId) {
+        alert('ID do post inválido!');
+        return;
+    }
+    setModalPostId(postId);
+    setModalCommentText('');
+    setShowCommentModal(true);
+};
+
+const closeCommentModal = () => {
+    setShowCommentModal(false);
+    setModalCommentText('');
+    setModalPostId(null);
+};
+
+const sendModalComment = async () => {
+    if (!modalPostId) {
+        alert('ID do post inválido!');
+        return;
+    }
+    try {
+        await fetch(`http://localhost:8080/api/comments/post/${modalPostId}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ content: modalCommentText })
+        });
+        closeCommentModal();
+        fetchPosts();
+    } catch (err) {
+        alert('Erro ao comentar');
+    }
+};
+
+const handleShare = (postId) => {
+    const url = `${window.location.origin}/post/${postId}`;
+    navigator.clipboard.writeText(url);
+    alert('Link do post copiado!');
+};
 
     if (!usuario) {
         return (
@@ -355,67 +455,139 @@ const Inicio = () => {
     </div>
 </div>
 
-                            {/* Posts */}
-                            <div className="post-card card">
-                                <div className="post-header">
-                                    <img src={post1Img} className="post-avatar" alt="Maria Silva" />
-                                    <div className="post-author">
-                                        <h6>Maria Silva</h6>
-                                        <small><i className="fas fa-map-marker-alt me-1"></i>Minas Gerais • 2h atrás</small>
+                            {/* Posts dinâmicos do backend */}
+                            {posts.length === 0 ? (
+    <div className="text-center text-muted mt-4">Nenhum post encontrado.</div>
+) : (
+    filtrarPosts(posts).map((post) => {
+        let fotoAutorSrc = perfilPadrao;
+        if (post.autorFoto) {
+            if (Array.isArray(post.autorFoto)) {
+                // Se vier como array de bytes
+                const byteArray = new Uint8Array(post.autorFoto);
+                const base64String = btoa(String.fromCharCode(...byteArray));
+                fotoAutorSrc = `data:image/jpeg;base64,${base64String}`;
+            } else if (typeof post.autorFoto === 'string' && post.autorFoto.startsWith('data:image')) {
+                // Se já vier como base64
+                fotoAutorSrc = post.autorFoto;
+            } else if (typeof post.autorFoto === 'string' && post.autorFoto.length > 10) {
+                // Se vier como URL
+                fotoAutorSrc = post.autorFoto;
+            }
+        } else if (post.autorId) {
+            fotoAutorSrc = `http://localhost:8080/tcc/usuarios/${post.autorId}/foto`;
+        }
+        return (
+        <div className="post-card card" key={post.id}>
+            <div className="post-header">
+                <img
+                    src={fotoAutorSrc}
+                    className="post-avatar"
+                    alt={post.autorNome || 'Usuário'}
+                    onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
+                />
+                <div className="post-author">
+                    <h6>{post.autorNome || 'Usuário'}</h6>
+                    <small><i className="fas fa-map-marker-alt me-1"></i>{post.localizacao || ''} • {post.tempoPostado || ''}</small>
+                </div>
+                <div className="dropdown">
+                    <button className="btn btn-sm" data-bs-toggle="dropdown">
+                        <i className="fas fa-ellipsis-h"></i>
+                    </button>
+                    <ul className="dropdown-menu">
+                        <li><a className="dropdown-item" href="#">Salvar post</a></li>
+                        <li><a className="dropdown-item" href="#">Denunciar</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div className="post-content">
+                <p>{post.message}</p>
+                {(post.nomeArquivoPost || post.tipoMimePost || post.fotoPost) && (
+                    (() => {
+                        let imgSrc = '';
+                        if (post.fotoPost) {
+                            if (Array.isArray(post.fotoPost)) {
+                                // Array de bytes
+                                const byteArray = new Uint8Array(post.fotoPost);
+                                const base64String = btoa(String.fromCharCode(...byteArray));
+                                imgSrc = `data:image/jpeg;base64,${base64String}`;
+                            } else if (typeof post.fotoPost === 'string' && post.fotoPost.startsWith('data:image')) {
+                                // Base64
+                                imgSrc = post.fotoPost;
+                            } else if (typeof post.fotoPost === 'string' && post.fotoPost.length > 10) {
+                                // URL
+                                imgSrc = post.fotoPost;
+                            }
+                        } else {
+                            imgSrc = `http://localhost:8080/api/posts/${post.id}/image`;
+                        }
+                        return (
+                            <img
+                                src={imgSrc}
+                                className="post-image"
+                                alt="Mídia do post"
+                                onError={e => e.target.style.display = 'none'}
+                            />
+                        );
+                    })()
+                )}
+                {post.comments && post.comments.length > 0 && (
+                    <div className="comments-list mt-2">
+                        <h6 className="fw-bold mb-2">Comentários</h6>
+                        {post.comments.map((comment) => {
+                            let fotoSrc = perfilPadrao;
+                            if (comment.fotoUsuario) {
+                                // Se vier como array de bytes
+                                if (Array.isArray(comment.fotoUsuario)) {
+                                    const byteArray = new Uint8Array(comment.fotoUsuario);
+                                    const base64String = btoa(String.fromCharCode(...byteArray));
+                                    fotoSrc = `data:image/jpeg;base64,${base64String}`;
+                                } else if (typeof comment.fotoUsuario === 'string') {
+                                    // Se já vier como base64
+                                    fotoSrc = `data:image/jpeg;base64,${comment.fotoUsuario}`;
+                                } else {
+                                    // Se vier como URL
+                                    fotoSrc = comment.fotoUsuario;
+                                }
+                            }
+                            return (
+                                <div key={comment.id} className="comment-item d-flex align-items-center mb-2">
+                                    <img
+                                        src={fotoSrc}
+                                        className="post-avatar me-2"
+                                        alt={comment.nomeUsuario || 'Usuário'}
+                                        style={{ width: 32, height: 32 }}
+                                    />
+                                    <div>
+                                        <span className="fw-bold">{comment.nomeUsuario || 'Usuário'}: </span>
+                                        <span className="comment-content">{comment.content}</span>
                                     </div>
-                                    <div className="dropdown">
-                                        <button className="btn btn-sm" data-bs-toggle="dropdown">
-                                            <i className="fas fa-ellipsis-h"></i>
-                                        </button>
-                                        <ul className="dropdown-menu">
-                                            <li><a className="dropdown-item" href="#">Salvar post</a></li>
-                                            <li><a className="dropdown-item" href="#">Denunciar</a></li>
-                                        </ul>
-                                    </div>
                                 </div>
-                                <div className="post-content">
-                                    <p>Pessoal, acabei de implementar um sistema de irrigação inteligente na minha plantação de tomates. Os resultados foram impressionantes! 🍅💧</p>
-                                    <p>A economia de água foi de 40% e a produtividade aumentou 25%. Alguém mais tem experiência com IoT na agricultura?</p>
-                                    <img src={iotImg} className="post-image" alt="Sistema de Irrigação" />
-                                </div>
-                                <div className="post-actions">
-                                    <button className="btn-action">
-                                        <i className="far fa-heart me-1"></i>Curtir (24)
-                                    </button>
-                                    <button className="btn-action">
-                                        <i className="far fa-comment me-1"></i>Comentar (8)
-                                    </button>
-                                    <button className="btn-action">
-                                        <i className="fas fa-share me-1"></i>Compartilhar
-                                    </button>
-                                </div>
-                            </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </div>
+            <div className="post-actions">
+                <button
+                    className="btn-action"
+                    style={{ color: likedPosts.includes(post.id) ? 'green' : undefined }}
+                    onClick={() => handleLike(post.id)}
+                >
+                    <i className="far fa-heart me-1"></i>Curtir ({post.likes || 0})
+                </button>
+                <button className="btn-action" onClick={() => openCommentModal(post.id)}>
+                    <i className="far fa-comment me-1"></i>Comentar ({post.comments ? post.comments.length : 0})
+                </button>
+                <button className="btn-action" onClick={() => handleShare(post.id)}>
+                    <i className="fas fa-share me-1"></i>Compartilhar
+                </button>
+            </div>
+        </div>
+        );
+    })
+)}
 
-                            <div className="post-card card">
-                                <div className="post-header">
-                                    <img src={post2Img} className="post-avatar" alt="AgroTech" />
-                                    <div className="post-author">
-                                        <h6>AgroTech Solutions <i className="fas fa-check-circle text-primary ms-1"></i></h6>
-                                        <small><i className="fas fa-building me-1"></i>Empresa • 4h atrás</small>
-                                    </div>
-                                </div>
-                                <div className="post-content">
-                                    <p><strong>🚀 Nova tecnologia de análise de solo disponível!</strong></p>
-                                    <p>Estamos oferecendo análises gratuitas de solo para pequenos produtores rurais. Nossa tecnologia utiliza IA para fornecer recomendações precisas de nutrientes e pH.</p>
-                                    <p>Interessados podem se inscrever através do link nos comentários. Vagas limitadas!</p>
-                                </div>
-                                <div className="post-actions">
-                                    <button className="btn-action">
-                                        <i className="far fa-heart me-1"></i>Curtir (156)
-                                    </button>
-                                    <button className="btn-action">
-                                        <i className="far fa-comment me-1"></i>Comentar (32)
-                                    </button>
-                                    <button className="btn-action">
-                                        <i className="fas fa-share me-1"></i>Compartilhar
-                                    </button>
-                                </div>
-                            </div>
                         </div>
 
                         {/* Research Section - mantido como estava */}
@@ -464,6 +636,33 @@ const Inicio = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Modal de Comentários */}
+            {showCommentModal && (
+    <div className="modal" style={{ display: 'block', background: 'rgba(0,0,0,0.5)', position: 'fixed', top:0, left:0, width:'100vw', height:'100vh', zIndex:9999 }}>
+        <div className="modal-dialog" style={{ margin: '10vh auto', maxWidth: 400 }}>
+            <div className="modal-content">
+                <div className="modal-header">
+                    <h5 className="modal-title">Comentar</h5>
+                    <button type="button" className="btn-close" onClick={closeCommentModal}></button>
+                </div>
+                <div className="modal-body">
+                    <textarea
+                        className="form-control"
+                        rows={3}
+                        placeholder="Digite seu comentário..."
+                        value={modalCommentText}
+                        onChange={e => setModalCommentText(e.target.value)}
+                    />
+                </div>
+                <div className="modal-footer">
+                    <button type="button" className="btn btn-secondary" onClick={closeCommentModal}>Cancelar</button>
+                    <button type="button" className="btn btn-primary" onClick={sendModalComment}>Enviar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+)}
         </div>
     );
 };

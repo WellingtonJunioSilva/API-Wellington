@@ -94,7 +94,7 @@ import React, { useState, useEffect } from "react";
         const [email, setEmail] = useState("");
         const [telefone, setTelefone] = useState("");
         const [loading, setLoading] = useState(true);
-        const [activeTab, setActiveTab] = useState('sobre');
+        const [activeTab, setActiveTab] = useState('demandas');
         const [searchTerm, setSearchTerm] = useState('');
         const [filtros, setFiltros] = useState({ tipoUsuario: null, ordenacao: null });
         const [editando, setEditando] = useState(false);
@@ -112,8 +112,12 @@ import React, { useState, useEffect } from "react";
         });
         const [formDemandaAberto, setFormDemandaAberto] = useState(false);
         const [carregandoDemandas, setCarregandoDemandas] = useState(false);
+        const [posts, setPosts] = useState([]);
+        const [carregandoPosts, setCarregandoPosts] = useState(false);
+        const [novoPost, setNovoPost] = useState({ titulo: '', descricao: '', foto: '' });
+        const [formPostAberto, setFormPostAberto] = useState(false);
 
-        // Buscar demandas do usuário ao carregar perfil
+        // Buscar demandas e posts do usuário ao carregar perfil
         useEffect(() => {
             if (!usuario) return;
             const fetchDemandas = async () => {
@@ -131,7 +135,20 @@ import React, { useState, useEffect } from "react";
                     setCarregandoDemandas(false);
                 }
             };
+            const fetchPosts = async () => {
+                setCarregandoPosts(true);
+                try {
+                    const res = await fetch(`http://localhost:8080/api/posts/${usuario.id}`);
+                    const data = await res.json();
+                    setPosts(Array.isArray(data) ? data : []);
+                } catch (err) {
+                    setPosts([]);
+                } finally {
+                    setCarregandoPosts(false);
+                }
+            };
             fetchDemandas();
+            fetchPosts();
         }, [usuario]);
 
         // Função para obter opções de categoria e tipo de apoio conforme o tipo de usuário
@@ -425,207 +442,302 @@ import React, { useState, useEffect } from "react";
                                     )}
                                 </div>
                             </div>
-                            {/* Área de demandas do usuário */}
+                            {/* Área de demandas e posts do usuário */}
                             <div className="card mb-4">
                                 <div className="card-body">
-                                    <h5 className="mb-3">Minhas Demandas</h5>
-                                    {/* Botão para abrir formulário de nova demanda */}
-                                    {!formDemandaAberto && (
-                                        <button className="btn btn-success mb-3" onClick={() => setFormDemandaAberto(true)}>
-                                            Nova Demanda
-                                        </button>
-                                    )}
-                                    {/* Formulário completo de demanda */}
-                                    {formDemandaAberto && usuario && (
-                                        <form onSubmit={handleCriarDemanda} className="mb-3">
-                                            <div className="mb-2">
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    placeholder="Título da demanda"
-                                                    value={novaDemanda.titulo}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, titulo: e.target.value })}
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="mb-2">
-                                                <textarea
-                                                    className="form-control"
-                                                    placeholder="Descrição da demanda"
-                                                    rows={2}
-                                                    value={novaDemanda.descricao}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, descricao: e.target.value })}
-                                                    required
-                                                />
-                                            </div>
-                                            {/* Campo categoria só para produtor (case-insensitive) */}
-                                            {usuario.tipo_usuario && (
-                                                <div className="mb-2">
-                                                    <select
-                                                        className="form-control"
-                                                        value={novaDemanda.categoria}
-                                                        onChange={e => setNovaDemanda({ ...novaDemanda, categoria: e.target.value })}
-                                                    >
-                                                        <option value="">Selecione a categoria</option>
-                                                        {getOpcoesDemanda(usuario.tipo_usuario).categorias.map(opt => (
-                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
+                                    <div className="d-flex gap-2 mb-3">
+                                        <button className={`btn ${activeTab === 'demandas' ? 'btn-success' : 'btn-outline-success'}`} onClick={() => setActiveTab('demandas')}>Minhas Demandas</button>
+                                        <button className={`btn ${activeTab === 'posts' ? 'btn-success' : 'btn-outline-success'}`} onClick={() => setActiveTab('posts')}>Meus Posts</button>
+                                    </div>
+                                    {activeTab === 'demandas' && (
+                                        <>
+                                            <h5 className="mb-3">Minhas Demandas</h5>
+                                            {/* Botão para abrir formulário de nova demanda */}
+                                            {!formDemandaAberto && (
+                                                <button className="btn btn-success mb-3" onClick={() => setFormDemandaAberto(true)}>
+                                                    Nova Demanda
+                                                </button>
                                             )}
-                                            {/* Campo tipo de apoio só para apoiador (case-insensitive) */}
-                                            {usuario.tipo_usuario && usuario.tipo_usuario.toLowerCase().includes('apoiador') && (
-                                                <div className="mb-2">
-                                                    <select
-                                                        className="form-control"
-                                                        value={novaDemanda.tipoApoio}
-                                                        onChange={e => setNovaDemanda({ ...novaDemanda, tipoApoio: e.target.value })}
-                                                        
-                                                    >
-                                                        <option value="">Selecione o tipo de apoio</option>
-                                                        {getOpcoesDemanda(usuario.tipo_usuario).tiposApoio.map(opt => (
-                                                            <option key={opt.value} value={opt.value}>{opt.label}</option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-                                            )}
-
-                                            <div className="mb-2">
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    placeholder="Cidade"
-                                                    value={usuario.cidade}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, cidade: usuario.cidade })}
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="mb-2">
-                                                <input
-                                                    type="text"
-                                                    className="form-control"
-                                                    placeholder="Estado"
-                                                    value={usuario.estado}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, estado: usuario.estado})}
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="mb-2">
-                                                <input
-                                                    type="date"
-                                                    className="form-control"
-                                                    placeholder="Validade da oferta"
-                                                    value={novaDemanda.validade_oferta}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, validade_oferta: e.target.value })}
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="mb-2">
-                                                <select
-                                                    className="form-control"
-                                                    value={novaDemanda.status}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, status: e.target.value })}
-                                                    required
-                                                >
-                                                    <option value="">Selecione o status</option>
-                                                    <option value="aberta">Aberta</option>
-                                                    <option value="fechada">Fechada</option>
-                                                </select>
-                                            </div>
-                                            <input
-                                                type="date"
-                                                className="form-control"
-                                                value={novaDemanda.data_postagem}
-                                                onChange={e => setNovaDemanda({ ...novaDemanda, data_postagem: e.target.value })}
-                                                />
-                                            <button type="submit" className="btn btn-success me-2">Criar Demanda</button>
-                                            <button type="button" className="btn btn-secondary" onClick={() => setFormDemandaAberto(false)}>Cancelar</button>
-                                        </form>
-                                    )}
-                                    <hr />
-                                    {carregandoDemandas ? (
-                                        <div>Carregando demandas...</div>
-                                    ) : (
-                                        <ul className="list-group">
-                                            {demandas.length === 0 && <li className="list-group-item">Nenhuma demanda criada.</li>}
-                                            {demandas.map((demanda) => (
-                                                <li key={demanda.id} className="list-group-item">
-                                                    {editandoDemandaId === demanda.id ? (
-                                                        <form onSubmit={handleSalvarDemandaEdit} className="mb-2">
-                                                            <div className="mb-2">
-                                                                <input
-                                                                    type="text"
-                                                                    className="form-control"
-                                                                    value={demandaEdit.titulo}
-                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, titulo: e.target.value })}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div className="mb-2">
-                                                                <textarea
-                                                                    className="form-control"
-                                                                    value={demandaEdit.descricao}
-                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, descricao: e.target.value })}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div className="mb-2">
-                                                                <select
-                                                                    className="form-control"
-                                                                    value={demandaEdit.categoria}
-                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, categoria: e.target.value })}
-                                                                    required
-                                                                >
-                                                                    <option value="">Selecione a categoria</option>
-                                                                    <option value="graos">Grãos</option>
-                                                                    <option value="feijoes_raizes">Feijões/Raízes</option>
-                                                                    <option value="frutas_hortalicas">Frutas/Hortaliças</option>
-                                                                    <option value="verduras_ervas">Verduras/Ervas</option>
-                                                                    <option value="outros">Outros</option>
-                                                                </select>
-                                                            </div>
-                                                            <div className="mb-2">
-                                                                <input
-                                                                    type="date"
-                                                                    className="form-control"
-                                                                    value={demandaEdit.validade_oferta}
-                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, validade_oferta: e.target.value })}
-                                                                    required
-                                                                />
-                                                            </div>
-                                                            <div className="mb-2">
-                                                                <select
-                                                                    className="form-control"
-                                                                    value={demandaEdit.status}
-                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, status: e.target.value })}
-                                                                    required
-                                                                >
-                                                                    <option value="">Selecione o status</option>
-                                                                    <option value="aberta">Aberta</option>
-                                                                    <option value="fechada">Fechada</option>
-                                                                </select>
-                                                            </div>
-                                                            <button type="submit" className="btn btn-success me-2">Salvar</button>
-                                                            <button type="button" className="btn btn-secondary" onClick={handleCancelarDemandaEdit}>Cancelar</button>
-                                                        </form>
-                                                    ) : (
-                                                        <>
-                                                            <strong>{demanda.titulo}</strong> <span className="badge bg-info ms-2">{demanda.categoria}</span>
-                                                            <p className="mb-0">{demanda.descricao}</p>
-                                                            <small className="text-muted">Cidade: {usuario.cidade} | Estado: {usuario.estado} | Validade: {demanda.validade_oferta} | Status: {demanda.status}</small>
-                                                            <div className="mt-2">
-                                                                <button className="btn btn-editar" onClick={() => handleEditarDemanda(demanda)}>
-                                                                    Editar
-                                                                </button>
-                                                                <button className="btn btn-delete" onClick={() => handleExcluirDemanda(demanda.id)}>
-                                                                    Excluir
-                                                                </button>
-                                                            </div>
-                                                        </>
+                                            {/* Formulário completo de demanda */}
+                                            {formDemandaAberto && usuario && (
+                                                <form onSubmit={handleCriarDemanda} className="mb-3">
+                                                    <div className="mb-2">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            placeholder="Título da demanda"
+                                                            value={novaDemanda.titulo}
+                                                            onChange={e => setNovaDemanda({ ...novaDemanda, titulo: e.target.value })}
+                                                            required
+                                                        />
+                                                    </div>
+                                                    <div className="mb-2">
+                                                        <textarea
+                                                            className="form-control"
+                                                            placeholder="Descrição da demanda"
+                                                            rows={2}
+                                                            value={novaDemanda.descricao}
+                                                            onChange={e => setNovaDemanda({ ...novaDemanda, descricao: e.target.value })}
+                                                            required
+                                                        />
+                                                    </div>
+                                                    {/* Campo categoria só para produtor (case-insensitive) */}
+                                                    {usuario.tipo_usuario && (
+                                                        <div className="mb-2">
+                                                            <select
+                                                                className="form-control"
+                                                                value={novaDemanda.categoria}
+                                                                onChange={e => setNovaDemanda({ ...novaDemanda, categoria: e.target.value })}
+                                                            >
+                                                                <option value="">Selecione a categoria</option>
+                                                                {getOpcoesDemanda(usuario.tipo_usuario).categorias.map(opt => (
+                                                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
                                                     )}
-                                                </li>
-                                            ))}
-                                        </ul>
+                                                    {/* Campo tipo de apoio só para apoiador (case-insensitive) */}
+                                                    {usuario.tipo_usuario && usuario.tipo_usuario.toLowerCase().includes('apoiador') && (
+                                                        <div className="mb-2">
+                                                            <select
+                                                                className="form-control"
+                                                                value={novaDemanda.tipoApoio}
+                                                                onChange={e => setNovaDemanda({ ...novaDemanda, tipoApoio: e.target.value })}
+                                                                
+                                                            >
+                                                                <option value="">Selecione o tipo de apoio</option>
+                                                                {getOpcoesDemanda(usuario.tipo_usuario).tiposApoio.map(opt => (
+                                                                    <option key={opt.value} value={opt.value}>{opt.label}</option>
+                                                                ))}
+                                                            </select>
+                                                        </div>
+                                                    )}
+
+                                                    <div className="mb-2">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            placeholder="Cidade"
+                                                            value={usuario.cidade}
+                                                            onChange={e => setNovaDemanda({ ...novaDemanda, cidade: usuario.cidade })}
+                                                            required
+                                                        />
+                                                    </div>
+                                                    <div className="mb-2">
+                                                        <input
+                                                            type="text"
+                                                            className="form-control"
+                                                            placeholder="Estado"
+                                                            value={usuario.estado}
+                                                            onChange={e => setNovaDemanda({ ...novaDemanda, estado: usuario.estado})}
+                                                            required
+                                                        />
+                                                    </div>
+                                                    <div className="mb-2">
+                                                        <input
+                                                            type="date"
+                                                            className="form-control"
+                                                            placeholder="Validade da oferta"
+                                                            value={novaDemanda.validade_oferta}
+                                                            onChange={e => setNovaDemanda({ ...novaDemanda, validade_oferta: e.target.value })}
+                                                            required
+                                                        />
+                                                    </div>
+                                                    <div className="mb-2">
+                                                        <select
+                                                            className="form-control"
+                                                            value={novaDemanda.status}
+                                                            onChange={e => setNovaDemanda({ ...novaDemanda, status: e.target.value })}
+                                                            required
+                                                        >
+                                                            <option value="">Selecione o status</option>
+                                                            <option value="aberta">Aberta</option>
+                                                            <option value="fechada">Fechada</option>
+                                                        </select>
+                                                    </div>
+                                                    <input
+                                                        type="date"
+                                                        className="form-control"
+                                                        value={novaDemanda.data_postagem}
+                                                        onChange={e => setNovaDemanda({ ...novaDemanda, data_postagem: e.target.value })}
+                                                        />
+                                                    <button type="submit" className="btn btn-success me-2">Criar Demanda</button>
+                                                    <button type="button" className="btn btn-secondary" onClick={() => setFormDemandaAberto(false)}>Cancelar</button>
+                                                </form>
+                                            )}
+                                            <hr />
+                                            {carregandoDemandas ? (
+                                                <div>Carregando demandas...</div>
+                                            ) : (
+                                                <ul className="list-group">
+                                                    {demandas.length === 0 && <li className="list-group-item">Nenhuma demanda criada.</li>}
+                                                    {demandas.map((demanda) => (
+                                                        <li key={demanda.id} className="list-group-item">
+                                                            {editandoDemandaId === demanda.id ? (
+                                                                <form onSubmit={handleSalvarDemandaEdit} className="mb-2">
+                                                                    <div className="mb-2">
+                                                                        <input
+                                                                            type="text"
+                                                                            className="form-control"
+                                                                            value={demandaEdit.titulo}
+                                                                            onChange={e => setDemandaEdit({ ...demandaEdit, titulo: e.target.value })}
+                                                                            required
+                                                                        />
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                        <textarea
+                                                                            className="form-control"
+                                                                            value={demandaEdit.descricao}
+                                                                            onChange={e => setDemandaEdit({ ...demandaEdit, descricao: e.target.value })}
+                                                                            required
+                                                                        />
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                        <select
+                                                                            className="form-control"
+                                                                            value={demandaEdit.categoria}
+                                                                            onChange={e => setDemandaEdit({ ...demandaEdit, categoria: e.target.value })}
+                                                                            required
+                                                                        >
+                                                                            <option value="">Selecione a categoria</option>
+                                                                            <option value="graos">Grãos</option>
+                                                                            <option value="feijoes_raizes">Feijões/Raízes</option>
+                                                                            <option value="frutas_hortalicas">Frutas/Hortaliças</option>
+                                                                            <option value="verduras_ervas">Verduras/Ervas</option>
+                                                                            <option value="outros">Outros</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                        <input
+                                                                            type="date"
+                                                                            className="form-control"
+                                                                            value={demandaEdit.validade_oferta}
+                                                                            onChange={e => setDemandaEdit({ ...demandaEdit, validade_oferta: e.target.value })}
+                                                                            required
+                                                                        />
+                                                                    </div>
+                                                                    <div className="mb-2">
+                                                                        <select
+                                                                            className="form-control"
+                                                                            value={demandaEdit.status}
+                                                                            onChange={e => setDemandaEdit({ ...demandaEdit, status: e.target.value })}
+                                                                            required
+                                                                        >
+                                                                            <option value="">Selecione o status</option>
+                                                                            <option value="aberta">Aberta</option>
+                                                                            <option value="fechada">Fechada</option>
+                                                                        </select>
+                                                                    </div>
+                                                                    <button type="submit" className="btn btn-success me-2">Salvar</button>
+                                                                    <button type="button" className="btn btn-secondary" onClick={handleCancelarDemandaEdit}>Cancelar</button>
+                                                                </form>
+                                                            ) : (
+                                                                <>
+                                                                    <strong>{demanda.titulo}</strong> <span className="badge bg-info ms-2">{demanda.categoria}</span>
+                                                                    <p className="mb-0">{demanda.descricao}</p>
+                                                                    <small className="text-muted">Cidade: {usuario.cidade} | Estado: {usuario.estado} | Validade: {demanda.validade_oferta} | Status: {demanda.status}</small>
+                                                                    <div className="mt-2">
+                                                                        <button className="btn btn-editar" onClick={() => handleEditarDemanda(demanda)}>
+                                                                            Editar
+                                                                        </button>
+                                                                        <button className="btn btn-delete" onClick={() => handleExcluirDemanda(demanda.id)}>
+                                                                            Excluir
+                                                                        </button>
+                                                                    </div>
+                                                                </>
+                                                            )}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            )}
+                                        </>
+                                    )}
+                                    {activeTab === 'posts' && (
+                                        <div className="card mb-4">
+                                            <div className="card-body">
+                                                <h5 className="mb-3">Meus Posts</h5>
+                                                {!formPostAberto && (
+                                                    <button className="btn btn-success mb-3" onClick={() => setFormPostAberto(true)}>
+                                                        Novo Post
+                                                    </button>
+                                                )}
+                                                {formPostAberto && (
+                                                    <form onSubmit={handleCriarPost} className="mb-3">
+                                                        <div className="mb-2">
+                                                            <input
+                                                                type="text"
+                                                                className="form-control"
+                                                                placeholder="Título do post"
+                                                                value={novoPost.titulo}
+                                                                onChange={e => setNovoPost({ ...novoPost, titulo: e.target.value })}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className="mb-2">
+                                                            <textarea
+                                                                className="form-control"
+                                                                placeholder="Descrição do post"
+                                                                rows={2}
+                                                                value={novoPost.descricao}
+                                                                onChange={e => setNovoPost({ ...novoPost, descricao: e.target.value })}
+                                                                required
+                                                            />
+                                                        </div>
+                                                        <div className="mb-2">
+                                                            <input
+                                                                type="text"
+                                                                className="form-control"
+                                                                placeholder="URL da foto (opcional)"
+                                                                value={novoPost.foto}
+                                                                onChange={e => setNovoPost({ ...novoPost, foto: e.target.value })}
+                                                            />
+                                                        </div>
+                                                        <button type="submit" className="btn btn-success me-2">Criar Post</button>
+                                                        <button type="button" className="btn btn-secondary" onClick={() => setFormPostAberto(false)}>Cancelar</button>
+                                                    </form>
+                                                )}
+                                                {carregandoPosts ? (
+                                                    <div>Carregando posts...</div>
+                                                ) : (
+                                                    posts.length === 0 ? (
+                                                        <div>Nenhum post encontrado.</div>
+                                                    ) : (
+                                                        <div className="row">
+                                                            {posts.map(post => (
+                                                                <div className="col-md-6 col-lg-4 mb-3" key={post.id}>
+                                                                    <div className="card h-100 shadow-sm">
+                                                                        {post.foto && (
+                                                                            <img src={post.foto} alt="Post" className="card-img-top" style={{height: '200px', objectFit: 'cover'}} />
+                                                                        )}
+                                                                        <div className="card-body">
+                                                                            <h6 className="card-title">{post.titulo}</h6>
+                                                                            <p className="card-text">{post.descricao}</p>
+                                                                        </div>
+                                                                        <div className="card-footer d-flex justify-content-between align-items-center">
+                                                                            <span><i className="fas fa-heart text-danger"></i> {post.curtidas || 0}</span>
+                                                                            <span><i className="fas fa-comment"></i> {post.comentarios?.length || 0}</span>
+                                                                        </div>
+                                                                        {/* Comentários */}
+                                                                        {post.comentarios && post.comentarios.length > 0 && (
+                                                                            <div className="p-2 border-top">
+                                                                                <strong>Comentários:</strong>
+                                                                                <ul className="list-unstyled mb-0">
+                                                                                    {post.comentarios.map((c, idx) => (
+                                                                                        <li key={idx} className="border-bottom py-1">
+                                                                                            <span className="fw-bold">{c.usuarioNome}:</span> {c.texto}
+                                                                                        </li>
+                                                                                    ))}
+                                                                                </ul>
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    )
+                                                )}
+                                            </div>
+                                        </div>
                                     )}
                                 </div>
                             </div>
