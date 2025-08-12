@@ -422,15 +422,17 @@ import React, { useState, useEffect } from "react";
                                                     </button>
                                                 </>
                                             ) : (
-                                                <div>
-                                                    <button
-                                                        className={`btn mb-3 ${conectado ? "btn-danger" : "btn-success"}`}
-                                                        onClick={handleConectarUsuario}
-                                                    >
-                                                        <i className={`${conectado ? "fas fa-user-times" : "fas fa-user-plus"}`}>
-                                                        </i>
-                                                    </button>
-                                                </div>
+                                                !proprioPerfil && (
+                                                    <div>
+                                                        <button
+                                                            className={`btn mb-3 ${conectado ? "btn-danger" : "btn-success"}`}
+                                                            onClick={handleConectarUsuario}
+                                                        >
+                                                            <i className={`${conectado ? "fas fa-user-times" : "fas fa-user-plus"}`}>
+                                                            </i>
+                                                        </button>
+                                                    </div>
+                                                )
                                             )}
                                         </div>
                                     </div>
