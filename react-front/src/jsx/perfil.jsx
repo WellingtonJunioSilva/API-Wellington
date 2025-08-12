@@ -393,7 +393,7 @@ import React, { useState, useEffect } from "react";
 
                         <div className="col-lg-9">
                             <div className="card mb-4">
-                                <div className="card-body">
+                                <div className="card-body bodyType01">
                                     <div className="row mb-3">
                                         <div className="col-md-3 text-center">
                                             <img
@@ -403,34 +403,37 @@ import React, { useState, useEffect } from "react";
                                                 style={{ width: "120px", height: "120px", objectFit: "cover" }}
                                             />
                                         </div>
-                                        <div className="col-md-9">
+                                        <div className="col-md-7">
                                             <h5>{usuario.nome}</h5>
                                             <p className="mb-1"><strong>Tipo de Usuário:</strong> {usuario.tipo_usuario}</p>
                                             <p className="mb-1"><strong>Cidade:</strong> {usuario.cidade}</p>
                                             <p className="mb-1"><strong>Email:</strong> {usuario.email}</p>
                                             <p className="mb-1"><strong>Telefone:</strong> {usuario.telefone}</p>
                                         </div>
-                                    </div>
-                                    {/* Botão para editar perfil */}
-                                    {!editando && proprioPerfil ? (
-                                        <>
-                                            <button className="btn btn-editarPerfil mb-3" onClick={() => setEditando(true)}>
-                                                Editar Perfil
-                                            </button>
-                                            <button className="btn btn-excluir mb-3" onClick={handleExcluirUsuario}>
-                                                Excluir Perfil
-                                            </button>
-                                        </>
-                                    ) : (
-                                        <div>
-                                            <button
-                                                className={`btn mb-3 ${conectado ? "btn-danger" : "btn-success"}`}
-                                                onClick={handleConectarUsuario}
-                                            >
-                                                {conectado ? "Desconectar" : "Conectar"}
-                                            </button>
+                                        <div className="col-md-2">
+                                            {/* Botão para editar perfil */}
+                                            {!editando && proprioPerfil ? (
+                                                <>
+                                                    <button title="Editar informações" className="btn btn-editarPerfil mb-3" onClick={() => setEditando(true)}>
+                                                        <i className="fas fa-pencil"></i>
+                                                    </button>
+                                                    <button title="Deletar conta" className="btn btn-excluir mb-3" onClick={handleExcluirUsuario}>
+                                                        <i className="fas fa-trash"></i>
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                <div>
+                                                    <button
+                                                        className={`btn mb-3 ${conectado ? "btn-danger" : "btn-success"}`}
+                                                        onClick={handleConectarUsuario}
+                                                    >
+                                                        <i className={`${conectado ? "fas fa-user-times" : "fas fa-user-plus"}`}>
+                                                        </i>
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
-                                    )}
+                                    </div>
                                     {/* Formulário de edição */}
                                     {editando && (
                                         <>
@@ -494,7 +497,7 @@ import React, { useState, useEffect } from "react";
                             </div>
                             {/* Área de demandas do usuário */}
                             <div className="card mb-4">
-                                <div className="card-body">
+                                <div className="card-body bodyType01">
                                     {proprioPerfil ? (
                                         <h5 className="mb-3">Minhas Demandas</h5>
                                     ) : (
@@ -684,6 +687,7 @@ import React, { useState, useEffect } from "react";
                                                             <strong>{demanda.titulo}</strong> <span className="badge bg-info ms-2">{demanda.categoria}</span>
                                                             <p className="mb-0">{demanda.descricao}</p>
                                                             <small className="text-muted">Cidade: {usuario.cidade} | Estado: {usuario.estado} | Validade: {demanda.validade_oferta} | Status: {demanda.status}</small>
+                                                            {!editando && proprioPerfil && (
                                                             <div className="mt-2">
                                                                 <button className="btn btn-editar" onClick={() => handleEditarDemanda(demanda)}>
                                                                     Editar
@@ -692,6 +696,7 @@ import React, { useState, useEffect } from "react";
                                                                     Excluir
                                                                 </button>
                                                             </div>
+                                                            )}
                                                         </>
                                                     )}
                                                 </li>

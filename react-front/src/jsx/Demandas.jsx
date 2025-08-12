@@ -175,14 +175,14 @@ export default function Demandas() {
           {/* Lista de demandas */}
           <div className="col-md-8 col-lg-9">
             <div className="card shadow">
-              <div className="card-body">
+              <div className="card-body bodyType01">
                 <h4 className="mb-3">Demandas</h4>
                 {demandas.length === 0 ? (
                   <p className="text-muted">Nenhuma demanda encontrada.</p>
                 ) : (
                   demandas.map((d) => (
                     <div className="card mb-3" key={d.id}>
-                      <div className="card-body">
+                      <div className="card-body bodyType01">
                         <h5 className="card-title">{d.titulo}</h5>
                         <p className="card-text">{d.descricao}</p>
                         <p className="text-muted small">

@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import perfilPadrao from "../IMG/icon perfil novo.png";
+import '../css/mensagens.css'
 
 export default function Mensagens() {
   const [filtros, setFiltros] = useState({ tipoUsuario: null, ordenacao: null });
@@ -31,7 +32,6 @@ export default function Mensagens() {
       try {
         const res = await fetch(`http://localhost:8080/tcc/usuarios/${id}/conexoes`);
         let data = await res.json();
-        console.log(data);
         setUsuario({...usuarioLogado, conexoes: data.length});
 
         /* if (filtros.tipoUsuario)
@@ -48,7 +48,20 @@ export default function Mensagens() {
       }
     }
     fetchConexoes(usuarioLogado.id);
+
+    async function fetchMensagens(id) {
+      try{
+        const res = await fetch(`http:localhost:8080/tcc/usuarios/${id}/mensagens`);
+        let data = await res.json();
+        console.log(data);
+      } catch (error) {
+        console.error("Erro ao carregar mensagens: ", error);
+      }
+    }
+    //fetchMensagens(usuarioLogado.id)
     }, []);
+
+
 
     if(!usuario) return null;
   
@@ -143,25 +156,40 @@ export default function Mensagens() {
             </div>
           </div>
 
-        {/* Lista de demandas */}
-          <div className="col-md-8 col-lg-9">
+        {/* Lista de usuários */}
+          <div className="col-md-8 col-lg-4">
             <div className="card shadow">
-              <div className="card-body">
+              <div className="card-body bodyType01">
                 <h4 className="mb-3">Suas conexões</h4>
                 {conexoes.length === 0 ? (
                   <p className="text-muted">Você não possui contatos.</p>
                 ) : (
                   conexoes.map((d) => (
-                    <div className="card mb-3" key={d.id}>
-                      <div className="card-body">
-                        <h5 className="card-title">{d.nome}</h5>
-                        <p className="card-text">{d.biografia}</p>
+                    <div className="card mb-1" key={d.id}>
+                      <div className="card-body bodyType02 d-flex flex-row">
+                        <div className="p-2">
+                          <a href={"/perfil/" + d.id}>
+                            <img className="img-fluid rounded-circle mb-2" src={d.foto || perfilPadrao}
+                            style={{ width: "60px", height: "60px", objectFit: "cover" }}></img>
+                          </a>
+                        </div>
+
+                        <div className="p-2 contatosChat">
+                            <h5 className="card-title">{d.nome}</h5>
+                            <p className="card-text">{d.biografia}</p>
+                        </div>
                       </div>
                     </div>
                   ))
                 )}
             </div>
           </div>
+        </div>
+        <div className="col-lg-5">
+          <div className="card shadow">
+            <div className="card-body bodyType01"></div>
+                <h4 className="mb-3">selected</h4>
+            </div>
         </div>
       </div>
     </div>
