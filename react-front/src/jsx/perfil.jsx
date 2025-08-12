@@ -178,8 +178,12 @@ import React, { useState, useEffect } from "react";
         });
         const [formDemandaAberto, setFormDemandaAberto] = useState(false);
         const [carregandoDemandas, setCarregandoDemandas] = useState(false);
+        const [posts, setPosts] = useState([]);
+        const [carregandoPosts, setCarregandoPosts] = useState(false);
+        const [novoPost, setNovoPost] = useState({ titulo: '', descricao: '', foto: '' });
+        const [formPostAberto, setFormPostAberto] = useState(false);
 
-        // Buscar demandas do usuário ao carregar perfil
+        // Buscar demandas e posts do usuário ao carregar perfil
         useEffect(() => {
             if (!usuario) return;
             const fetchDemandas = async () => {
@@ -197,7 +201,20 @@ import React, { useState, useEffect } from "react";
                     setCarregandoDemandas(false);
                 }
             };
+            const fetchPosts = async () => {
+                setCarregandoPosts(true);
+                try {
+                    const res = await fetch(`http://localhost:8080/api/posts/${usuario.id}`);
+                    const data = await res.json();
+                    setPosts(Array.isArray(data) ? data : []);
+                } catch (err) {
+                    setPosts([]);
+                } finally {
+                    setCarregandoPosts(false);
+                }
+            };
             fetchDemandas();
+            fetchPosts();
         }, [usuario]);
 
         // Função para obter opções de categoria e tipo de apoio conforme o tipo de usuário
@@ -497,7 +514,7 @@ import React, { useState, useEffect } from "react";
                                     )}
                                 </div>
                             </div>
-                            {/* Área de demandas do usuário */}
+                            {/* Área de demandas e posts do usuário */}
                             <div className="card mb-4">
                                 <div className="card-body bodyType01">
                                     {proprioPerfil ? (
