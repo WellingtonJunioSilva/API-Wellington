@@ -186,7 +186,7 @@ export default function Demandas() {
                         <h5 className="card-title">{d.titulo}</h5>
                         <p className="card-text">{d.descricao}</p>
                         <p className="text-muted small">
-                          Postado por {d.usuarioNome} em {new Date(d.data_postagem).toLocaleDateString()} • {d.cidade}, {d.estado}
+                          Postado por <a className="postedBy" href={"/perfil/" + d.usuario}>{d.usuarioNome}</a> em {new Date(d.data_postagem).toLocaleDateString()} • {d.cidade}, {d.estado}
                         </p>
 
                         <button className="btn btn-detalhesDemada" onClick={() => abrirModalDetalhes(d)}>
@@ -214,7 +214,7 @@ export default function Demandas() {
               <div className="modal-body">
                 <h6>{demandaSelecionada.titulo}</h6>
                 <p>{demandaSelecionada.descricao}</p>
-                <p><strong>Postado por:</strong> {demandaSelecionada.usuarioNome}</p>
+                <p><strong>Postado por:</strong> <a className="postedBy" href={"/perfil/" + demandaSelecionada.usuario}>{demandaSelecionada.usuarioNome}</a></p>
                 <p><strong>Data:</strong> {new Date(demandaSelecionada.data_postagem).toLocaleDateString()}</p>
                 <p><strong>Local:</strong> {demandaSelecionada.cidade}, {demandaSelecionada.estado}</p>
                 <hr />
