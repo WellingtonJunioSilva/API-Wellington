@@ -351,7 +351,7 @@ const handleShare = (postId) => {
                             <div className="sidebar-header">
                                 <a href="/perfil">
                                     <img 
-                                      src={usuario.foto} 
+                                      src={usuario?.foto ? usuario.foto : perfilPadrao}
                                       className="post-avatar" 
                                       alt="Foto do usuário" 
                                       onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
@@ -439,7 +439,7 @@ const handleShare = (postId) => {
                     <div className="card-body">
                         <form onSubmit={handleSubmit}>
                             <div className="d-flex align-items-start mb-3">
-                                <img src={usuario?.foto ? usuario.foto : perfilPadrao} alt="Foto do Perfil" className="rounded-circle me-3 profile-pic post-avatar" />
+                                <img src={usuario?.foto_perfil?.value != null ? usuario.foto_perfil : perfilPadrao} alt="Foto do Perfil" className="rounded-circle me-3 profile-pic post-avatar" />
                                 <textarea
                                     id="postTextarea"
                                     className="form-control post-textarea"
@@ -501,7 +501,7 @@ const handleShare = (postId) => {
     filtrarPosts(posts).map((post) => {
         let fotoAutorSrc = perfilPadrao;
         try {
-            fotoAutorSrc = usuario.foto; // `http://localhost:8080/tcc/usuarios/${post.autor}/foto`;
+            fotoAutorSrc = `http://localhost:8080/tcc/usuarios/${post.autor}/foto`;
         }
         catch(error) {
             console.log(error);
@@ -517,7 +517,7 @@ const handleShare = (postId) => {
                     // onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
                 />
                 <div className="post-author">
-                    <h6>{post.autorNome || 'Usuário'}</h6>
+                    <h6><a className="profileAnchor" href={"/perfil/" + post.autor}>{post.autorNome || 'Usuário'}</a></h6>
                     <small><i className="fas fa-map-marker-alt me-1"></i>{post.localizacao || ''} • {post.tempoPostado || ''}</small>
                 </div>
                 <div className="dropdown">
@@ -580,7 +580,7 @@ const handleShare = (postId) => {
                     <i 
                         style={{ color: curtidas[post.id] ? 'green' : '#555'}}
                         className = {curtidas[post.id] ? "far fa-heart me-1" : "far fa-heart me-1"}
-                    ></i>Curtir ({post.likes || 0})
+                    ></i> {curtidas[post.id] ? "Descurtir" : "Curtir"} ({post.likes || 0})
                 </button>   
                 <button className="btn-action" onClick={() => openCommentModal(post.id)}>
                     <i className="far fa-comment me-1"></i>Comentar ({post.comments ? post.comments.length : 0})
