@@ -26,7 +26,7 @@ function App() {
 
       {/* Definindo rotas */}
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} /> {/* Redireciona para Login por padrão */}
+        <Route path="/" element={<Navigate to="/landingPage" />} /> {/* Redireciona para Login por padrão */}
         <Route path="/landingPage" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
