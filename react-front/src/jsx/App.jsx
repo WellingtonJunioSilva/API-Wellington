@@ -6,7 +6,6 @@ import Demandas from "./Demandas.jsx";
 import Mensagens from "./mensagens.jsx";
 import PerfilUser from "./perfil.jsx"; 
 import LandingPage from "./LandingPage.jsx";
-import DetalheDemanda from "./DetalheDemanda.jsx";
 
 function App() {
   return (
@@ -21,12 +20,11 @@ function App() {
         <Link to="/mensagens" style={styles.link}>Mensagens</Link>
         <Link to="/perfil" style={styles.link}>Perfil</Link>
         <Link to="/perfil/:id" style={styles.link}>Perfil</Link>
-        <Link to="/demandas/:id" style={styles.link}>Detalhe Demanda</Link> {/* Link de exemplo para DetalheDemanda */}
       </nav>
 
       {/* Definindo rotas */}
       <Routes>
-        <Route path="/" element={<Navigate to="/login" />} /> {/* Redireciona para Login por padrão */}
+        <Route path="/" element={<Navigate to="/landingPage" />} /> {/* Redireciona para Landing Page por padrão */}
         <Route path="/landingPage" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/cadastro" element={<Cadastro />} />
@@ -35,7 +33,6 @@ function App() {
         <Route path="/demandas" element={<Demandas />} />
         <Route path="/perfil" element= {<PerfilUser/>} />
         <Route path="/perfil/:id" element= {<PerfilUser/>} />
-        <Route path="/demandas/:id" element={<DetalheDemanda />} />
       </Routes>
     </Router>
   );
