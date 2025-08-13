@@ -14,6 +14,7 @@ const Inicio = () => {
     const [usuario, setUsuario] = useState(null);
     const [activeTab, setActiveTab] = useState('feed');
     const [conteudoPost, setConteudoPost] = useState('');
+    const [curtidas, setCurtidas] = useState({});
     const navigate = useNavigate();
     const [filtros, setFiltros] = useState({
         tipo_usuario : null,
@@ -30,19 +31,27 @@ const Inicio = () => {
     const isPostButtonDisabled = isPosting || (!text.trim() && !selectedFile);
     const charCounterColor = text.length > MAX_CHARS ? 'red' : undefined;
 
+    const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
+
     useEffect(() => {
-        const usuarioLogado = JSON.parse(localStorage.getItem("usuarioLogado"));
-        
-        if (usuarioLogado) {
-            // Garante que tenha uma foto padrão se não houver foto do usuário
-            setUsuario({
-                ...usuarioLogado,
-                foto: usuarioLogado.foto || perfilPadrao
-            });
-        } else {
-            navigate('/login');
+    if (!usuarioLogado) {
+        navigate('/login');
+        return;
+    }
+
+    setUsuario(prev => {
+        const novaFoto = `http://localhost:8080/tcc/usuarios/${usuarioLogado.id}/foto`;
+        // só atualiza se mudou algo
+        if (prev?.id === usuarioLogado.id && prev?.foto === novaFoto) {
+        return prev;
         }
-    }, [navigate]);
+        return {
+        ...usuarioLogado,
+        foto: novaFoto,
+        };
+    });
+    }, [usuarioLogado, navigate]);
+
 
     useEffect(() => {
         if (!selectedFile) {
@@ -57,23 +66,14 @@ const Inicio = () => {
     // Adicione a função fetchPosts para buscar os posts do backend
     const fetchPosts = async () => {
         try {
-            const usuarioLogado = localStorage.getItem("usuarioLogado");
-            if (!usuarioLogado) throw new Error("usuarioLogado não encontrado no localStorage");
-            let usuarioId;
-            try {
-                usuarioId = JSON.parse(usuarioLogado).id;
-            } catch (e) {
-                throw new Error("Falha ao ler o id do usuarioLogado no localStorage");
-            }
-            if (!usuarioId) throw new Error("id do usuarioLogado não encontrado");
-            const response = await fetch(`http://localhost:8080/api/posts?usuarioId=${usuarioId}`);
+            const response = await fetch(`http://localhost:8080/api/posts`);
             if (!response.ok) {
                 const errorText = await response.text();
                 throw new Error(`Erro ao buscar posts: ${response.status} - ${errorText}`);
             }
             const data = await response.json();
             setPosts(data);
-            // console.log('Posts carregados:', data); // Para depuração
+            console.log('Posts carregados:', data); // Para depuração
         } catch (err) {
             console.error('Erro ao buscar posts:', err);
             alert(err.message); // Mostra o erro detalhado
@@ -141,6 +141,7 @@ const Inicio = () => {
     };
 
     const filtrarPosts = (posts) => {
+        console.log(posts);
         let postsFiltrados = [...posts];
         
         // Filtro por tipo de usuário
@@ -154,49 +155,74 @@ const Inicio = () => {
         if (filtros.ordenacao === 'recentes') {
             postsFiltrados.sort((a, b) => new Date(b.data) - new Date(a.data));
         } else {
-            postsFiltrados.sort((a, b) => b.curtidas - a.curtidas);
+            postsFiltrados.sort((a, b) => b.likes - a.likes);
         }
         
         return postsFiltrados;
     };
 
-    // Estado para controlar posts curtidos pelo usuário
-const [likedPosts, setLikedPosts] = useState([]);
 
-// Função para curtir/descurtir
-const handleLike = async (postId) => {
-    if (!postId) return;
-    // Se já curtiu, descurte
-    const alreadyLiked = likedPosts.includes(postId);
-    try {
-        const usuarioLogado = localStorage.getItem("usuarioLogado");
-        if (!usuarioLogado) throw new Error("usuarioLogado não encontrado no localStorage");
-        let usuarioId;
-        try {
-            usuarioId = JSON.parse(usuarioLogado).id;
-        } catch (e) {
-            throw new Error("Falha ao ler o id do usuarioLogado no localStorage");
-        }
-        if (!usuarioId) throw new Error("id do usuarioLogado não encontrado");
-        const url = `http://localhost:8080/api/posts/${postId}/${alreadyLiked ? 'unlike' : 'like'}?usuarioId=${usuarioId}`;
-        await fetch(url, { method: 'POST' });
-        setLikedPosts((prev) => {
-            if (alreadyLiked) {
-                return prev.filter(id => id !== postId);
-            } else {
-                return [...prev, postId];
+    useEffect(() => {
+        if (!usuario?.id || posts.length === 0) return;
+        const verificarCurtidas = async () => { 
+            const status = {};
+            for (const post of posts) {
+                try {
+                    const res = await fetch(
+                        `http://localhost:8080/api/posts/${post.id}/likedBy/${usuario.id}`
+                    );
+                    const data = await res.json();
+                    status[post.id] = data;
+                } catch (error) {
+                    console.error(`Erro ao verificar curtida do post ${post.id}:`, error);
+                }
             }
-        });
-        fetchPosts();
-    } catch (err) {
-        alert('Erro ao curtir/descurtir o post: ' + err.message);
-    }
-};
+            setCurtidas(status);
+        };
+
+        if (posts.length > 0) {
+            verificarCurtidas();
+        }
+    }, [posts, usuario?.id]);
+
+    const handleLike = async (postId) => {
+        try {
+            const response = await fetch(
+                `http://localhost:8080/api/posts/${postId}/like/${usuario.id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                }
+            );
+            if (!response.ok) {
+                throw new Error("Erro ao curtir/descurtir a postagem");
+            }
+            const likedPost = posts.find((post) => post.id == postId);
+            if (curtidas[postId]) {
+                likedPost.likes--;
+            } else {
+                likedPost.likes++;
+            }
+            posts.map((post) => {
+                if (post.id == postId) {
+                    return likedPost;
+                }
+            })
+            setCurtidas((prev) => ({
+                ...prev,
+                [postId]: !prev[postId],
+            }));
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
 // Atualiza likedPosts ao carregar posts (supondo que o backend retorna se o usuário curtiu cada post)
-useEffect(() => {
-    setLikedPosts(posts.filter(post => post.curtidoPorUsuario).map(post => post.id));
-}, [posts]);
+//useEffect(() => {
+ //   setLikedPosts(posts.filter(post => post.curtidoPorUsuario).map(post => post.id));
+//}, [posts]);
 
 // Modal para comentar
 const [showCommentModal, setShowCommentModal] = useState(false);
@@ -228,7 +254,7 @@ const sendModalComment = async () => {
         await fetch(`http://localhost:8080/api/comments/post/${modalPostId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: modalCommentText })
+            body: JSON.stringify({ content: modalCommentText, usuario: usuario.id })
         });
         closeCommentModal();
         fetchPosts();
@@ -325,7 +351,7 @@ const handleShare = (postId) => {
                             <div className="sidebar-header">
                                 <a href="/perfil">
                                     <img 
-                                      src={`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`} 
+                                      src={usuario.foto} 
                                       className="post-avatar" 
                                       alt="Foto do usuário" 
                                       onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
@@ -413,7 +439,7 @@ const handleShare = (postId) => {
                     <div className="card-body">
                         <form onSubmit={handleSubmit}>
                             <div className="d-flex align-items-start mb-3">
-                                <img src={usuario?.foto ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao} alt="Foto do Perfil" className="rounded-circle me-3 profile-pic post-avatar" />
+                                <img src={usuario?.foto ? usuario.foto : perfilPadrao} alt="Foto do Perfil" className="rounded-circle me-3 profile-pic post-avatar" />
                                 <textarea
                                     id="postTextarea"
                                     className="form-control post-textarea"
@@ -473,10 +499,13 @@ const handleShare = (postId) => {
     <div className="text-center text-muted mt-4">Nenhum post encontrado.</div>
 ) : (
     filtrarPosts(posts).map((post) => {
-        let fotoAutorSrc = `http://localhost:8080/tcc/usuarios/${post.autor}/foto`;
-        
-        // perfilPadrao;
-        if(!fotoAutorSrc) fotoAutorSrc = perfilPadrao;
+        let fotoAutorSrc = perfilPadrao;
+        try {
+            fotoAutorSrc = usuario.foto; // `http://localhost:8080/tcc/usuarios/${post.autor}/foto`;
+        }
+        catch(error) {
+            console.log(error);
+        }
         console.log(fotoAutorSrc);
         return (
         <div className="post-card card" key={post.id}>
@@ -503,52 +532,25 @@ const handleShare = (postId) => {
             </div>
             <div className="post-content">
                 <p>{post.message}</p>
-                {(post.nomeArquivoPost || post.tipoMimePost || post.fotoPost) && (
-                    (() => {
-                        let imgSrc = '';
-                        if (post.fotoPost) {
-                            if (Array.isArray(post.fotoPost)) {
-                                // Array de bytes
-                                const byteArray = new Uint8Array(post.fotoPost);
-                                const base64String = btoa(String.fromCharCode(...byteArray));
-                                imgSrc = `data:image/jpeg;base64,${base64String}`;
-                            } else if (typeof post.fotoPost === 'string' && post.fotoPost.startsWith('data:image')) {
-                                // Base64
-                                imgSrc = post.fotoPost;
-                            } else if (typeof post.fotoPost === 'string' && post.fotoPost.length > 10) {
-                                // URL
-                                imgSrc = post.fotoPost;
-                            }
-                        } else {
-                            imgSrc = `http://localhost:8080/api/posts/${post.id}/image`;
-                        }
-                        return (
-                            <img
-                                src={imgSrc}
-                                className="post-image"
-                                alt="Mídia do post"
-                                onError={e => e.target.style.display = 'none'}
-                            />
-                        );
-                    })()
+                {(post.fotoPost) && (
+                    <img
+                        src={`http://localhost:8080/api/posts/${post.id}/image`}
+                        className="post-image"
+                        alt="Mídia do post"
+                        onError={e => e.target.style.display = 'none'}
+                    />
                 )}
                 {post.comments && post.comments.length > 0 && (
                     <div className="comments-list mt-2">
                         <h6 className="fw-bold mb-2">Comentários</h6>
                         {post.comments.map((comment) => {
                             let fotoSrc = perfilPadrao;
-                            if (comment.fotoUsuario) {
-                                // Se vier como array de bytes
-                                if (Array.isArray(comment.fotoUsuario)) {
-                                    const byteArray = new Uint8Array(comment.fotoUsuario);
-                                    const base64String = btoa(String.fromCharCode(...byteArray));
-                                    fotoSrc = `data:image/jpeg;base64,${base64String}`;
-                                } else if (typeof comment.fotoUsuario === 'string') {
-                                    // Se já vier como base64
-                                    fotoSrc = `data:image/jpeg;base64,${comment.fotoUsuario}`;
-                                } else {
-                                    // Se vier como URL
-                                    fotoSrc = comment.fotoUsuario;
+                            if (comment.usuario) {
+                                try{
+                                    fotoSrc = `http://localhost:8080/tcc/usuarios/${comment.usuario}/foto`;
+                                }
+                                catch (error) {
+                                    console.log("Erro ao carregar imagem do comentário: " + error);
                                 }
                             }
                             return (
@@ -572,11 +574,14 @@ const handleShare = (postId) => {
             <div className="post-actions">
                 <button
                     className="btn-action"
-                    style={{ color: likedPosts.includes(post.id) ? 'green' : undefined }}
+                    style={{ color: curtidas[post.id] ? 'green' : '#555' }}
                     onClick={() => handleLike(post.id)}
                 >
-                    <i className="far fa-heart me-1"></i>Curtir ({post.likes || 0})
-                </button>
+                    <i 
+                        style={{ color: curtidas[post.id] ? 'green' : '#555'}}
+                        className = {curtidas[post.id] ? "far fa-heart me-1" : "far fa-heart me-1"}
+                    ></i>Curtir ({post.likes || 0})
+                </button>   
                 <button className="btn-action" onClick={() => openCommentModal(post.id)}>
                     <i className="far fa-comment me-1"></i>Comentar ({post.comments ? post.comments.length : 0})
                 </button>
@@ -640,30 +645,30 @@ const handleShare = (postId) => {
 
             {/* Modal de Comentários */}
             {showCommentModal && (
-    <div className="modal" style={{ display: 'block', background: 'rgba(0,0,0,0.5)', position: 'fixed', top:0, left:0, width:'100vw', height:'100vh', zIndex:9999 }}>
-        <div className="modal-dialog" style={{ margin: '10vh auto', maxWidth: 400 }}>
-            <div className="modal-content">
-                <div className="modal-header">
-                    <h5 className="modal-title">Comentar</h5>
-                    <button type="button" className="btn-close" onClick={closeCommentModal}></button>
-                </div>
-                <div className="modal-body">
-                    <textarea
-                        className="form-control"
-                        rows={3}
-                        placeholder="Digite seu comentário..."
-                        value={modalCommentText}
-                        onChange={e => setModalCommentText(e.target.value)}
-                    />
-                </div>
-                <div className="modal-footer">
-                    <button type="button" className="btn btn-secondary" onClick={closeCommentModal}>Cancelar</button>
-                    <button type="button" className="btn btn-primary" onClick={sendModalComment}>Enviar</button>
+            <div className="modal" style={{ display: 'block', background: 'rgba(0,0,0,0.5)', position: 'fixed', top:0, left:0, width:'100vw', height:'100vh', zIndex:9999 }}>
+                <div className="modal-dialog" style={{ margin: '10vh auto', maxWidth: 400 }}>
+                    <div className="modal-content">
+                        <div className="modal-header">
+                            <h5 className="modal-title">Comentar</h5>
+                            <button type="button" className="btn-close" onClick={closeCommentModal}></button>
+                        </div>
+                        <div className="modal-body">
+                        <textarea
+                            className="form-control"
+                            rows={3}
+                            placeholder="Digite seu comentário..."
+                            value={modalCommentText}
+                            onChange={e => setModalCommentText(e.target.value)}
+                        />
+                        </div>
+                        <div className="modal-footer">
+                            <button type="button" className="btn btn-secondary" onClick={closeCommentModal}>Cancelar</button>
+                            <button type="button" className="btn btn-primary" onClick={sendModalComment}>Enviar</button>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </div>
-)}
+            )}
         </div>
     );
 };
