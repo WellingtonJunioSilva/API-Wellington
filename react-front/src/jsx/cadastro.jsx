@@ -96,15 +96,7 @@ export default function Cadastro() {
       alert("Usuário cadastrado com sucesso!");
 
       // Armazena apenas os dados necessários no localStorage
-      localStorage.setItem(
-        "usuario",
-        JSON.stringify({
-          id: data.id, // Assumindo que o servidor retorna o ID
-          nome: usuario.nome,
-          email: usuario.email,
-          tipo_usuario: usuario.tipo_usuario,
-        })
-      );
+      localStorage.setItem("usuarioLogado", JSON.stringify(usuario));
 
       limparFormulario();
 
