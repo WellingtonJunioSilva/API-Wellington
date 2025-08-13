@@ -473,23 +473,11 @@ const handleShare = (postId) => {
     <div className="text-center text-muted mt-4">Nenhum post encontrado.</div>
 ) : (
     filtrarPosts(posts).map((post) => {
-        let fotoAutorSrc = perfilPadrao;
-        if (post.autorFoto) {
-            if (Array.isArray(post.autorFoto)) {
-                // Se vier como array de bytes
-                const byteArray = new Uint8Array(post.autorFoto);
-                const base64String = btoa(String.fromCharCode(...byteArray));
-                fotoAutorSrc = `data:image/jpeg;base64,${base64String}`;
-            } else if (typeof post.autorFoto === 'string' && post.autorFoto.startsWith('data:image')) {
-                // Se já vier como base64
-                fotoAutorSrc = post.autorFoto;
-            } else if (typeof post.autorFoto === 'string' && post.autorFoto.length > 10) {
-                // Se vier como URL
-                fotoAutorSrc = post.autorFoto;
-            }
-        } else if (post.autorId) {
-            fotoAutorSrc = `http://localhost:8080/tcc/usuarios/${post.autorId}/foto`;
-        }
+        let fotoAutorSrc = `http://localhost:8080/tcc/usuarios/${post.autor}/foto`;
+        
+        // perfilPadrao;
+        if(!fotoAutorSrc) fotoAutorSrc = perfilPadrao;
+        console.log(fotoAutorSrc);
         return (
         <div className="post-card card" key={post.id}>
             <div className="post-header">
@@ -497,7 +485,7 @@ const handleShare = (postId) => {
                     src={fotoAutorSrc}
                     className="post-avatar"
                     alt={post.autorNome || 'Usuário'}
-                    onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
+                    // onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
                 />
                 <div className="post-author">
                     <h6>{post.autorNome || 'Usuário'}</h6>

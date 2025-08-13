@@ -12,7 +12,8 @@ const PostCard = ({ post }) => {
     });
 
     // Assume que a URL da foto do autor e do post já vem do backend
-    const fotoAutorUrl = post.autor.foto ? `http://localhost:8080/tcc/usuarios/${post.autor.id}/foto` : perfilPadrao;
+    const fotoAutorUrl = post.autorFoto ? post.autorFoto : perfilPadrao;
+    console.log(post.autorFoto)
     const fotoPostUrl = post.urlImagem ? `http://localhost:8080/tcc/posts/${post.id}/imagem` : null;
 
     return (
