@@ -171,7 +171,6 @@ import React, { useState, useEffect } from "react";
             categoria: '',
             cidade: '',
             estado: '',
-            validade_oferta: '',
             status: '',
             data_postagem: '',
             tipoApoio: '',
@@ -253,7 +252,7 @@ import React, { useState, useEffect } from "react";
         const handleCriarDemanda = async (e) => {
             e.preventDefault();
             // Validação simples
-            if (!novaDemanda.titulo || !novaDemanda.descricao || !novaDemanda.categoria || !novaDemanda.validade_oferta || !novaDemanda.status || (usuario?.tipo_usuario === 'apoiador' && !novaDemanda.tipoApoio)) {
+            if (!novaDemanda.titulo || !novaDemanda.descricao || !novaDemanda.categoria || !novaDemanda.status || (usuario?.tipo_usuario === 'apoiador' && !novaDemanda.tipoApoio)) {
                 alert('Preencha todos os campos obrigatórios.');
                 return;
             }
@@ -270,7 +269,7 @@ import React, { useState, useEffect } from "react";
                 const data = await res.json();
                 setDemandas([data, ...demandas]);
                 setNovaDemanda({
-                    titulo: '', descricao: '', categoria: '', cidade: usuario.cidade, estado: usuario.estado, validade_oferta: '', status: '', data_postagem: '', tipoApoio: ''
+                    titulo: '', descricao: '', categoria: '', cidade: usuario.cidade, estado: usuario.estado, status: '', data_postagem: '', tipoApoio: ''
                 });
                 setFormDemandaAberto(false);
             } catch (err) {
@@ -603,16 +602,7 @@ import React, { useState, useEffect } from "react";
                                                     required
                                                 />
                                             </div>
-                                            <div className="mb-2">
-                                                <input
-                                                    type="date"
-                                                    className="form-control"
-                                                    placeholder="Validade da oferta"
-                                                    value={novaDemanda.validade_oferta}
-                                                    onChange={e => setNovaDemanda({ ...novaDemanda, validade_oferta: e.target.value })}
-                                                    required
-                                                />
-                                            </div>
+                                            
                                             <div className="mb-2">
                                                 <select
                                                     className="form-control"
@@ -677,15 +667,7 @@ import React, { useState, useEffect } from "react";
                                                                     <option value="outros">Outros</option>
                                                                 </select>
                                                             </div>
-                                                            <div className="mb-2">
-                                                                <input
-                                                                    type="date"
-                                                                    className="form-control"
-                                                                    value={demandaEdit.validade_oferta}
-                                                                    onChange={e => setDemandaEdit({ ...demandaEdit, validade_oferta: e.target.value })}
-                                                                    required
-                                                                />
-                                                            </div>
+                                                            
                                                             <div className="mb-2">
                                                                 <select
                                                                     className="form-control"
@@ -705,7 +687,7 @@ import React, { useState, useEffect } from "react";
                                                         <>
                                                             <strong>{demanda.titulo}</strong> <span className="badge bg-info ms-2">{demanda.categoria}</span>
                                                             <p className="mb-0">{demanda.descricao}</p>
-                                                            <small className="text-muted">Cidade: {usuario.cidade} | Estado: {usuario.estado} | Validade: {demanda.validade_oferta} | Status: {demanda.status}</small>
+                                                            <small className="text-muted">Cidade: {usuario.cidade} | Estado: {usuario.estado} | Status: {demanda.status}</small>
                                                             {!editando && proprioPerfil && (
                                                             <div className="mt-2">
                                                                 <button className="btn btn-editar" onClick={() => handleEditarDemanda(demanda)}>
