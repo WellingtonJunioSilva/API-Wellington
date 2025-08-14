@@ -169,7 +169,8 @@ export default function Mensagens() {
                       <div className="card-body bodyType02 d-flex flex-row">
                         <div className="p-2">
                           <a href={"/perfil/" + d.id}>
-                            <img className="img-fluid rounded-circle mb-2" src={d.foto || perfilPadrao}
+                            <img className="img-fluid rounded-circle mb-2"
+                            src={d.foto_perfil? `http://localhost:8080/tcc/usuarios/${d.id}/foto` : perfilPadrao}
                             style={{ width: "60px", height: "60px", objectFit: "cover" }}></img>
                           </a>
                         </div>

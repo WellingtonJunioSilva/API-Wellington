@@ -251,10 +251,11 @@ const sendModalComment = async () => {
         return;
     }
     try {
+        console.log("alo");
         await fetch(`http://localhost:8080/api/comments/post/${modalPostId}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ content: modalCommentText, usuario: usuario.id })
+            body: JSON.stringify({ content: modalCommentText, usuarioId: usuario.id})
         });
         closeCommentModal();
         fetchPosts();
@@ -500,13 +501,9 @@ const handleShare = (postId) => {
 ) : (
     filtrarPosts(posts).map((post) => {
         let fotoAutorSrc = perfilPadrao;
-        try {
+        if(post.fotoPost) {
             fotoAutorSrc = `http://localhost:8080/tcc/usuarios/${post.autor}/foto`;
         }
-        catch(error) {
-            console.log(error);
-        }
-        console.log(fotoAutorSrc);
         return (
         <div className="post-card card" key={post.id}>
             <div className="post-header">
@@ -544,25 +541,17 @@ const handleShare = (postId) => {
                     <div className="comments-list mt-2">
                         <h6 className="fw-bold mb-2">Comentários</h6>
                         {post.comments.map((comment) => {
-                            let fotoSrc = perfilPadrao;
-                            if (comment.usuario) {
-                                try{
-                                    fotoSrc = `http://localhost:8080/tcc/usuarios/${comment.usuario}/foto`;
-                                }
-                                catch (error) {
-                                    console.log("Erro ao carregar imagem do comentário: " + error);
-                                }
-                            }
                             return (
                                 <div key={comment.id} className="comment-item d-flex align-items-center mb-2">
                                     <img
-                                        src={fotoSrc}
+                                        src= {comment.usuario.foto_perfil? 
+                                            `http://localhost:8080/tcc/usuarios/${comment.usuario.id}/foto` : perfilPadrao}
                                         className="post-avatar me-2"
-                                        alt={comment.nomeUsuario || 'Usuário'}
+                                        alt={comment.usuario?.nome || 'Usuário'}
                                         style={{ width: 32, height: 32 }}
                                     />
                                     <div>
-                                        <span className="fw-bold">{comment.nomeUsuario || 'Usuário'}: </span>
+                                        <span className="fw-bold">{comment.usuario.nome || 'Usuário'}: </span>
                                         <span className="comment-content">{comment.content}</span>
                                     </div>
                                 </div>

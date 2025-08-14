@@ -414,10 +414,11 @@ import React, { useState, useEffect } from "react";
                                     <div className="row mb-3">
                                         <div className="col-md-3 text-center">
                                             <img
-                                                src={usuario.foto_perfil != null ? `http://localhost:8080/tcc/usuarios/${usuario.id}/foto` : perfilPadrao}
+                                                src={`http://localhost:8080/tcc/usuarios/${usuario.id}/foto`}
                                                 alt="Foto do usuário"
                                                 className="img-fluid rounded-circle mb-2"
                                                 style={{ width: "120px", height: "120px", objectFit: "cover" }}
+                                                onError={e => { e.target.onerror=null; e.target.src=perfilPadrao; }}
                                             />
                                         </div>
                                         <div className="col-md-7">
