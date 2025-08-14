@@ -123,6 +123,7 @@ import React, { useState, useEffect } from "react";
     };
 
     useEffect(() => {
+        if(usuarioLogadoId == id) return;
         const verificarConexao = async () => {
             try {
                 const res = await fetch(
