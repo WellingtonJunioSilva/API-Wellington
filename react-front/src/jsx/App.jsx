@@ -10,17 +10,18 @@ import LandingPage from "./LandingPage.jsx";
 function App() {
   return (
     <Router>
-      {/* Menu simples */}
+      {/* Menu simples
       <nav style={styles.nav}>
         <Link to="/landingPage" style={styles.link}>Landing Page</Link>
         <Link to="/login" style={styles.link}>Login</Link>
         <Link to="/cadastro" style={styles.link}>Cadastro</Link>
         <Link to="/inicio" style={styles.link}>Inicio</Link>
-        <Link to="/demandas" style={styles.link}>Demandas</Link> {/* Corrigido aqui */}
+        <Link to="/demandas" style={styles.link}>Demandas</Link>
         <Link to="/mensagens" style={styles.link}>Mensagens</Link>
         <Link to="/perfil" style={styles.link}>Perfil</Link>
         <Link to="/perfil/:id" style={styles.link}>Perfil</Link>
       </nav>
+      */ }
 
       {/* Definindo rotas */}
       <Routes>
